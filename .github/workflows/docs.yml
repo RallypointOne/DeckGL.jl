@@ -31,17 +31,6 @@ jobs:
         with:
           version: '1.12'
 
-      - name: Install IJulia and register kernel
-        run: |
-          julia -e '
-            using Pkg
-            Pkg.add("IJulia")
-            using IJulia
-            installkernel("Julia", "--project=@.")
-          '
-          # List available kernels for debugging
-          jupyter kernelspec list
-
       - name: Install DeckGL.jl
         run: |
           julia -e '

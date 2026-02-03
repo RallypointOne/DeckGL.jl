@@ -61,4 +61,4 @@ format:
 execute:
   freeze: auto
 
-jupyter: julia-1.12
+engine: julia
