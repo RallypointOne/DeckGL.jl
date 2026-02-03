@@ -1,0 +1,62 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "DeckGL.jl"
+  description: "GPU-accelerated geospatial visualization for Julia"
+  repo-url: https://github.com/RallypointOne/DeckGL.jl
+  repo-actions: [edit, issue]
+
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+      - href: getting-started.qmd
+        text: Getting Started
+      - href: layers.qmd
+        text: Layers
+      - href: api.qmd
+        text: API Reference
+      - href: examples.qmd
+        text: Examples
+    right:
+      - icon: github
+        href: https://github.com/RallypointOne/DeckGL.jl
+
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - section: "Guide"
+        contents:
+          - index.qmd
+          - getting-started.qmd
+      - section: "Layers"
+        contents:
+          - layers.qmd
+          - text: "Core Layers"
+            href: layers.qmd#core-layers
+          - text: "Aggregation Layers"
+            href: layers.qmd#aggregation-layers
+          - text: "Composite Layers"
+            href: layers.qmd#composite-layers
+      - section: "Reference"
+        contents:
+          - api.qmd
+          - examples.qmd
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: styles.css
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+    highlight-style: github
+
+execute:
+  freeze: auto

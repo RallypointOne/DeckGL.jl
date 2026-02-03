@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeckGL Visualization</title>
+    <script src="https://unpkg.com/deck.gl@9.0.16/dist.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #deck-container {
+            width: {{WIDTH}};
+            height: {{HEIGHT}};
+            position: relative;
+        }
+        #deck-canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="deck-container">
+        <canvas id="deck-canvas"></canvas>
+    </div>
+    <script>
+        const spec = {{SPEC_JSON}};
+
+        // Process accessor strings that start with "@@="
+        function processAccessor(value, obj) {
+            if (typeof value === 'string' && value.startsWith('@@=')) {
+                const path = value.slice(3);
+                return (d) => {
+                    const parts = path.split('.');
+                    let result = d;
+                    for (const part of parts) {
+                        result = result[part];
+                    }
+                    return result;
+                };
+            }
+            return value;
+        }
+
+        // Process layer specification
+        function processLayer(layerSpec) {
+            const layerType = layerSpec['@@type'];
+            const LayerClass = deck[layerType];
+
+            if (!LayerClass) {
+                console.error('Unknown layer type:', layerType);
+                return null;
+            }
+
+            const props = {};
+            for (const [key, value] of Object.entries(layerSpec)) {
+                if (key === '@@type') continue;
+                props[key] = processAccessor(value, null);
+            }
+
+            return new LayerClass(props);
+        }
+
+        // Create layers
+        const layers = spec.layers.map(processLayer).filter(l => l !== null);
+
+        // Initialize deck.gl
+        new deck.DeckGL({
+            container: 'deck-container',
+            initialViewState: spec.initialViewState,
+            controller: spec.controller,
+            layers: layers,
+            getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+---
+title: "Examples"
+---
+
+A collection of examples demonstrating DeckGL.jl capabilities.
+
+## Basic Scatterplot
+
+Simple point visualization with data-driven sizing.
+
+```julia
+using DeckGL
+
+# Generate sample data
+n = 1000
+data = (
+    lng = -122.4 .+ 0.1 .* randn(n),
+    lat = 37.8 .+ 0.1 .* randn(n),
+    size = 50 .+ 100 .* rand(n)
+)
+
+# Create visualization
+layer = ScatterplotLayer(
+    data = data,
+    get_position = [:lng, :lat],
+    get_radius = :size,
+    get_fill_color = [255, 140, 0, 180],
+    radius_min_pixels = 2,
+    pickable = true
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 11
+    )
+)
+
+open_html(deck)
+```
+
+## Flight Routes with Arcs
+
+Visualize connections between cities.
+
+```julia
+using DeckGL
+
+# Sample flight routes
+routes = (
+    src_lng = [-122.4, -122.4, -122.4, -73.9, -87.6],
+    src_lat = [37.8, 37.8, 37.8, 40.7, 41.9],
+    dst_lng = [-73.9, -87.6, -118.2, -87.6, -118.2],
+    dst_lat = [40.7, 41.9, 34.0, 41.9, 34.0],
+    flights = [150, 80, 200, 120, 90]
+)
+
+layer = ArcLayer(
+    data = routes,
+    get_source_position = [:src_lng, :src_lat],
+    get_target_position = [:dst_lng, :dst_lat],
+    get_source_color = [0, 128, 255],
+    get_target_color = [255, 0, 128],
+    get_width = :flights,
+    width_scale = 0.05,
+    width_min_pixels = 1,
+    great_circle = true
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -98,
+        latitude = 39,
+        zoom = 3,
+        pitch = 30
+    )
+)
+
+open_html(deck)
+```
+
+## GPS Tracks with Paths
+
+Render GPS tracks or routes.
+
+```julia
+using DeckGL
+
+# Sample paths (each path is an array of [lng, lat] coordinates)
+paths_data = (
+    path = [
+        # Path 1: San Francisco to Oakland
+        [[-122.4194, 37.7749], [-122.3, 37.8], [-122.2711, 37.8044]],
+        # Path 2: Around the bay
+        [[-122.4, 37.8], [-122.35, 37.85], [-122.3, 37.82], [-122.28, 37.78]]
+    ],
+    name = ["SF to Oakland", "Bay Loop"],
+    speed = [35, 45]
+)
+
+layer = PathLayer(
+    data = paths_data,
+    get_path = :path,
+    get_color = [0, 128, 255, 200],
+    get_width = :speed,
+    width_scale = 0.5,
+    width_min_pixels = 2,
+    cap_rounded = true,
+    joint_rounded = true
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.35,
+        latitude = 37.8,
+        zoom = 11
+    )
+)
+
+open_html(deck)
+```
+
+## Choropleth with Polygons
+
+Colored regions based on data values.
+
+```julia
+using DeckGL
+
+# Sample polygon data (simplified for example)
+regions = (
+    polygon = [
+        # Region 1 (triangle)
+        [[[-122.5, 37.7], [-122.4, 37.9], [-122.3, 37.7], [-122.5, 37.7]]],
+        # Region 2 (quadrilateral)
+        [[[-122.45, 37.75], [-122.35, 37.75], [-122.35, 37.85], [-122.45, 37.85], [-122.45, 37.75]]]
+    ],
+    value = [100, 200],
+    name = ["Region A", "Region B"]
+)
+
+layer = PolygonLayer(
+    data = regions,
+    get_polygon = :polygon,
+    get_fill_color = [255, 140, 0, 150],
+    get_line_color = [255, 140, 0, 255],
+    get_line_width = 50,
+    line_width_min_pixels = 2,
+    pickable = true
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 11
+    )
+)
+
+open_html(deck)
+```
+
+## 3D Hexagonal Binning
+
+Aggregate points into 3D hexagons.
+
+```julia
+using DeckGL
+
+# Generate random earthquake-like data
+n = 5000
+earthquakes = (
+    lng = -122.4 .+ 0.2 .* randn(n),
+    lat = 37.8 .+ 0.2 .* randn(n),
+    magnitude = 1 .+ 4 .* rand(n)
+)
+
+layer = HexagonLayer(
+    data = earthquakes,
+    get_position = [:lng, :lat],
+    get_elevation_weight = :magnitude,
+    radius = 500,
+    elevation_scale = 50,
+    elevation_range = [0, 500],
+    extruded = true,
+    coverage = 0.9,
+    pickable = true
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 11,
+        pitch = 45,
+        bearing = 15
+    )
+)
+
+open_html(deck)
+```
+
+## Density Heatmap
+
+Visualize point density.
+
+```julia
+using DeckGL
+
+# Generate clustered data
+n = 10000
+clusters = [
+    (-122.4, 37.8, 3000),   # Downtown SF
+    (-122.45, 37.75, 2000), # South
+    (-122.35, 37.85, 1500)  # North
+]
+
+lng = Float64[]
+lat = Float64[]
+for (cx, cy, count) in clusters
+    append!(lng, cx .+ 0.02 .* randn(count))
+    append!(lat, cy .+ 0.02 .* randn(count))
+end
+
+data = (lng = lng, lat = lat)
+
+layer = HeatmapLayer(
+    data = data,
+    get_position = [:lng, :lat],
+    radius_pixels = 30,
+    intensity = 1,
+    threshold = 0.03
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 12
+    )
+)
+
+open_html(deck)
+```
+
+## City Labels
+
+Add text labels to a map.
+
+```julia
+using DeckGL
+
+cities = (
+    lng = [-122.4, -73.9, -87.6, -118.2, -95.4],
+    lat = [37.8, 40.7, 41.9, 34.0, 29.8],
+    name = ["San Francisco", "New York", "Chicago", "Los Angeles", "Houston"],
+    population = [883305, 8336817, 2693976, 3979576, 2320268]
+)
+
+# Scatter layer for points
+scatter_layer = ScatterplotLayer(
+    data = cities,
+    get_position = [:lng, :lat],
+    get_radius = 50000,
+    get_fill_color = [255, 0, 0, 200]
+)
+
+# Text layer for labels
+text_layer = TextLayer(
+    data = cities,
+    get_position = [:lng, :lat],
+    get_text = :name,
+    get_size = 16,
+    get_color = [0, 0, 0, 255],
+    get_pixel_offset = [0, -20],
+    font_family = "Arial, sans-serif"
+)
+
+deck = Deck(
+    [scatter_layer, text_layer],
+    initial_view_state = ViewState(
+        longitude = -98,
+        latitude = 39,
+        zoom = 4
+    )
+)
+
+open_html(deck)
+```
+
+## Multiple Layers
+
+Combine different layer types.
+
+```julia
+using DeckGL
+
+# Points
+points = (
+    lng = [-122.4, -122.45, -122.35],
+    lat = [37.8, 37.75, 37.85],
+    size = [200, 150, 180]
+)
+
+# Connections
+connections = (
+    src_lng = [-122.4, -122.4],
+    src_lat = [37.8, 37.8],
+    dst_lng = [-122.45, -122.35],
+    dst_lat = [37.75, 37.85]
+)
+
+# Labels
+labels = (
+    lng = [-122.4, -122.45, -122.35],
+    lat = [37.8, 37.75, 37.85],
+    name = ["HQ", "Office A", "Office B"]
+)
+
+layers = [
+    # Lines first (background)
+    LineLayer(
+        data = connections,
+        get_source_position = [:src_lng, :src_lat],
+        get_target_position = [:dst_lng, :dst_lat],
+        get_color = [100, 100, 100, 200],
+        get_width = 2
+    ),
+    # Points on top
+    ScatterplotLayer(
+        data = points,
+        get_position = [:lng, :lat],
+        get_radius = :size,
+        get_fill_color = [0, 128, 255, 200]
+    ),
+    # Labels on top
+    TextLayer(
+        data = labels,
+        get_position = [:lng, :lat],
+        get_text = :name,
+        get_size = 14,
+        get_color = [0, 0, 0],
+        get_pixel_offset = [0, -25]
+    )
+]
+
+deck = Deck(
+    layers,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 12
+    )
+)
+
+open_html(deck)
+```
+
+## GeoJSON from URL
+
+Load and display GeoJSON data from a URL.
+
+```julia
+using DeckGL
+
+# US states GeoJSON (example URL)
+layer = GeoJsonLayer(
+    data = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",
+    filled = true,
+    stroked = true,
+    get_fill_color = [200, 200, 255, 100],
+    get_line_color = [0, 0, 128, 255],
+    get_line_width = 2,
+    line_width_min_pixels = 1,
+    pickable = true
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -98,
+        latitude = 39,
+        zoom = 4
+    )
+)
+
+open_html(deck)
+```
+
+## Using Convenience Functions
+
+Quick visualizations with minimal code.
+
+```julia
+using DeckGL
+
+# Generate data
+n = 1000
+data = (
+    lng = -122.4 .+ 0.1 .* randn(n),
+    lat = 37.8 .+ 0.1 .* randn(n),
+    value = rand(n) .* 100
+)
+
+# One-liner visualizations
+scatter(data, :lng, :lat, radius=:value, color=[255, 0, 0]) |> open_html
+
+heatmap(data, :lng, :lat, weight=:value) |> open_html
+
+hexbin(data, :lng, :lat, elevation_weight=:value, radius=300) |> open_html
+```
+
+## Working with DataFrames
+
+DeckGL.jl works seamlessly with DataFrames.
+
+```julia
+using DeckGL
+using DataFrames
+
+# Create a DataFrame
+df = DataFrame(
+    longitude = [-122.4, -122.5, -122.3, -122.45],
+    latitude = [37.8, 37.7, 37.9, 37.75],
+    category = ["A", "B", "A", "B"],
+    value = [100, 200, 150, 180]
+)
+
+# Use DataFrame directly
+layer = ScatterplotLayer(
+    data = df,
+    get_position = [:longitude, :latitude],
+    get_radius = :value,
+    get_fill_color = [255, 140, 0, 200]
+)
+
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 11
+    )
+)
+
+open_html(deck)
+```

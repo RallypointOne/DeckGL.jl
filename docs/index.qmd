@@ -1,0 +1,99 @@
+---
+title: "DeckGL.jl"
+subtitle: "GPU-accelerated geospatial visualization for Julia"
+---
+
+::: {.hero}
+# DeckGL.jl
+
+[GPU-accelerated geospatial visualization for Julia]{.tagline}
+
+[![CI](https://github.com/joshday/DeckGL.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/joshday/DeckGL.jl/actions/workflows/CI.yml)
+:::
+
+DeckGL.jl is a Julia package for creating interactive, GPU-accelerated visualizations using [deck.gl](https://deck.gl/). It provides a simple, Julian API for rendering large-scale geospatial data in web browsers and notebooks.
+
+## Features
+
+::: {.feature-grid}
+
+::: {.feature-card}
+### High Performance
+Leverages WebGL for GPU-accelerated rendering. Handle millions of data points with smooth pan, zoom, and rotate interactions.
+:::
+
+::: {.feature-card}
+### Tables.jl Integration
+Works seamlessly with DataFrames, NamedTuples, and any Tables.jl-compatible data source. Reference columns by symbol.
+:::
+
+::: {.feature-card}
+### Multiple Outputs
+Display in Jupyter notebooks, VS Code, Pluto.jl, or export as standalone HTML files that work in any browser.
+:::
+
+::: {.feature-card}
+### Rich Layer Types
+10+ layer types including scatterplots, arcs, paths, polygons, hexagonal binning, heatmaps, and GeoJSON support.
+:::
+
+:::
+
+## Quick Example
+
+```julia
+using DeckGL
+
+# Any Tables.jl-compatible data works
+data = (
+    longitude = [-122.4, -122.5, -122.3, -122.45],
+    latitude = [37.8, 37.7, 37.9, 37.75],
+    size = [100, 200, 150, 180]
+)
+
+# Create a scatterplot layer
+layer = ScatterplotLayer(
+    data = data,
+    get_position = [:longitude, :latitude],
+    get_radius = :size,
+    get_fill_color = [255, 140, 0, 200]
+)
+
+# Create and display the visualization
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11)
+)
+
+open_html(deck)  # Opens in browser
+```
+
+Or use convenience functions for even simpler code:
+
+```julia
+scatter(data, :longitude, :latitude, radius=:size, color=[255, 140, 0]) |> open_html
+```
+
+## Installation
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/joshday/DeckGL.jl")
+```
+
+## Layer Types
+
+DeckGL.jl supports a variety of layer types for different visualization needs:
+
+| Category | Layers |
+|----------|--------|
+| **Core** | `ScatterplotLayer`, `ArcLayer`, `LineLayer`, `PathLayer`, `PolygonLayer`, `TextLayer` |
+| **Aggregation** | `HexagonLayer`, `GridLayer`, `HeatmapLayer` |
+| **Composite** | `GeoJsonLayer` |
+
+## Next Steps
+
+- [Getting Started](getting-started.qmd) - Installation and first visualization
+- [Layers](layers.qmd) - Complete layer reference
+- [API Reference](api.qmd) - Full API documentation
+- [Examples](examples.qmd) - Example gallery

@@ -1,0 +1,191 @@
+---
+title: "Getting Started"
+---
+
+This guide will help you get up and running with DeckGL.jl.
+
+## Installation
+
+DeckGL.jl can be installed from GitHub:
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/joshday/DeckGL.jl")
+```
+
+## Basic Concepts
+
+DeckGL.jl has three main components:
+
+1. **Layers** - Define what data to visualize and how
+2. **ViewState** - Configure the camera (position, zoom, angle)
+3. **Deck** - Container that combines layers and view state
+
+## Your First Visualization
+
+Let's create a simple scatterplot:
+
+```julia
+using DeckGL
+
+# Sample data - any Tables.jl-compatible source works
+data = (
+    lng = [-122.4, -122.5, -122.3, -122.45, -122.35],
+    lat = [37.8, 37.7, 37.9, 37.75, 37.85],
+    size = [100, 200, 150, 180, 120]
+)
+
+# Create a layer
+layer = ScatterplotLayer(
+    data = data,
+    get_position = [:lng, :lat],  # Reference columns by symbol
+    get_radius = :size,            # Data-driven radius
+    get_fill_color = [255, 140, 0, 200]  # RGBA color
+)
+
+# Create the deck
+deck = Deck(
+    layer,
+    initial_view_state = ViewState(
+        longitude = -122.4,
+        latitude = 37.8,
+        zoom = 11
+    )
+)
+
+# Open in browser
+open_html(deck)
+```
+
+## Data Input
+
+DeckGL.jl works with any [Tables.jl](https://tables.juliadata.org/)-compatible data source:
+
+```julia
+# NamedTuple of vectors
+data = (x = [1, 2, 3], y = [4, 5, 6])
+
+# DataFrame
+using DataFrames
+df = DataFrame(x = [1, 2, 3], y = [4, 5, 6])
+
+# Vector of NamedTuples
+rows = [(x=1, y=4), (x=2, y=5), (x=3, y=6)]
+```
+
+### Column References
+
+Use `Symbol` to reference columns for data-driven properties:
+
+```julia
+layer = ScatterplotLayer(
+    data = data,
+    get_position = [:lng, :lat],     # Two columns for position
+    get_radius = :size,               # Column for radius
+    get_fill_color = [255, 0, 0, 200] # Static color
+)
+```
+
+## Color Specification
+
+Colors are specified as RGB or RGBA arrays with values 0-255:
+
+```julia
+# RGB (alpha defaults to 255)
+color = [255, 0, 0]      # Red
+
+# RGBA (with transparency)
+color = [255, 0, 0, 128] # Semi-transparent red
+```
+
+For data-driven colors, reference a column:
+
+```julia
+get_fill_color = :color_column
+```
+
+## ViewState
+
+The `ViewState` controls the camera:
+
+```julia
+ViewState(
+    longitude = -122.4,  # Center longitude
+    latitude = 37.8,     # Center latitude
+    zoom = 11,           # Zoom level (0-20+)
+    pitch = 45,          # Tilt angle (0-60 degrees)
+    bearing = 0          # Rotation (0-360 degrees)
+)
+```
+
+## Display Options
+
+### Open in Browser
+
+```julia
+open_html(deck)
+```
+
+### Save as HTML File
+
+```julia
+save_html(deck, "visualization.html")
+```
+
+### Get HTML String
+
+```julia
+html_string = to_html(deck)
+```
+
+### Jupyter/VS Code
+
+In notebook environments, `Deck` objects display automatically:
+
+```julia
+deck  # Displays inline in notebook
+```
+
+## Convenience Functions
+
+For quick visualizations, use the convenience functions:
+
+```julia
+# Scatterplot
+scatter(data, :lng, :lat, radius=:size, color=[255, 140, 0])
+
+# Arcs
+arcs(data, [:src_lng, :src_lat], [:dst_lng, :dst_lat])
+
+# Hexagonal binning
+hexbin(data, :lng, :lat, radius=1000)
+
+# Heatmap
+heatmap(data, :lng, :lat, weight=:value)
+```
+
+These return a `Deck` that you can display:
+
+```julia
+scatter(data, :lng, :lat) |> open_html
+```
+
+## Multiple Layers
+
+Combine multiple layers in a single visualization:
+
+```julia
+layers = [
+    ScatterplotLayer(data=points, get_position=[:lng, :lat]),
+    TextLayer(data=labels, get_position=[:lng, :lat], get_text=:name),
+    PathLayer(data=routes, get_path=:path)
+]
+
+deck = Deck(layers, initial_view_state=ViewState(zoom=10))
+```
+
+## Next Steps
+
+- [Layers](layers.qmd) - Explore all available layer types
+- [API Reference](api.qmd) - Complete function and type documentation
+- [Examples](examples.qmd) - More visualization examples

@@ -1,0 +1,340 @@
+---
+title: "Layers"
+---
+
+DeckGL.jl provides a variety of layer types for different visualization needs. This page documents all available layers and their properties.
+
+## Core Layers {#core-layers}
+
+Core layers render individual data points directly without aggregation.
+
+### ScatterplotLayer
+
+Renders circles at given coordinates.
+
+```julia
+ScatterplotLayer(
+    data = data,
+    get_position = [:lng, :lat],
+    get_radius = 100,
+    get_fill_color = [255, 140, 0, 200]
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_position` | Symbol/Vector{Symbol} | required | Position accessor `[:lng, :lat]` |
+| `get_radius` | Real/Symbol | `1` | Circle radius in meters |
+| `get_fill_color` | Vector/Symbol | `[0,0,0,255]` | Fill color RGBA |
+| `get_line_color` | Vector/Symbol | `[0,0,0,255]` | Outline color RGBA |
+| `get_line_width` | Real/Symbol | `1` | Outline width |
+| `radius_scale` | Real | `1` | Radius multiplier |
+| `radius_min_pixels` | Real | `0` | Minimum radius in pixels |
+| `radius_max_pixels` | Real | `Inf` | Maximum radius in pixels |
+| `stroked` | Bool | `false` | Draw outline |
+| `filled` | Bool | `true` | Draw fill |
+| `billboard` | Bool | `false` | Always face camera |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+| `pickable` | Bool | `false` | Enable interactions |
+
+### ArcLayer
+
+Renders arcs between source and target coordinates.
+
+```julia
+ArcLayer(
+    data = trips,
+    get_source_position = [:src_lng, :src_lat],
+    get_target_position = [:dst_lng, :dst_lat],
+    get_source_color = [0, 128, 255],
+    get_target_color = [255, 0, 128],
+    get_width = 2
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_source_position` | Symbol/Vector{Symbol} | required | Source position |
+| `get_target_position` | Symbol/Vector{Symbol} | required | Target position |
+| `get_source_color` | Vector/Symbol | `[0,0,0,255]` | Source end color |
+| `get_target_color` | Vector/Symbol | `[0,0,0,255]` | Target end color |
+| `get_width` | Real/Symbol | `1` | Arc width in pixels |
+| `get_height` | Real/Symbol | `1` | Arc height multiplier (0-1) |
+| `get_tilt` | Real/Symbol | `0` | Arc tilt in degrees |
+| `great_circle` | Bool | `false` | Use great circle arcs |
+| `width_scale` | Real | `1` | Width multiplier |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+### LineLayer
+
+Renders straight lines between source and target coordinates.
+
+```julia
+LineLayer(
+    data = connections,
+    get_source_position = [:from_lng, :from_lat],
+    get_target_position = [:to_lng, :to_lat],
+    get_color = [255, 0, 0],
+    get_width = 2
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_source_position` | Symbol/Vector{Symbol} | required | Source position |
+| `get_target_position` | Symbol/Vector{Symbol} | required | Target position |
+| `get_color` | Vector/Symbol | `[0,0,0,255]` | Line color |
+| `get_width` | Real/Symbol | `1` | Line width |
+| `width_units` | String | `"pixels"` | Width units |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+### PathLayer
+
+Renders paths/polylines from coordinate sequences.
+
+```julia
+PathLayer(
+    data = routes,
+    get_path = :path,  # Column containing [[lng1,lat1], [lng2,lat2], ...]
+    get_color = [0, 128, 255],
+    get_width = 5,
+    cap_rounded = true
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_path` | Symbol | required | Path coordinates column |
+| `get_color` | Vector/Symbol | `[0,0,0,255]` | Path color |
+| `get_width` | Real/Symbol | `1` | Path width |
+| `cap_rounded` | Bool | `false` | Round line caps |
+| `joint_rounded` | Bool | `false` | Round line joints |
+| `billboard` | Bool | `false` | Always face camera |
+| `miter_limit` | Real | `4` | Miter limit for sharp corners |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+### PolygonLayer
+
+Renders filled and/or stroked polygons.
+
+```julia
+PolygonLayer(
+    data = regions,
+    get_polygon = :polygon,
+    get_fill_color = [255, 140, 0, 100],
+    get_line_color = [255, 140, 0, 255],
+    extruded = true,
+    get_elevation = :value
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_polygon` | Symbol | required | Polygon coordinates column |
+| `get_fill_color` | Vector/Symbol | `[0,0,0,255]` | Fill color |
+| `get_line_color` | Vector/Symbol | `[0,0,0,255]` | Outline color |
+| `get_line_width` | Real/Symbol | `1` | Outline width |
+| `filled` | Bool | `true` | Draw fill |
+| `stroked` | Bool | `true` | Draw outline |
+| `extruded` | Bool | `false` | Extrude as 3D |
+| `wireframe` | Bool | `false` | Draw 3D wireframe |
+| `get_elevation` | Real/Symbol | `1000` | Polygon height for 3D |
+| `elevation_scale` | Real | `1` | Elevation multiplier |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+### TextLayer
+
+Renders text labels at coordinates.
+
+```julia
+TextLayer(
+    data = cities,
+    get_position = [:lng, :lat],
+    get_text = :name,
+    get_size = 16,
+    get_color = [0, 0, 0]
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
+| `get_text` | Symbol | required | Text content column |
+| `get_size` | Real/Symbol | `32` | Text size in pixels |
+| `get_color` | Vector/Symbol | `[0,0,0,255]` | Text color |
+| `get_angle` | Real/Symbol | `0` | Rotation in degrees |
+| `get_text_anchor` | String | `"middle"` | Horizontal anchor |
+| `get_alignment_baseline` | String | `"center"` | Vertical anchor |
+| `font_family` | String | `"Monaco, monospace"` | Font family |
+| `billboard` | Bool | `true` | Always face camera |
+| `background` | Bool | `false` | Draw background |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+## Aggregation Layers {#aggregation-layers}
+
+Aggregation layers bin data points and render aggregated values.
+
+### HexagonLayer
+
+Aggregates data into hexagonal bins and renders as 3D hexagons.
+
+```julia
+HexagonLayer(
+    data = earthquakes,
+    get_position = [:lng, :lat],
+    get_elevation_weight = :magnitude,
+    radius = 50000,
+    elevation_scale = 100,
+    extruded = true
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
+| `radius` | Real | `1000` | Hexagon radius in meters |
+| `coverage` | Real | `1` | Hexagon coverage (0-1) |
+| `extruded` | Bool | `true` | Render as 3D |
+| `elevation_scale` | Real | `1` | Elevation multiplier |
+| `elevation_range` | Vector | `[0, 1000]` | Min/max elevation |
+| `get_color_weight` | Real/Symbol | `1` | Color aggregation weight |
+| `get_elevation_weight` | Real/Symbol | `1` | Elevation aggregation weight |
+| `color_aggregation` | String | `"SUM"` | Aggregation method |
+| `elevation_aggregation` | String | `"SUM"` | Aggregation method |
+| `color_range` | Vector | yellow-red scale | Color gradient |
+| `upper_percentile` | Real | `100` | Upper filter percentile |
+| `lower_percentile` | Real | `0` | Lower filter percentile |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+### GridLayer
+
+Aggregates data into rectangular grid cells.
+
+```julia
+GridLayer(
+    data = points,
+    get_position = [:lng, :lat],
+    cell_size = 200,
+    elevation_scale = 4,
+    extruded = true
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
+| `cell_size` | Real | `1000` | Grid cell size in meters |
+| `coverage` | Real | `1` | Cell coverage (0-1) |
+| `extruded` | Bool | `true` | Render as 3D |
+| `elevation_scale` | Real | `1` | Elevation multiplier |
+| `get_color_weight` | Real/Symbol | `1` | Color aggregation weight |
+| `get_elevation_weight` | Real/Symbol | `1` | Elevation aggregation weight |
+| `color_aggregation` | String | `"SUM"` | Aggregation method |
+| `elevation_aggregation` | String | `"SUM"` | Aggregation method |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+### HeatmapLayer
+
+Renders a heatmap based on point density and weights.
+
+```julia
+HeatmapLayer(
+    data = incidents,
+    get_position = [:lng, :lat],
+    get_weight = :severity,
+    radius_pixels = 50,
+    intensity = 1,
+    threshold = 0.03
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Any | required | Tables.jl-compatible data source |
+| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
+| `radius_pixels` | Real | `30` | Radius of influence in pixels |
+| `intensity` | Real | `1` | Intensity multiplier |
+| `threshold` | Real | `0.05` | Minimum density threshold |
+| `get_weight` | Real/Symbol | `1` | Point weight |
+| `color_range` | Vector | blue-green-yellow-red | Color gradient |
+| `aggregation` | String | `"SUM"` | Aggregation method |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+## Composite Layers {#composite-layers}
+
+Composite layers render complex data types using multiple sub-layers.
+
+### GeoJsonLayer
+
+Renders GeoJSON data as points, lines, and polygons.
+
+```julia
+# From Dict
+geojson_data = Dict(
+    "type" => "FeatureCollection",
+    "features" => [...]
+)
+
+GeoJsonLayer(
+    data = geojson_data,
+    get_fill_color = [255, 0, 0, 100],
+    get_line_color = [255, 0, 0, 255],
+    get_point_radius = 100
+)
+
+# From URL
+GeoJsonLayer(
+    data = "https://example.com/data.geojson",
+    filled = true,
+    stroked = true
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `data` | Dict/String | required | GeoJSON Dict or URL |
+| `filled` | Bool | `true` | Fill polygons |
+| `stroked` | Bool | `true` | Draw outlines |
+| `extruded` | Bool | `false` | Extrude polygons |
+| `get_fill_color` | Vector/Symbol | `[0,0,0,255]` | Fill color |
+| `get_line_color` | Vector/Symbol | `[0,0,0,255]` | Line color |
+| `get_line_width` | Real/Symbol | `1` | Line width |
+| `get_point_radius` | Real/Symbol | `1` | Point radius |
+| `get_elevation` | Real/Symbol | `1000` | Polygon elevation |
+| `point_type` | String | `"circle"` | Point rendering type |
+| `opacity` | Real | `1` | Layer opacity (0-1) |
+
+## GeoInterface.jl Integration
+
+Convert GeoInterface-compatible geometries to GeoJSON:
+
+```julia
+using Shapefile
+using DeckGL
+
+# Load shapefile
+shp = Shapefile.Table("boundaries.shp")
+
+# Convert to GeoJSON and create layer
+layer = geojson_layer(shp, get_fill_color=[255, 0, 0, 100])
+
+# Or manually convert
+geojson_dict = to_geojson(shp)
+layer = GeoJsonLayer(data=geojson_dict)
+```
+
+Supported geometry types:
+
+- Point, MultiPoint
+- LineString, MultiLineString
+- Polygon, MultiPolygon
+- GeometryCollection
+- Feature, FeatureCollection
