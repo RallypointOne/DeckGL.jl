@@ -2,145 +2,253 @@
 title: "Examples"
 ---
 
-A collection of examples demonstrating DeckGL.jl capabilities.
+Interactive examples demonstrating each DeckGL.jl layer type. Each visualization below is rendered using deck.gl.
 
-## Basic Scatterplot
+## ScatterplotLayer
 
-Simple point visualization with data-driven sizing.
+Renders circles at geographic coordinates. Size and color can be data-driven.
 
 ```julia
-using DeckGL
-
-# Generate sample data
-n = 1000
 data = (
-    lng = -122.4 .+ 0.1 .* randn(n),
-    lat = 37.8 .+ 0.1 .* randn(n),
-    size = 50 .+ 100 .* rand(n)
+    lng = [-122.4, -122.45, -122.35, -122.42, -122.38],
+    lat = [37.8, 37.75, 37.85, 37.78, 37.82],
+    size = [100, 150, 80, 120, 90]
 )
 
-# Create visualization
 layer = ScatterplotLayer(
     data = data,
     get_position = [:lng, :lat],
     get_radius = :size,
-    get_fill_color = [255, 140, 0, 180],
-    radius_min_pixels = 2,
-    pickable = true
+    get_fill_color = [255, 140, 0, 200],
+    radius_min_pixels = 5
 )
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -122.4,
-        latitude = 37.8,
-        zoom = 11
-    )
-)
-
-open_html(deck)
 ```
 
-## Flight Routes with Arcs
+```{=html}
+<div id="scatterplot-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script src="https://unpkg.com/deck.gl@9.0.16/dist.min.js"></script>
+<script>
+(function() {
+    const data = [
+        {position: [-122.4, 37.8], size: 100},
+        {position: [-122.45, 37.75], size: 150},
+        {position: [-122.35, 37.85], size: 80},
+        {position: [-122.42, 37.78], size: 120},
+        {position: [-122.38, 37.82], size: 90},
+        {position: [-122.41, 37.79], size: 110},
+        {position: [-122.43, 37.81], size: 95},
+        {position: [-122.39, 37.77], size: 130},
+        {position: [-122.44, 37.83], size: 85},
+        {position: [-122.36, 37.76], size: 140}
+    ];
 
-Visualize connections between cities.
+    new deck.DeckGL({
+        container: 'scatterplot-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.8,
+            zoom: 12,
+            pitch: 0
+        },
+        controller: true,
+        layers: [
+            new deck.ScatterplotLayer({
+                id: 'scatterplot',
+                data: data,
+                getPosition: d => d.position,
+                getRadius: d => d.size,
+                getFillColor: [255, 140, 0, 200],
+                radiusMinPixels: 5,
+                radiusMaxPixels: 50
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## ArcLayer
+
+Renders arcs between source and target coordinates. Great for showing connections or flows.
 
 ```julia
-using DeckGL
-
-# Sample flight routes
-routes = (
-    src_lng = [-122.4, -122.4, -122.4, -73.9, -87.6],
-    src_lat = [37.8, 37.8, 37.8, 40.7, 41.9],
-    dst_lng = [-73.9, -87.6, -118.2, -87.6, -118.2],
-    dst_lat = [40.7, 41.9, 34.0, 41.9, 34.0],
-    flights = [150, 80, 200, 120, 90]
+trips = (
+    src_lng = [-122.4, -122.4, -122.4],
+    src_lat = [37.8, 37.8, 37.8],
+    dst_lng = [-73.9, -87.6, -118.2],
+    dst_lat = [40.7, 41.9, 34.0]
 )
 
 layer = ArcLayer(
-    data = routes,
+    data = trips,
     get_source_position = [:src_lng, :src_lat],
     get_target_position = [:dst_lng, :dst_lat],
     get_source_color = [0, 128, 255],
     get_target_color = [255, 0, 128],
-    get_width = :flights,
-    width_scale = 0.05,
-    width_min_pixels = 1,
-    great_circle = true
+    get_width = 3
 )
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -98,
-        latitude = 39,
-        zoom = 3,
-        pitch = 30
-    )
-)
-
-open_html(deck)
 ```
 
-## GPS Tracks with Paths
+```{=html}
+<div id="arc-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const data = [
+        {source: [-122.4, 37.8], target: [-73.9, 40.7]},
+        {source: [-122.4, 37.8], target: [-87.6, 41.9]},
+        {source: [-122.4, 37.8], target: [-118.2, 34.0]},
+        {source: [-73.9, 40.7], target: [-87.6, 41.9]},
+        {source: [-87.6, 41.9], target: [-118.2, 34.0]}
+    ];
 
-Render GPS tracks or routes.
+    new deck.DeckGL({
+        container: 'arc-container',
+        initialViewState: {
+            longitude: -98,
+            latitude: 39,
+            zoom: 3,
+            pitch: 30
+        },
+        controller: true,
+        layers: [
+            new deck.ArcLayer({
+                id: 'arcs',
+                data: data,
+                getSourcePosition: d => d.source,
+                getTargetPosition: d => d.target,
+                getSourceColor: [0, 128, 255],
+                getTargetColor: [255, 0, 128],
+                getWidth: 3
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## LineLayer
+
+Renders straight lines between points. Simpler than arcs, useful for direct connections.
 
 ```julia
-using DeckGL
+connections = (
+    from_lng = [-122.4, -122.45, -122.35],
+    from_lat = [37.8, 37.75, 37.85],
+    to_lng = [-122.45, -122.35, -122.4],
+    to_lat = [37.75, 37.85, 37.8]
+)
 
-# Sample paths (each path is an array of [lng, lat] coordinates)
-paths_data = (
+layer = LineLayer(
+    data = connections,
+    get_source_position = [:from_lng, :from_lat],
+    get_target_position = [:to_lng, :to_lat],
+    get_color = [64, 192, 128, 200],
+    get_width = 3
+)
+```
+
+```{=html}
+<div id="line-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const data = [
+        {source: [-122.4, 37.8], target: [-122.45, 37.75]},
+        {source: [-122.45, 37.75], target: [-122.35, 37.85]},
+        {source: [-122.35, 37.85], target: [-122.4, 37.8]},
+        {source: [-122.42, 37.78], target: [-122.38, 37.82]},
+        {source: [-122.38, 37.82], target: [-122.43, 37.77]}
+    ];
+
+    new deck.DeckGL({
+        container: 'line-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.8,
+            zoom: 12
+        },
+        controller: true,
+        layers: [
+            new deck.LineLayer({
+                id: 'lines',
+                data: data,
+                getSourcePosition: d => d.source,
+                getTargetPosition: d => d.target,
+                getColor: [64, 192, 128, 200],
+                getWidth: 3
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## PathLayer
+
+Renders polylines/paths from sequences of coordinates. Ideal for routes, tracks, or boundaries.
+
+```julia
+routes = (
     path = [
-        # Path 1: San Francisco to Oakland
-        [[-122.4194, 37.7749], [-122.3, 37.8], [-122.2711, 37.8044]],
-        # Path 2: Around the bay
-        [[-122.4, 37.8], [-122.35, 37.85], [-122.3, 37.82], [-122.28, 37.78]]
+        [[-122.4, 37.8], [-122.42, 37.78], [-122.45, 37.75]],
+        [[-122.35, 37.85], [-122.38, 37.82], [-122.4, 37.8]]
     ],
-    name = ["SF to Oakland", "Bay Loop"],
-    speed = [35, 45]
+    name = ["Route A", "Route B"]
 )
 
 layer = PathLayer(
-    data = paths_data,
+    data = routes,
     get_path = :path,
     get_color = [0, 128, 255, 200],
-    get_width = :speed,
-    width_scale = 0.5,
-    width_min_pixels = 2,
-    cap_rounded = true,
-    joint_rounded = true
+    get_width = 5,
+    cap_rounded = true
 )
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -122.35,
-        latitude = 37.8,
-        zoom = 11
-    )
-)
-
-open_html(deck)
 ```
 
-## Choropleth with Polygons
+```{=html}
+<div id="path-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const data = [
+        {path: [[-122.4, 37.8], [-122.42, 37.78], [-122.44, 37.76], [-122.45, 37.75]], color: [0, 128, 255]},
+        {path: [[-122.35, 37.85], [-122.37, 37.83], [-122.39, 37.81], [-122.4, 37.8]], color: [255, 128, 0]},
+        {path: [[-122.43, 37.82], [-122.41, 37.79], [-122.38, 37.77], [-122.36, 37.76]], color: [128, 0, 255]}
+    ];
 
-Colored regions based on data values.
+    new deck.DeckGL({
+        container: 'path-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.8,
+            zoom: 12
+        },
+        controller: true,
+        layers: [
+            new deck.PathLayer({
+                id: 'paths',
+                data: data,
+                getPath: d => d.path,
+                getColor: d => d.color,
+                getWidth: 5,
+                capRounded: true,
+                jointRounded: true
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## PolygonLayer
+
+Renders filled polygons. Supports 3D extrusion for building-like visualizations.
 
 ```julia
-using DeckGL
-
-# Sample polygon data (simplified for example)
 regions = (
     polygon = [
-        # Region 1 (triangle)
-        [[[-122.5, 37.7], [-122.4, 37.9], [-122.3, 37.7], [-122.5, 37.7]]],
-        # Region 2 (quadrilateral)
-        [[[-122.45, 37.75], [-122.35, 37.75], [-122.35, 37.85], [-122.45, 37.85], [-122.45, 37.75]]]
+        [[[-122.42, 37.78], [-122.45, 37.75], [-122.43, 37.73], [-122.40, 37.75], [-122.42, 37.78]]],
+        [[[-122.38, 37.82], [-122.40, 37.80], [-122.36, 37.79], [-122.35, 37.81], [-122.38, 37.82]]]
     ],
-    value = [100, 200],
-    name = ["Region A", "Region B"]
+    height = [100, 150]
 )
 
 layer = PolygonLayer(
@@ -148,307 +256,542 @@ layer = PolygonLayer(
     get_polygon = :polygon,
     get_fill_color = [255, 140, 0, 150],
     get_line_color = [255, 140, 0, 255],
-    get_line_width = 50,
-    line_width_min_pixels = 2,
-    pickable = true
+    extruded = true,
+    get_elevation = :height
 )
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -122.4,
-        latitude = 37.8,
-        zoom = 11
-    )
-)
-
-open_html(deck)
 ```
 
-## 3D Hexagonal Binning
+```{=html}
+<div id="polygon-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const data = [
+        {
+            polygon: [[-122.42, 37.78], [-122.44, 37.76], [-122.42, 37.74], [-122.40, 37.76]],
+            height: 200,
+            color: [255, 140, 0, 180]
+        },
+        {
+            polygon: [[-122.38, 37.82], [-122.40, 37.80], [-122.37, 37.79], [-122.35, 37.81]],
+            height: 300,
+            color: [0, 140, 255, 180]
+        },
+        {
+            polygon: [[-122.45, 37.80], [-122.47, 37.78], [-122.45, 37.76], [-122.43, 37.78]],
+            height: 150,
+            color: [140, 255, 0, 180]
+        }
+    ];
 
-Aggregate points into 3D hexagons.
+    new deck.DeckGL({
+        container: 'polygon-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.78,
+            zoom: 12,
+            pitch: 45,
+            bearing: 15
+        },
+        controller: true,
+        layers: [
+            new deck.PolygonLayer({
+                id: 'polygons',
+                data: data,
+                getPolygon: d => d.polygon,
+                getFillColor: d => d.color,
+                getLineColor: [80, 80, 80],
+                getElevation: d => d.height,
+                extruded: true,
+                elevationScale: 10,
+                lineWidthMinPixels: 1
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## TextLayer
+
+Renders text labels at geographic coordinates.
 
 ```julia
-using DeckGL
+cities = (
+    lng = [-122.4, -122.45, -122.35],
+    lat = [37.8, 37.75, 37.85],
+    name = ["Downtown", "South Bay", "North Bay"]
+)
 
-# Generate random earthquake-like data
+layer = TextLayer(
+    data = cities,
+    get_position = [:lng, :lat],
+    get_text = :name,
+    get_size = 20,
+    get_color = [0, 0, 0]
+)
+```
+
+```{=html}
+<div id="text-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const data = [
+        {position: [-122.4, 37.8], text: 'Downtown SF', size: 20},
+        {position: [-122.45, 37.75], text: 'Daly City', size: 16},
+        {position: [-122.35, 37.85], text: 'Berkeley', size: 16},
+        {position: [-122.42, 37.77], text: 'Mission', size: 14},
+        {position: [-122.38, 37.82], text: 'Marina', size: 14}
+    ];
+
+    new deck.DeckGL({
+        container: 'text-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.8,
+            zoom: 11
+        },
+        controller: true,
+        layers: [
+            new deck.ScatterplotLayer({
+                id: 'points',
+                data: data,
+                getPosition: d => d.position,
+                getRadius: 100,
+                getFillColor: [255, 0, 0, 200],
+                radiusMinPixels: 5
+            }),
+            new deck.TextLayer({
+                id: 'text',
+                data: data,
+                getPosition: d => d.position,
+                getText: d => d.text,
+                getSize: d => d.size,
+                getColor: [0, 0, 0, 255],
+                getPixelOffset: [0, -20],
+                fontFamily: 'Arial, sans-serif',
+                fontWeight: 'bold'
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## HexagonLayer
+
+Aggregates points into hexagonal bins. Height represents density or aggregated values.
+
+```julia
+# Generate random point data
 n = 5000
-earthquakes = (
-    lng = -122.4 .+ 0.2 .* randn(n),
-    lat = 37.8 .+ 0.2 .* randn(n),
-    magnitude = 1 .+ 4 .* rand(n)
+points = (
+    lng = -122.4 .+ 0.1 .* randn(n),
+    lat = 37.8 .+ 0.1 .* randn(n),
+    value = rand(n)
 )
 
 layer = HexagonLayer(
-    data = earthquakes,
+    data = points,
     get_position = [:lng, :lat],
-    get_elevation_weight = :magnitude,
-    radius = 500,
+    radius = 200,
     elevation_scale = 50,
-    elevation_range = [0, 500],
-    extruded = true,
-    coverage = 0.9,
-    pickable = true
+    extruded = true
 )
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -122.4,
-        latitude = 37.8,
-        zoom = 11,
-        pitch = 45,
-        bearing = 15
-    )
-)
-
-open_html(deck)
 ```
 
-## Density Heatmap
+```{=html}
+<div id="hexagon-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    // Generate random clustered data
+    const data = [];
+    const clusters = [
+        [-122.4, 37.8, 500],
+        [-122.45, 37.75, 300],
+        [-122.35, 37.82, 400]
+    ];
 
-Visualize point density.
+    clusters.forEach(([cx, cy, count]) => {
+        for (let i = 0; i < count; i++) {
+            data.push({
+                position: [
+                    cx + (Math.random() - 0.5) * 0.05,
+                    cy + (Math.random() - 0.5) * 0.05
+                ]
+            });
+        }
+    });
+
+    new deck.DeckGL({
+        container: 'hexagon-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.8,
+            zoom: 11,
+            pitch: 45,
+            bearing: 15
+        },
+        controller: true,
+        layers: [
+            new deck.HexagonLayer({
+                id: 'hexagons',
+                data: data,
+                getPosition: d => d.position,
+                radius: 200,
+                elevationScale: 50,
+                elevationRange: [0, 500],
+                extruded: true,
+                coverage: 0.9,
+                colorRange: [
+                    [255, 255, 178],
+                    [254, 217, 118],
+                    [254, 178, 76],
+                    [253, 141, 60],
+                    [240, 59, 32],
+                    [189, 0, 38]
+                ]
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## GridLayer
+
+Similar to HexagonLayer but uses rectangular grid cells.
 
 ```julia
-using DeckGL
+points = (
+    lng = -122.4 .+ 0.1 .* randn(n),
+    lat = 37.8 .+ 0.1 .* randn(n)
+)
 
-# Generate clustered data
-n = 10000
-clusters = [
-    (-122.4, 37.8, 3000),   # Downtown SF
-    (-122.45, 37.75, 2000), # South
-    (-122.35, 37.85, 1500)  # North
-]
+layer = GridLayer(
+    data = points,
+    get_position = [:lng, :lat],
+    cell_size = 200,
+    elevation_scale = 50,
+    extruded = true
+)
+```
 
-lng = Float64[]
-lat = Float64[]
-for (cx, cy, count) in clusters
-    append!(lng, cx .+ 0.02 .* randn(count))
-    append!(lat, cy .+ 0.02 .* randn(count))
-end
+```{=html}
+<div id="grid-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    // Generate random clustered data
+    const data = [];
+    for (let i = 0; i < 1000; i++) {
+        const cluster = Math.floor(Math.random() * 3);
+        const centers = [[-122.4, 37.8], [-122.45, 37.76], [-122.35, 37.83]];
+        data.push({
+            position: [
+                centers[cluster][0] + (Math.random() - 0.5) * 0.04,
+                centers[cluster][1] + (Math.random() - 0.5) * 0.04
+            ]
+        });
+    }
 
-data = (lng = lng, lat = lat)
+    new deck.DeckGL({
+        container: 'grid-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.8,
+            zoom: 11,
+            pitch: 45,
+            bearing: -15
+        },
+        controller: true,
+        layers: [
+            new deck.GridLayer({
+                id: 'grid',
+                data: data,
+                getPosition: d => d.position,
+                cellSize: 200,
+                elevationScale: 50,
+                elevationRange: [0, 300],
+                extruded: true,
+                coverage: 0.9,
+                colorRange: [
+                    [255, 255, 204],
+                    [199, 233, 180],
+                    [127, 205, 187],
+                    [65, 182, 196],
+                    [44, 127, 184],
+                    [37, 52, 148]
+                ]
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## HeatmapLayer
+
+Renders a smooth density heatmap. Great for visualizing point density.
+
+```julia
+incidents = (
+    lng = -122.4 .+ 0.1 .* randn(10000),
+    lat = 37.8 .+ 0.1 .* randn(10000)
+)
 
 layer = HeatmapLayer(
-    data = data,
+    data = incidents,
     get_position = [:lng, :lat],
     radius_pixels = 30,
     intensity = 1,
     threshold = 0.03
 )
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -122.4,
-        latitude = 37.8,
-        zoom = 12
-    )
-)
-
-open_html(deck)
 ```
 
-## City Labels
+```{=html}
+<div id="heatmap-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    // Generate random clustered data for heatmap
+    const data = [];
+    const clusters = [
+        [-122.41, 37.79, 2000],
+        [-122.43, 37.77, 1500],
+        [-122.38, 37.81, 1200],
+        [-122.45, 37.75, 800]
+    ];
 
-Add text labels to a map.
+    clusters.forEach(([cx, cy, count]) => {
+        for (let i = 0; i < count; i++) {
+            data.push({
+                position: [
+                    cx + (Math.random() - 0.5) * 0.03,
+                    cy + (Math.random() - 0.5) * 0.03
+                ],
+                weight: Math.random()
+            });
+        }
+    });
+
+    new deck.DeckGL({
+        container: 'heatmap-container',
+        initialViewState: {
+            longitude: -122.41,
+            latitude: 37.78,
+            zoom: 12
+        },
+        controller: true,
+        layers: [
+            new deck.HeatmapLayer({
+                id: 'heatmap',
+                data: data,
+                getPosition: d => d.position,
+                getWeight: d => d.weight,
+                radiusPixels: 40,
+                intensity: 1,
+                threshold: 0.03,
+                colorRange: [
+                    [0, 0, 255, 0],
+                    [0, 0, 255, 255],
+                    [0, 255, 0, 255],
+                    [255, 255, 0, 255],
+                    [255, 0, 0, 255]
+                ]
+            })
+        ]
+    });
+})();
+</script>
+```
+
+## GeoJsonLayer
+
+Renders GeoJSON data including points, lines, and polygons.
 
 ```julia
-using DeckGL
-
-cities = (
-    lng = [-122.4, -73.9, -87.6, -118.2, -95.4],
-    lat = [37.8, 40.7, 41.9, 34.0, 29.8],
-    name = ["San Francisco", "New York", "Chicago", "Los Angeles", "Houston"],
-    population = [883305, 8336817, 2693976, 3979576, 2320268]
+geojson_data = Dict(
+    "type" => "FeatureCollection",
+    "features" => [
+        Dict(
+            "type" => "Feature",
+            "geometry" => Dict(
+                "type" => "Polygon",
+                "coordinates" => [[[-122.4, 37.8], ...]]
+            ),
+            "properties" => Dict("name" => "Region A")
+        )
+    ]
 )
 
-# Scatter layer for points
-scatter_layer = ScatterplotLayer(
-    data = cities,
-    get_position = [:lng, :lat],
-    get_radius = 50000,
-    get_fill_color = [255, 0, 0, 200]
+layer = GeoJsonLayer(
+    data = geojson_data,
+    get_fill_color = [255, 0, 0, 100],
+    get_line_color = [255, 0, 0, 255]
 )
+```
 
-# Text layer for labels
-text_layer = TextLayer(
-    data = cities,
-    get_position = [:lng, :lat],
-    get_text = :name,
-    get_size = 16,
-    get_color = [0, 0, 0, 255],
-    get_pixel_offset = [0, -20],
-    font_family = "Arial, sans-serif"
-)
+```{=html}
+<div id="geojson-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const geojsonData = {
+        type: 'FeatureCollection',
+        features: [
+            {
+                type: 'Feature',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[
+                        [-122.45, 37.78],
+                        [-122.43, 37.75],
+                        [-122.40, 37.76],
+                        [-122.41, 37.79],
+                        [-122.45, 37.78]
+                    ]]
+                },
+                properties: { name: 'Region A', value: 100 }
+            },
+            {
+                type: 'Feature',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[
+                        [-122.40, 37.82],
+                        [-122.38, 37.80],
+                        [-122.35, 37.81],
+                        [-122.36, 37.84],
+                        [-122.40, 37.82]
+                    ]]
+                },
+                properties: { name: 'Region B', value: 150 }
+            },
+            {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [
+                        [-122.45, 37.78],
+                        [-122.42, 37.80],
+                        [-122.40, 37.82]
+                    ]
+                },
+                properties: { name: 'Route 1' }
+            },
+            {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [-122.42, 37.78]
+                },
+                properties: { name: 'Point A' }
+            },
+            {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [-122.37, 37.82]
+                },
+                properties: { name: 'Point B' }
+            }
+        ]
+    };
 
-deck = Deck(
-    [scatter_layer, text_layer],
-    initial_view_state = ViewState(
-        longitude = -98,
-        latitude = 39,
-        zoom = 4
-    )
-)
-
-open_html(deck)
+    new deck.DeckGL({
+        container: 'geojson-container',
+        initialViewState: {
+            longitude: -122.4,
+            latitude: 37.79,
+            zoom: 12
+        },
+        controller: true,
+        layers: [
+            new deck.GeoJsonLayer({
+                id: 'geojson',
+                data: geojsonData,
+                filled: true,
+                stroked: true,
+                getFillColor: f => {
+                    if (f.geometry.type === 'Polygon') {
+                        return [255, 140, 0, 150];
+                    }
+                    return [255, 0, 0, 200];
+                },
+                getLineColor: [0, 0, 0, 200],
+                getLineWidth: 2,
+                getPointRadius: 200,
+                lineWidthMinPixels: 2,
+                pointRadiusMinPixels: 5
+            })
+        ]
+    });
+})();
+</script>
 ```
 
 ## Multiple Layers
 
-Combine different layer types.
+Combine multiple layer types in a single visualization.
 
 ```julia
-using DeckGL
-
-# Points
-points = (
-    lng = [-122.4, -122.45, -122.35],
-    lat = [37.8, 37.75, 37.85],
-    size = [200, 150, 180]
-)
-
-# Connections
-connections = (
-    src_lng = [-122.4, -122.4],
-    src_lat = [37.8, 37.8],
-    dst_lng = [-122.45, -122.35],
-    dst_lat = [37.75, 37.85]
-)
-
-# Labels
-labels = (
-    lng = [-122.4, -122.45, -122.35],
-    lat = [37.8, 37.75, 37.85],
-    name = ["HQ", "Office A", "Office B"]
-)
-
-layers = [
-    # Lines first (background)
-    LineLayer(
-        data = connections,
-        get_source_position = [:src_lng, :src_lat],
-        get_target_position = [:dst_lng, :dst_lat],
-        get_color = [100, 100, 100, 200],
-        get_width = 2
-    ),
-    # Points on top
-    ScatterplotLayer(
-        data = points,
-        get_position = [:lng, :lat],
-        get_radius = :size,
-        get_fill_color = [0, 128, 255, 200]
-    ),
-    # Labels on top
-    TextLayer(
-        data = labels,
-        get_position = [:lng, :lat],
-        get_text = :name,
-        get_size = 14,
-        get_color = [0, 0, 0],
-        get_pixel_offset = [0, -25]
-    )
-]
-
-deck = Deck(
-    layers,
-    initial_view_state = ViewState(
-        longitude = -122.4,
-        latitude = 37.8,
-        zoom = 12
-    )
-)
-
-open_html(deck)
+deck = Deck([
+    ScatterplotLayer(data=points, ...),
+    TextLayer(data=labels, ...),
+    PathLayer(data=routes, ...)
+])
 ```
 
-## GeoJSON from URL
+```{=html}
+<div id="multi-container" style="width: 100%; height: 400px; position: relative;"></div>
+<script>
+(function() {
+    const cities = [
+        {position: [-122.4, 37.8], name: 'San Francisco', size: 300},
+        {position: [-122.27, 37.87], name: 'Berkeley', size: 200},
+        {position: [-122.22, 37.77], name: 'Oakland', size: 250}
+    ];
 
-Load and display GeoJSON data from a URL.
+    const routes = [
+        {path: [[-122.4, 37.8], [-122.35, 37.82], [-122.27, 37.87]]},
+        {path: [[-122.4, 37.8], [-122.32, 37.78], [-122.22, 37.77]]},
+        {path: [[-122.27, 37.87], [-122.25, 37.82], [-122.22, 37.77]]}
+    ];
 
-```julia
-using DeckGL
-
-# US states GeoJSON (example URL)
-layer = GeoJsonLayer(
-    data = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",
-    filled = true,
-    stroked = true,
-    get_fill_color = [200, 200, 255, 100],
-    get_line_color = [0, 0, 128, 255],
-    get_line_width = 2,
-    line_width_min_pixels = 1,
-    pickable = true
-)
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -98,
-        latitude = 39,
-        zoom = 4
-    )
-)
-
-open_html(deck)
-```
-
-## Using Convenience Functions
-
-Quick visualizations with minimal code.
-
-```julia
-using DeckGL
-
-# Generate data
-n = 1000
-data = (
-    lng = -122.4 .+ 0.1 .* randn(n),
-    lat = 37.8 .+ 0.1 .* randn(n),
-    value = rand(n) .* 100
-)
-
-# One-liner visualizations
-scatter(data, :lng, :lat, radius=:value, color=[255, 0, 0]) |> open_html
-
-heatmap(data, :lng, :lat, weight=:value) |> open_html
-
-hexbin(data, :lng, :lat, elevation_weight=:value, radius=300) |> open_html
-```
-
-## Working with DataFrames
-
-DeckGL.jl works seamlessly with DataFrames.
-
-```julia
-using DeckGL
-using DataFrames
-
-# Create a DataFrame
-df = DataFrame(
-    longitude = [-122.4, -122.5, -122.3, -122.45],
-    latitude = [37.8, 37.7, 37.9, 37.75],
-    category = ["A", "B", "A", "B"],
-    value = [100, 200, 150, 180]
-)
-
-# Use DataFrame directly
-layer = ScatterplotLayer(
-    data = df,
-    get_position = [:longitude, :latitude],
-    get_radius = :value,
-    get_fill_color = [255, 140, 0, 200]
-)
-
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(
-        longitude = -122.4,
-        latitude = 37.8,
-        zoom = 11
-    )
-)
-
-open_html(deck)
+    new deck.DeckGL({
+        container: 'multi-container',
+        initialViewState: {
+            longitude: -122.32,
+            latitude: 37.82,
+            zoom: 11
+        },
+        controller: true,
+        layers: [
+            new deck.PathLayer({
+                id: 'routes',
+                data: routes,
+                getPath: d => d.path,
+                getColor: [100, 100, 100, 150],
+                getWidth: 3,
+                capRounded: true
+            }),
+            new deck.ScatterplotLayer({
+                id: 'cities',
+                data: cities,
+                getPosition: d => d.position,
+                getRadius: d => d.size,
+                getFillColor: [0, 128, 255, 200],
+                radiusMinPixels: 10
+            }),
+            new deck.TextLayer({
+                id: 'labels',
+                data: cities,
+                getPosition: d => d.position,
+                getText: d => d.name,
+                getSize: 16,
+                getColor: [0, 0, 0],
+                getPixelOffset: [0, -30],
+                fontWeight: 'bold'
+            })
+        ]
+    });
+})();
+</script>
 ```
