@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'docs/**'
+      - 'src/**'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
@@ -24,6 +25,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+
+      - name: Install IJulia and register kernel
+        run: |
+          julia -e '
+            using Pkg
+            Pkg.add("IJulia")
+            using IJulia
+            installkernel("Julia")
+          '
+
+      - name: Install DeckGL.jl
+        run: |
+          julia -e '
+            using Pkg
+            Pkg.develop(path=".")
+            Pkg.instantiate()
+          '
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
