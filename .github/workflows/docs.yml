@@ -31,6 +31,20 @@ jobs:
         with:
           version: '1.12'
 
+      - name: Setup Python and Jupyter
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install jupyter nbformat nbclient
+
+      - name: Install IJulia kernel
+        run: |
+          julia -e '
+            using Pkg
+            Pkg.add("IJulia")
+            using IJulia
+            installkernel("Julia")
+          '
+
       - name: Install DeckGL.jl
         run: |
           julia -e '
