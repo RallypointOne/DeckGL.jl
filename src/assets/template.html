@@ -18,14 +18,26 @@
             height: {{HEIGHT}};
             position: relative;
         }
-        #deck-canvas {
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+        }
+        #deck-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <div id="deck-container">
+        <div id="map"></div>
         <canvas id="deck-canvas"></canvas>
     </div>
     <script>
@@ -69,23 +81,45 @@
         // Create layers
         const layers = spec.layers.map(processLayer).filter(l => l !== null);
 
-        // Build deck.gl configuration
-        const deckConfig = {
-            container: 'deck-container',
-            initialViewState: spec.initialViewState,
-            controller: spec.controller,
-            layers: layers,
-            getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
-        };
-
-        // Add map style if specified (requires MapLibre GL)
+        // Check if we have a map style
         if (spec.mapStyle) {
-            deckConfig.mapStyle = spec.mapStyle;
-            deckConfig.mapLib = maplibregl;
-        }
+            // Create MapLibre map first
+            const map = new maplibregl.Map({
+                container: 'map',
+                style: spec.mapStyle,
+                center: [spec.initialViewState.longitude, spec.initialViewState.latitude],
+                zoom: spec.initialViewState.zoom,
+                pitch: spec.initialViewState.pitch || 0,
+                bearing: spec.initialViewState.bearing || 0,
+                interactive: false  // deck.gl will handle interaction
+            });
 
-        // Initialize deck.gl
-        new deck.DeckGL(deckConfig);
+            // Create deck.gl overlay
+            const deckgl = new deck.DeckGL({
+                canvas: 'deck-canvas',
+                initialViewState: spec.initialViewState,
+                controller: spec.controller,
+                layers: layers,
+                getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null,
+                onViewStateChange: ({viewState}) => {
+                    map.jumpTo({
+                        center: [viewState.longitude, viewState.latitude],
+                        zoom: viewState.zoom,
+                        pitch: viewState.pitch,
+                        bearing: viewState.bearing
+                    });
+                }
+            });
+        } else {
+            // No base map - use simple deck.gl setup
+            new deck.DeckGL({
+                container: 'deck-container',
+                initialViewState: spec.initialViewState,
+                controller: spec.controller,
+                layers: layers,
+                getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
+            });
+        }
     </script>
 </body>
 </html>
