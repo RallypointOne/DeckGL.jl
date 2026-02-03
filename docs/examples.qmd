@@ -374,3 +374,64 @@ label_layer = TextLayer(
 
 Deck([path_layer, scatter_layer, label_layer], initial_view_state = ViewState(longitude=-122.32, latitude=37.82, zoom=11))
 ```
+
+## Base Maps
+
+Add a base map using the `map_style` parameter. DeckGL.jl supports any MapLibre-compatible tile source. Here are some free options:
+
+- **OpenStreetMap**: `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`
+- **CartoDB Dark**: `https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json`
+- **CartoDB Voyager**: `https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`
+
+```{julia}
+airports = (
+    lng = [-122.38, -73.78, -87.90, -118.41, -84.43],
+    lat = [37.62, 40.64, 41.98, 33.94, 33.64],
+    name = ["SFO", "JFK", "ORD", "LAX", "ATL"],
+    passengers = [50, 60, 80, 85, 110]  # millions
+)
+
+layer = ScatterplotLayer(
+    data = airports,
+    get_position = [:lng, :lat],
+    get_radius = :passengers,
+    get_fill_color = [255, 0, 80, 180],
+    radius_scale = 5000,
+    radius_min_pixels = 5,
+    pickable = true
+)
+
+Deck(
+    layer,
+    initial_view_state = ViewState(longitude=-98, latitude=38, zoom=3.5, pitch=0),
+    map_style = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+)
+```
+
+### Dark Theme Base Map
+
+The dark matter style works well for visualizations with bright colors.
+
+```{julia}
+earthquakes = (
+    lng = [-122.0, -121.5, -117.5, -116.0, -118.2, -119.5, -122.5, -120.0],
+    lat = [37.0, 36.5, 34.0, 33.5, 34.2, 35.0, 38.0, 35.5],
+    magnitude = [3.2, 4.1, 5.5, 3.8, 4.5, 3.0, 4.8, 3.5]
+)
+
+layer = ScatterplotLayer(
+    data = earthquakes,
+    get_position = [:lng, :lat],
+    get_radius = :magnitude,
+    get_fill_color = [255, 200, 0, 200],
+    radius_scale = 20000,
+    radius_min_pixels = 3,
+    pickable = true
+)
+
+Deck(
+    layer,
+    initial_view_state = ViewState(longitude=-119, latitude=36, zoom=5.5),
+    map_style = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+)
+```

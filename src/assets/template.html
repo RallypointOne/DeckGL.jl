@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeckGL Visualization</title>
     <script src="https://unpkg.com/deck.gl@9.0.16/dist.min.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
         body {
             margin: 0;
@@ -67,14 +69,23 @@
         // Create layers
         const layers = spec.layers.map(processLayer).filter(l => l !== null);
 
-        // Initialize deck.gl
-        new deck.DeckGL({
+        // Build deck.gl configuration
+        const deckConfig = {
             container: 'deck-container',
             initialViewState: spec.initialViewState,
             controller: spec.controller,
             layers: layers,
             getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
-        });
+        };
+
+        // Add map style if specified (requires MapLibre GL)
+        if (spec.mapStyle) {
+            deckConfig.mapStyle = spec.mapStyle;
+            deckConfig.mapLib = maplibregl;
+        }
+
+        // Initialize deck.gl
+        new deck.DeckGL(deckConfig);
     </script>
 </body>
 </html>
