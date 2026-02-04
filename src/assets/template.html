@@ -25,20 +25,19 @@
             width: 100%;
             height: 100%;
         }
-        #deck-canvas {
+        #deck-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <div id="deck-container">
         <div id="map"></div>
-        <canvas id="deck-canvas"></canvas>
+        <canvas id="deck-overlay"></canvas>
     </div>
     <script>
         const spec = {{SPEC_JSON}};
@@ -95,8 +94,8 @@
             });
 
             // Create deck.gl overlay
-            const deckgl = new deck.DeckGL({
-                canvas: 'deck-canvas',
+            new deck.DeckGL({
+                canvas: 'deck-overlay',
                 initialViewState: spec.initialViewState,
                 controller: spec.controller,
                 layers: layers,
@@ -111,7 +110,10 @@
                 }
             });
         } else {
-            // No base map - use simple deck.gl setup
+            // No base map - hide the map div and use deck.gl directly
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('deck-overlay').style.display = 'none';
+
             new deck.DeckGL({
                 container: 'deck-container',
                 initialViewState: spec.initialViewState,
