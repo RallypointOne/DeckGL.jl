@@ -33,6 +33,9 @@ end
 accessor(val::Symbol) = "@@=$val"
 accessor(val) = val
 
+# Filter out nothing values from a dict (deck.gl doesn't handle null)
+filter_nothing(d::Dict) = Dict(k => v for (k, v) in d if v !== nothing)
+
 # Handle position accessor from one or two columns
 function process_position!(data_rows, pos::Vector{Symbol}, field::Symbol)
     col1, col2 = pos
@@ -85,7 +88,7 @@ function layer_to_dict(layer::ScatterplotLayer)
         layer.get_line_width
     end
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -107,7 +110,7 @@ function layer_to_dict(layer::ScatterplotLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::ArcLayer)
@@ -116,7 +119,7 @@ function layer_to_dict(layer::ArcLayer)
     get_source_position = process_position!(data_rows, layer.get_source_position, :_sourcePosition)
     get_target_position = process_position!(data_rows, layer.get_target_position, :_targetPosition)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -135,7 +138,7 @@ function layer_to_dict(layer::ArcLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::LineLayer)
@@ -144,7 +147,7 @@ function layer_to_dict(layer::LineLayer)
     get_source_position = process_position!(data_rows, layer.get_source_position, :_sourcePosition)
     get_target_position = process_position!(data_rows, layer.get_target_position, :_targetPosition)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -159,13 +162,13 @@ function layer_to_dict(layer::LineLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::PathLayer)
     data_rows = table_to_rows(layer.data)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -183,13 +186,13 @@ function layer_to_dict(layer::PathLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::PolygonLayer)
     data_rows = table_to_rows(layer.data)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -212,7 +215,7 @@ function layer_to_dict(layer::PolygonLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::TextLayer)
@@ -220,7 +223,7 @@ function layer_to_dict(layer::TextLayer)
 
     get_position = process_position!(data_rows, layer.get_position, :_position)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -246,7 +249,7 @@ function layer_to_dict(layer::TextLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::HexagonLayer)
@@ -254,7 +257,7 @@ function layer_to_dict(layer::HexagonLayer)
 
     get_position = process_position!(data_rows, layer.get_position, :_position)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -274,7 +277,7 @@ function layer_to_dict(layer::HexagonLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::GridLayer)
@@ -282,7 +285,7 @@ function layer_to_dict(layer::GridLayer)
 
     get_position = process_position!(data_rows, layer.get_position, :_position)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -302,7 +305,7 @@ function layer_to_dict(layer::GridLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::HeatmapLayer)
@@ -310,7 +313,7 @@ function layer_to_dict(layer::HeatmapLayer)
 
     get_position = process_position!(data_rows, layer.get_position, :_position)
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
@@ -326,7 +329,7 @@ function layer_to_dict(layer::HeatmapLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 function layer_to_dict(layer::GeoJsonLayer)
@@ -342,7 +345,7 @@ function layer_to_dict(layer::GeoJsonLayer)
         layer.data
     end
 
-    Dict{String,Any}(
+    filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data,
@@ -371,7 +374,7 @@ function layer_to_dict(layer::GeoJsonLayer)
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
-    )
+    ))
 end
 
 #-----------------------------------------------------------------------------# ViewState JSON
