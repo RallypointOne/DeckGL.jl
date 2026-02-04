@@ -110,12 +110,12 @@
                 }
             });
         } else {
-            // No base map - hide the map div and use deck.gl directly
-            document.getElementById('map').style.display = 'none';
-            document.getElementById('deck-overlay').style.display = 'none';
+            // No base map - remove the map elements and use deck.gl directly
+            const container = document.getElementById('deck-container');
+            container.innerHTML = '';
 
             new deck.DeckGL({
-                container: 'deck-container',
+                container: container,
                 initialViewState: spec.initialViewState,
                 controller: spec.controller,
                 layers: layers,
