@@ -7,31 +7,13 @@ function table_to_rows(data)
     return [Dict{Symbol,Any}(pairs(row)) for row in rows]
 end
 
-# Convert accessor specification to deck.gl format
-# - Symbol :col -> "@@=row.col" (accessor function)
-# - Vector{Symbol} [:lng, :lat] -> positions embedded in data
-# - Literal values pass through
-function convert_accessor(val, data_rows, accessor_name)
-    if val isa Symbol
-        # Data-driven accessor: reference column directly
-        return "@@=properties.$val"
-    elseif val isa Vector{Symbol} && length(val) == 2
-        # Position accessor from two columns: embed in data as coordinates
-        col1, col2 = val
-        for row in data_rows
-            row[:coordinates] = [row[col1], row[col2]]
-            # Clean up original columns to reduce payload (optional)
-        end
-        return "@@=coordinates"
-    else
-        return val
-    end
-end
-
 #-----------------------------------------------------------------------------# Accessor Helpers
 # Convert a value or symbol accessor to deck.gl format
 accessor(val::Symbol) = "@@=$val"
 accessor(val) = val
+
+# Replace Inf with nothing (deck.gl doesn't handle Inf)
+clamp_inf(x) = x == Inf ? nothing : x
 
 # Filter out nothing values from a dict (deck.gl doesn't handle null)
 filter_nothing(d::Dict) = Dict(k => v for (k, v) in d if v !== nothing)
@@ -51,59 +33,24 @@ process_position!(data_rows, pos::Symbol, field::Symbol) = "@@=$pos"
 function layer_to_dict(layer::ScatterplotLayer)
     data_rows = table_to_rows(layer.data)
 
-    # Handle position accessor
-    get_position = if layer.get_position isa Vector{Symbol}
-        col1, col2 = layer.get_position
-        for row in data_rows
-            row[:_position] = [row[col1], row[col2]]
-        end
-        "@@=_position"
-    else
-        "@@=$(layer.get_position)"
-    end
-
-    # Handle radius accessor
-    get_radius = if layer.get_radius isa Symbol
-        "@@=$(layer.get_radius)"
-    else
-        layer.get_radius
-    end
-
-    # Handle color accessors
-    get_fill_color = if layer.get_fill_color isa Symbol
-        "@@=$(layer.get_fill_color)"
-    else
-        layer.get_fill_color
-    end
-
-    get_line_color = if layer.get_line_color isa Symbol
-        "@@=$(layer.get_line_color)"
-    else
-        layer.get_line_color
-    end
-
-    get_line_width = if layer.get_line_width isa Symbol
-        "@@=$(layer.get_line_width)"
-    else
-        layer.get_line_width
-    end
+    get_position = process_position!(data_rows, layer.get_position, :_position)
 
     filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
         "data" => data_rows,
         "getPosition" => get_position,
-        "getRadius" => get_radius,
-        "getFillColor" => get_fill_color,
-        "getLineColor" => get_line_color,
-        "getLineWidth" => get_line_width,
+        "getRadius" => accessor(layer.get_radius),
+        "getFillColor" => accessor(layer.get_fill_color),
+        "getLineColor" => accessor(layer.get_line_color),
+        "getLineWidth" => accessor(layer.get_line_width),
         "radiusScale" => layer.radius_scale,
         "radiusMinPixels" => layer.radius_min_pixels,
-        "radiusMaxPixels" => layer.radius_max_pixels == Inf ? nothing : layer.radius_max_pixels,
+        "radiusMaxPixels" => clamp_inf(layer.radius_max_pixels),
         "lineWidthUnits" => layer.line_width_units,
         "lineWidthScale" => layer.line_width_scale,
         "lineWidthMinPixels" => layer.line_width_min_pixels,
-        "lineWidthMaxPixels" => layer.line_width_max_pixels == Inf ? nothing : layer.line_width_max_pixels,
+        "lineWidthMaxPixels" => clamp_inf(layer.line_width_max_pixels),
         "stroked" => layer.stroked,
         "filled" => layer.filled,
         "billboard" => layer.billboard,
@@ -134,7 +81,7 @@ function layer_to_dict(layer::ArcLayer)
         "widthUnits" => layer.width_units,
         "widthScale" => layer.width_scale,
         "widthMinPixels" => layer.width_min_pixels,
-        "widthMaxPixels" => layer.width_max_pixels == Inf ? nothing : layer.width_max_pixels,
+        "widthMaxPixels" => clamp_inf(layer.width_max_pixels),
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
@@ -158,7 +105,7 @@ function layer_to_dict(layer::LineLayer)
         "widthUnits" => layer.width_units,
         "widthScale" => layer.width_scale,
         "widthMinPixels" => layer.width_min_pixels,
-        "widthMaxPixels" => layer.width_max_pixels == Inf ? nothing : layer.width_max_pixels,
+        "widthMaxPixels" => clamp_inf(layer.width_max_pixels),
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
@@ -178,7 +125,7 @@ function layer_to_dict(layer::PathLayer)
         "widthUnits" => layer.width_units,
         "widthScale" => layer.width_scale,
         "widthMinPixels" => layer.width_min_pixels,
-        "widthMaxPixels" => layer.width_max_pixels == Inf ? nothing : layer.width_max_pixels,
+        "widthMaxPixels" => clamp_inf(layer.width_max_pixels),
         "capRounded" => layer.cap_rounded,
         "jointRounded" => layer.joint_rounded,
         "billboard" => layer.billboard,
@@ -209,7 +156,7 @@ function layer_to_dict(layer::PolygonLayer)
         "lineWidthUnits" => layer.line_width_units,
         "lineWidthScale" => layer.line_width_scale,
         "lineWidthMinPixels" => layer.line_width_min_pixels,
-        "lineWidthMaxPixels" => layer.line_width_max_pixels == Inf ? nothing : layer.line_width_max_pixels,
+        "lineWidthMaxPixels" => clamp_inf(layer.line_width_max_pixels),
         "lineJointRounded" => layer.line_joint_rounded,
         "lineMiterLimit" => layer.line_miter_limit,
         "opacity" => layer.opacity,
@@ -245,7 +192,7 @@ function layer_to_dict(layer::TextLayer)
         "sizeScale" => layer.size_scale,
         "sizeUnits" => layer.size_units,
         "sizeMinPixels" => layer.size_min_pixels,
-        "sizeMaxPixels" => layer.size_max_pixels == Inf ? nothing : layer.size_max_pixels,
+        "sizeMaxPixels" => clamp_inf(layer.size_max_pixels),
         "opacity" => layer.opacity,
         "pickable" => layer.pickable,
         "visible" => layer.visible,
@@ -333,22 +280,10 @@ function layer_to_dict(layer::HeatmapLayer)
 end
 
 function layer_to_dict(layer::GeoJsonLayer)
-    # GeoJSON data can be Dict, String (JSON), or URL
-    data = if layer.data isa AbstractString
-        # URL or JSON string - pass through
-        layer.data
-    elseif layer.data isa Dict
-        # Already a Dict - pass through
-        layer.data
-    else
-        # Try to convert via JSON3
-        layer.data
-    end
-
     filter_nothing(Dict{String,Any}(
         "@@type" => layer_type(layer),
         "id" => layer.id,
-        "data" => data,
+        "data" => layer.data,
         "filled" => layer.filled,
         "stroked" => layer.stroked,
         "extruded" => layer.extruded,
@@ -360,12 +295,12 @@ function layer_to_dict(layer::GeoJsonLayer)
         "pointRadiusUnits" => layer.point_radius_units,
         "pointRadiusScale" => layer.point_radius_scale,
         "pointRadiusMinPixels" => layer.point_radius_min_pixels,
-        "pointRadiusMaxPixels" => layer.point_radius_max_pixels == Inf ? nothing : layer.point_radius_max_pixels,
+        "pointRadiusMaxPixels" => clamp_inf(layer.point_radius_max_pixels),
         "getLineWidth" => accessor(layer.get_line_width),
         "lineWidthUnits" => layer.line_width_units,
         "lineWidthScale" => layer.line_width_scale,
         "lineWidthMinPixels" => layer.line_width_min_pixels,
-        "lineWidthMaxPixels" => layer.line_width_max_pixels == Inf ? nothing : layer.line_width_max_pixels,
+        "lineWidthMaxPixels" => clamp_inf(layer.line_width_max_pixels),
         "lineJointRounded" => layer.line_joint_rounded,
         "lineCapRounded" => layer.line_cap_rounded,
         "lineMiterLimit" => layer.line_miter_limit,

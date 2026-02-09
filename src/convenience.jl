@@ -187,6 +187,20 @@ function paths(data, path_col::Symbol;
     rounded = false,
     kwargs...
 )
+    # Compute center from first point of each path
+    rows = Tables.rowtable(data)
+    lngs = Float64[]
+    lats = Float64[]
+    for row in rows
+        path = row[path_col]
+        if !isempty(path)
+            push!(lngs, first(path)[1])
+            push!(lats, first(path)[2])
+        end
+    end
+    center_lng = isempty(lngs) ? 0.0 : sum(lngs) / length(lngs)
+    center_lat = isempty(lats) ? 0.0 : sum(lats) / length(lats)
+
     layer = PathLayer(;
         data = data,
         get_path = path_col,
@@ -198,7 +212,11 @@ function paths(data, path_col::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(zoom = zoom))
+    Deck(layer, initial_view_state = ViewState(
+        longitude = center_lng,
+        latitude = center_lat,
+        zoom = zoom
+    ))
 end
 
 """
@@ -226,6 +244,23 @@ function polygons(data, polygon_col::Symbol;
     zoom = 10,
     kwargs...
 )
+    # Compute center from first vertex of each polygon's outer ring
+    rows = Tables.rowtable(data)
+    lngs = Float64[]
+    lats = Float64[]
+    for row in rows
+        poly = row[polygon_col]
+        if !isempty(poly)
+            ring = first(poly)
+            if !isempty(ring)
+                push!(lngs, first(ring)[1])
+                push!(lats, first(ring)[2])
+            end
+        end
+    end
+    center_lng = isempty(lngs) ? 0.0 : sum(lngs) / length(lngs)
+    center_lat = isempty(lats) ? 0.0 : sum(lats) / length(lats)
+
     layer = PolygonLayer(;
         data = data,
         get_polygon = polygon_col,
@@ -236,7 +271,11 @@ function polygons(data, polygon_col::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(zoom = zoom))
+    Deck(layer, initial_view_state = ViewState(
+        longitude = center_lng,
+        latitude = center_lat,
+        zoom = zoom
+    ))
 end
 
 """

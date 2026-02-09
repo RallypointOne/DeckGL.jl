@@ -22,7 +22,6 @@ Renders text labels at given coordinates.
 - `font_family::String`: Font family. Default: `"Monaco, monospace"`
 - `font_weight::Union{String,Int}`: Font weight. Default: `"normal"`
 - `line_height::Real`: Line height multiplier. Default: `1`
-- `font_settings::Dict`: Additional font settings. Default: `Dict()`
 - `billboard::Bool`: Always face camera. Default: `true`
 - `size_scale::Real`: Size multiplier. Default: `1`
 - `size_units::String`: Size units ("pixels" or "meters"). Default: `"pixels"`

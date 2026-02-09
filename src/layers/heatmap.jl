@@ -54,7 +54,7 @@ Base.@kwdef struct HeatmapLayer <: AbstractLayer
     get_weight::Union{Real,Symbol} = 1
 
     # Color gradient (default: transparent -> blue -> green -> yellow -> red)
-    color_range::Vector = [
+    color_range::Vector{<:AbstractVector{<:Integer}} = [
         [0, 0, 255, 0],
         [0, 0, 255, 255],
         [0, 255, 0, 255],

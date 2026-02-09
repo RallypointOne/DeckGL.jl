@@ -1,4 +1,4 @@
-const TEMPLATE_PATH = joinpath(@__DIR__, "assets", "template.html")
+const TEMPLATE = read(joinpath(@__DIR__, "assets", "template.html"), String)
 
 """
     to_html(deck::Deck; width="100%", height="500px") -> String
@@ -6,10 +6,9 @@ const TEMPLATE_PATH = joinpath(@__DIR__, "assets", "template.html")
 Generate a standalone HTML string for the deck.gl visualization.
 """
 function to_html(deck::Deck; width::String="100%", height::String="500px")
-    template = read(TEMPLATE_PATH, String)
     spec_json = to_json(deck)
 
-    html = replace(template,
+    html = replace(TEMPLATE,
         "{{SPEC_JSON}}" => spec_json,
         "{{WIDTH}}" => width,
         "{{HEIGHT}}" => height

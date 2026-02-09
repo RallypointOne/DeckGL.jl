@@ -1,3 +1,18 @@
+#-----------------------------------------------------------------------------# REPL display
+function Base.show(io::IO, layer::AbstractLayer)
+    T = typeof(layer)
+    ndata = Tables.istable(layer.data) ? length(Tables.rowtable(layer.data)) : "?"
+    print(io, nameof(T), "(", ndata, " rows)")
+end
+
+function Base.show(io::IO, deck::Deck)
+    n = length(deck.layers)
+    vs = deck.initial_view_state
+    print(io, "Deck(", n, " layer", n == 1 ? "" : "s")
+    print(io, ", center=(", round(vs.longitude; digits=4), ", ", round(vs.latitude; digits=4), ")")
+    print(io, ", zoom=", vs.zoom, ")")
+end
+
 #-----------------------------------------------------------------------------# MIME types
 # Jupyter notebooks and VS Code use text/html
 function Base.show(io::IO, ::MIME"text/html", deck::Deck)

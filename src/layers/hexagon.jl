@@ -69,7 +69,7 @@ Base.@kwdef struct HexagonLayer <: AbstractLayer
     elevation_aggregation::String = "SUM"
 
     # Color scale (default: yellow to red)
-    color_range::Vector = [
+    color_range::Vector{<:AbstractVector{<:Integer}} = [
         [255, 255, 178],
         [254, 217, 118],
         [254, 178, 76],

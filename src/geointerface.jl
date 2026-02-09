@@ -3,6 +3,17 @@
 
 import GeoInterface as GI
 
+# Extract coordinates from a point, including z if present
+function _point_coords(p)
+    try
+        if GI.is3d(p)
+            return [GI.x(p), GI.y(p), GI.z(p)]
+        end
+    catch
+    end
+    return [GI.x(p), GI.y(p)]
+end
+
 """
     to_geojson(geom) -> Dict
 
@@ -17,13 +28,13 @@ end
 function to_geojson(::GI.PointTrait, geom)
     Dict{String,Any}(
         "type" => "Point",
-        "coordinates" => [GI.x(geom), GI.y(geom)]
+        "coordinates" => _point_coords(geom)
     )
 end
 
 # MultiPoint
 function to_geojson(::GI.MultiPointTrait, geom)
-    coords = [[GI.x(p), GI.y(p)] for p in GI.getpoint(geom)]
+    coords = [_point_coords(p) for p in GI.getpoint(geom)]
     Dict{String,Any}(
         "type" => "MultiPoint",
         "coordinates" => coords
@@ -32,7 +43,7 @@ end
 
 # LineString
 function to_geojson(::GI.LineStringTrait, geom)
-    coords = [[GI.x(p), GI.y(p)] for p in GI.getpoint(geom)]
+    coords = [_point_coords(p) for p in GI.getpoint(geom)]
     Dict{String,Any}(
         "type" => "LineString",
         "coordinates" => coords
@@ -41,7 +52,7 @@ end
 
 # MultiLineString
 function to_geojson(::GI.MultiLineStringTrait, geom)
-    coords = [[[GI.x(p), GI.y(p)] for p in GI.getpoint(line)] for line in GI.getgeom(geom)]
+    coords = [[_point_coords(p) for p in GI.getpoint(line)] for line in GI.getgeom(geom)]
     Dict{String,Any}(
         "type" => "MultiLineString",
         "coordinates" => coords
@@ -52,7 +63,7 @@ end
 function to_geojson(::GI.PolygonTrait, geom)
     rings = []
     for ring in GI.getring(geom)
-        push!(rings, [[GI.x(p), GI.y(p)] for p in GI.getpoint(ring)])
+        push!(rings, [_point_coords(p) for p in GI.getpoint(ring)])
     end
     Dict{String,Any}(
         "type" => "Polygon",
@@ -66,7 +77,7 @@ function to_geojson(::GI.MultiPolygonTrait, geom)
     for poly in GI.getgeom(geom)
         rings = []
         for ring in GI.getring(poly)
-            push!(rings, [[GI.x(p), GI.y(p)] for p in GI.getpoint(ring)])
+            push!(rings, [_point_coords(p) for p in GI.getpoint(ring)])
         end
         push!(polygons, rings)
     end
