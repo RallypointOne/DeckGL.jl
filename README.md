@@ -1,11 +1,13 @@
-# DeckGL.jl
-
 [![CI](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml)
-[![Docs](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/docs.yml/badge.svg)](https://rallypointone.github.io/DeckGL.jl/)
+[![Docs Build](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/Docs.yml/badge.svg)](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/Docs.yml)
+[![Stable Docs](https://img.shields.io/badge/docs-stable-blue)](https://RallypointOne.github.io/DeckGL.jl/stable/)
+[![Dev Docs](https://img.shields.io/badge/docs-dev-blue)](https://RallypointOne.github.io/DeckGL.jl/dev/)
+
+# DeckGL.jl
 
 A Julia package for visualizing data using [deck.gl](https://deck.gl/), a WebGL-powered framework for visual exploratory data analysis of large datasets.
 
-**[Documentation](https://rallypointone.github.io/DeckGL.jl/)**
+**[Documentation](https://RallypointOne.github.io/DeckGL.jl/stable/)**
 
 ## Installation
 

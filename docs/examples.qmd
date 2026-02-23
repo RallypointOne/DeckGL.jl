@@ -7,8 +7,6 @@ Interactive examples demonstrating each DeckGL.jl layer type. Each visualization
 ```{julia}
 #| echo: false
 #| output: false
-using Pkg
-Pkg.activate("..")
 using DeckGL
 ```
 

@@ -1,64 +1,53 @@
 project:
-  type: website
+  type: book
   output-dir: _site
 
-website:
-  title: "DeckGL.jl"
-  description: "GPU-accelerated geospatial visualization for Julia"
-  repo-url: https://github.com/RallypointOne/DeckGL.jl
-  repo-actions: [edit, issue]
+engine: julia
+julia:
+  project: "."
 
+book:
+  title: "DeckGL.jl"
+  search:
+    location: sidebar
+    keyboard-shortcut:
+      - "/"
   navbar:
-    background: primary
-    left:
-      - href: index.qmd
-        text: Home
-      - href: getting-started.qmd
-        text: Getting Started
-      - href: layers.qmd
-        text: Layers
-      - href: api.qmd
-        text: API Reference
-      - href: examples.qmd
-        text: Examples
     right:
+      - icon: star
+        href: https://github.com/RallypointOne/DeckGL.jl/stargazers
+        text: "Star"
       - icon: github
         href: https://github.com/RallypointOne/DeckGL.jl
+  chapters:
+    - part: "Docs"
+      chapters:
+        - index.qmd
+        - getting-started.qmd
+        - layers.qmd
+        - examples.qmd
+    - part: "API"
+      chapters:
+        - api.qmd
+    - part: "Resources"
+      chapters:
+        - resources/benchmarks.qmd
+        - resources/changelog.qmd
+        - resources/coverage.qmd
 
-  sidebar:
-    style: docked
-    search: true
-    contents:
-      - section: "Guide"
-        contents:
-          - index.qmd
-          - getting-started.qmd
-      - section: "Layers"
-        contents:
-          - layers.qmd
-          - text: "Core Layers"
-            href: layers.qmd#core-layers
-          - text: "Aggregation Layers"
-            href: layers.qmd#aggregation-layers
-          - text: "Composite Layers"
-            href: layers.qmd#composite-layers
-      - section: "Reference"
-        contents:
-          - api.qmd
-          - examples.qmd
+  page-footer:
+    center: "Built on __BUILD_DATE__"
+
+language:
+  search-text-placeholder: "Search  (/)"
 
 format:
   html:
+    css: styles.css
+    number-sections: false
     theme:
       light: flatly
       dark: darkly
-    css: styles.css
-    toc: true
-    code-copy: true
-    code-overflow: wrap
-    highlight-style: github
-
-execute:
-  freeze: auto
-
-jupyter: julia-1.12
+    respect-user-color-scheme: true
+    include-after-body:
+      - file: _version-selector.html
