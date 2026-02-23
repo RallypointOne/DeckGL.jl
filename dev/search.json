@@ -1,0 +1,431 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "DeckGL.jl",
+    "section": "",
+    "text": "DeckGL.jl\nGPU-accelerated geospatial visualization for Julia\nDeckGL.jl is a Julia package for creating interactive, GPU-accelerated visualizations using deck.gl. It provides a simple, Julian API for rendering large-scale geospatial data in web browsers and notebooks.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#features",
+    "href": "index.html#features",
+    "title": "DeckGL.jl",
+    "section": "Features",
+    "text": "Features\n\n\nHigh Performance\nLeverages WebGL for GPU-accelerated rendering. Handle millions of data points with smooth pan, zoom, and rotate interactions.\n\n\nTables.jl Integration\nWorks seamlessly with DataFrames, NamedTuples, and any Tables.jl-compatible data source. Reference columns by symbol.\n\n\nMultiple Outputs\nDisplay in Jupyter notebooks, VS Code, Pluto.jl, or export as standalone HTML files that work in any browser.\n\n\nRich Layer Types\n10+ layer types including scatterplots, arcs, paths, polygons, hexagonal binning, heatmaps, and GeoJSON support.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#quick-example",
+    "href": "index.html#quick-example",
+    "title": "DeckGL.jl",
+    "section": "Quick Example",
+    "text": "Quick Example\nusing DeckGL\n\n# Any Tables.jl-compatible data works\ndata = (\n    longitude = [-122.4, -122.5, -122.3, -122.45],\n    latitude = [37.8, 37.7, 37.9, 37.75],\n    size = [100, 200, 150, 180]\n)\n\n# Create a scatterplot layer\nlayer = ScatterplotLayer(\n    data = data,\n    get_position = [:longitude, :latitude],\n    get_radius = :size,\n    get_fill_color = [255, 140, 0, 200]\n)\n\n# Create and display the visualization\ndeck = Deck(\n    layer,\n    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11)\n)\n\nopen_html(deck)  # Opens in browser\nOr use convenience functions for even simpler code:\nscatter(data, :longitude, :latitude, radius=:size, color=[255, 140, 0]) |&gt; open_html",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "DeckGL.jl",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/joshday/DeckGL.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#layer-types",
+    "href": "index.html#layer-types",
+    "title": "DeckGL.jl",
+    "section": "Layer Types",
+    "text": "Layer Types\nDeckGL.jl supports a variety of layer types for different visualization needs:\n\n\n\n\n\n\n\nCategory\nLayers\n\n\n\n\nCore\nScatterplotLayer, ArcLayer, LineLayer, PathLayer, PolygonLayer, TextLayer\n\n\nAggregation\nHexagonLayer, GridLayer, HeatmapLayer\n\n\nComposite\nGeoJsonLayer",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#next-steps",
+    "href": "index.html#next-steps",
+    "title": "DeckGL.jl",
+    "section": "Next Steps",
+    "text": "Next Steps\n\nGetting Started - Installation and first visualization\nLayers - Complete layer reference\nAPI Reference - Full API documentation\nExamples - Example gallery",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html",
+    "href": "getting-started.html",
+    "title": "Getting Started",
+    "section": "",
+    "text": "Installation\nThis guide will help you get up and running with DeckGL.jl.\nDeckGL.jl can be installed from GitHub:",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#installation",
+    "href": "getting-started.html#installation",
+    "title": "Getting Started",
+    "section": "",
+    "text": "using Pkg\nPkg.add(url=\"https://github.com/joshday/DeckGL.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#basic-concepts",
+    "href": "getting-started.html#basic-concepts",
+    "title": "Getting Started",
+    "section": "Basic Concepts",
+    "text": "Basic Concepts\nDeckGL.jl has three main components:\n\nLayers - Define what data to visualize and how\nViewState - Configure the camera (position, zoom, angle)\nDeck - Container that combines layers and view state",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#your-first-visualization",
+    "href": "getting-started.html#your-first-visualization",
+    "title": "Getting Started",
+    "section": "Your First Visualization",
+    "text": "Your First Visualization\nLet’s create a simple scatterplot:\nusing DeckGL\n\n# Sample data - any Tables.jl-compatible source works\ndata = (\n    lng = [-122.4, -122.5, -122.3, -122.45, -122.35],\n    lat = [37.8, 37.7, 37.9, 37.75, 37.85],\n    size = [100, 200, 150, 180, 120]\n)\n\n# Create a layer\nlayer = ScatterplotLayer(\n    data = data,\n    get_position = [:lng, :lat],  # Reference columns by symbol\n    get_radius = :size,            # Data-driven radius\n    get_fill_color = [255, 140, 0, 200]  # RGBA color\n)\n\n# Create the deck\ndeck = Deck(\n    layer,\n    initial_view_state = ViewState(\n        longitude = -122.4,\n        latitude = 37.8,\n        zoom = 11\n    )\n)\n\n# Open in browser\nopen_html(deck)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#data-input",
+    "href": "getting-started.html#data-input",
+    "title": "Getting Started",
+    "section": "Data Input",
+    "text": "Data Input\nDeckGL.jl works with any Tables.jl-compatible data source:\n# NamedTuple of vectors\ndata = (x = [1, 2, 3], y = [4, 5, 6])\n\n# DataFrame\nusing DataFrames\ndf = DataFrame(x = [1, 2, 3], y = [4, 5, 6])\n\n# Vector of NamedTuples\nrows = [(x=1, y=4), (x=2, y=5), (x=3, y=6)]\n\nColumn References\nUse Symbol to reference columns for data-driven properties:\nlayer = ScatterplotLayer(\n    data = data,\n    get_position = [:lng, :lat],     # Two columns for position\n    get_radius = :size,               # Column for radius\n    get_fill_color = [255, 0, 0, 200] # Static color\n)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#color-specification",
+    "href": "getting-started.html#color-specification",
+    "title": "Getting Started",
+    "section": "Color Specification",
+    "text": "Color Specification\nColors are specified as RGB or RGBA arrays with values 0-255:\n# RGB (alpha defaults to 255)\ncolor = [255, 0, 0]      # Red\n\n# RGBA (with transparency)\ncolor = [255, 0, 0, 128] # Semi-transparent red\nFor data-driven colors, reference a column:\nget_fill_color = :color_column",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#viewstate",
+    "href": "getting-started.html#viewstate",
+    "title": "Getting Started",
+    "section": "ViewState",
+    "text": "ViewState\nThe ViewState controls the camera:\nViewState(\n    longitude = -122.4,  # Center longitude\n    latitude = 37.8,     # Center latitude\n    zoom = 11,           # Zoom level (0-20+)\n    pitch = 45,          # Tilt angle (0-60 degrees)\n    bearing = 0          # Rotation (0-360 degrees)\n)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#display-options",
+    "href": "getting-started.html#display-options",
+    "title": "Getting Started",
+    "section": "Display Options",
+    "text": "Display Options\n\nOpen in Browser\nopen_html(deck)\n\n\nSave as HTML File\nsave_html(deck, \"visualization.html\")\n\n\nGet HTML String\nhtml_string = to_html(deck)\n\n\nJupyter/VS Code\nIn notebook environments, Deck objects display automatically:\ndeck  # Displays inline in notebook",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#convenience-functions",
+    "href": "getting-started.html#convenience-functions",
+    "title": "Getting Started",
+    "section": "Convenience Functions",
+    "text": "Convenience Functions\nFor quick visualizations, use the convenience functions:\n# Scatterplot\nscatter(data, :lng, :lat, radius=:size, color=[255, 140, 0])\n\n# Arcs\narcs(data, [:src_lng, :src_lat], [:dst_lng, :dst_lat])\n\n# Hexagonal binning\nhexbin(data, :lng, :lat, radius=1000)\n\n# Heatmap\nheatmap(data, :lng, :lat, weight=:value)\nThese return a Deck that you can display:\nscatter(data, :lng, :lat) |&gt; open_html",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#multiple-layers",
+    "href": "getting-started.html#multiple-layers",
+    "title": "Getting Started",
+    "section": "Multiple Layers",
+    "text": "Multiple Layers\nCombine multiple layers in a single visualization:\nlayers = [\n    ScatterplotLayer(data=points, get_position=[:lng, :lat]),\n    TextLayer(data=labels, get_position=[:lng, :lat], get_text=:name),\n    PathLayer(data=routes, get_path=:path)\n]\n\ndeck = Deck(layers, initial_view_state=ViewState(zoom=10))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#next-steps",
+    "href": "getting-started.html#next-steps",
+    "title": "Getting Started",
+    "section": "Next Steps",
+    "text": "Next Steps\n\nLayers - Explore all available layer types\nAPI Reference - Complete function and type documentation\nExamples - More visualization examples",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "layers.html",
+    "href": "layers.html",
+    "title": "Layers",
+    "section": "",
+    "text": "Core Layers\nDeckGL.jl provides a variety of layer types for different visualization needs. This page documents all available layers and their properties.\nCore layers render individual data points directly without aggregation.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Layers</span>"
+    ]
+  },
+  {
+    "objectID": "layers.html#core-layers",
+    "href": "layers.html#core-layers",
+    "title": "Layers",
+    "section": "",
+    "text": "ScatterplotLayer\nRenders circles at given coordinates.\nScatterplotLayer(\n    data = data,\n    get_position = [:lng, :lat],\n    get_radius = 100,\n    get_fill_color = [255, 140, 0, 200]\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_position\nSymbol/Vector{Symbol}\nrequired\nPosition accessor [:lng, :lat]\n\n\nget_radius\nReal/Symbol\n1\nCircle radius in meters\n\n\nget_fill_color\nVector/Symbol\n[0,0,0,255]\nFill color RGBA\n\n\nget_line_color\nVector/Symbol\n[0,0,0,255]\nOutline color RGBA\n\n\nget_line_width\nReal/Symbol\n1\nOutline width\n\n\nradius_scale\nReal\n1\nRadius multiplier\n\n\nradius_min_pixels\nReal\n0\nMinimum radius in pixels\n\n\nradius_max_pixels\nReal\nInf\nMaximum radius in pixels\n\n\nstroked\nBool\nfalse\nDraw outline\n\n\nfilled\nBool\ntrue\nDraw fill\n\n\nbillboard\nBool\nfalse\nAlways face camera\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\npickable\nBool\nfalse\nEnable interactions\n\n\n\n\n\nArcLayer\nRenders arcs between source and target coordinates.\nArcLayer(\n    data = trips,\n    get_source_position = [:src_lng, :src_lat],\n    get_target_position = [:dst_lng, :dst_lat],\n    get_source_color = [0, 128, 255],\n    get_target_color = [255, 0, 128],\n    get_width = 2\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_source_position\nSymbol/Vector{Symbol}\nrequired\nSource position\n\n\nget_target_position\nSymbol/Vector{Symbol}\nrequired\nTarget position\n\n\nget_source_color\nVector/Symbol\n[0,0,0,255]\nSource end color\n\n\nget_target_color\nVector/Symbol\n[0,0,0,255]\nTarget end color\n\n\nget_width\nReal/Symbol\n1\nArc width in pixels\n\n\nget_height\nReal/Symbol\n1\nArc height multiplier (0-1)\n\n\nget_tilt\nReal/Symbol\n0\nArc tilt in degrees\n\n\ngreat_circle\nBool\nfalse\nUse great circle arcs\n\n\nwidth_scale\nReal\n1\nWidth multiplier\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\n\n\n\nLineLayer\nRenders straight lines between source and target coordinates.\nLineLayer(\n    data = connections,\n    get_source_position = [:from_lng, :from_lat],\n    get_target_position = [:to_lng, :to_lat],\n    get_color = [255, 0, 0],\n    get_width = 2\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_source_position\nSymbol/Vector{Symbol}\nrequired\nSource position\n\n\nget_target_position\nSymbol/Vector{Symbol}\nrequired\nTarget position\n\n\nget_color\nVector/Symbol\n[0,0,0,255]\nLine color\n\n\nget_width\nReal/Symbol\n1\nLine width\n\n\nwidth_units\nString\n\"pixels\"\nWidth units\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\n\n\n\nPathLayer\nRenders paths/polylines from coordinate sequences.\nPathLayer(\n    data = routes,\n    get_path = :path,  # Column containing [[lng1,lat1], [lng2,lat2], ...]\n    get_color = [0, 128, 255],\n    get_width = 5,\n    cap_rounded = true\n)\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_path\nSymbol\nrequired\nPath coordinates column\n\n\nget_color\nVector/Symbol\n[0,0,0,255]\nPath color\n\n\nget_width\nReal/Symbol\n1\nPath width\n\n\ncap_rounded\nBool\nfalse\nRound line caps\n\n\njoint_rounded\nBool\nfalse\nRound line joints\n\n\nbillboard\nBool\nfalse\nAlways face camera\n\n\nmiter_limit\nReal\n4\nMiter limit for sharp corners\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\n\n\n\nPolygonLayer\nRenders filled and/or stroked polygons.\nPolygonLayer(\n    data = regions,\n    get_polygon = :polygon,\n    get_fill_color = [255, 140, 0, 100],\n    get_line_color = [255, 140, 0, 255],\n    extruded = true,\n    get_elevation = :value\n)\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_polygon\nSymbol\nrequired\nPolygon coordinates column\n\n\nget_fill_color\nVector/Symbol\n[0,0,0,255]\nFill color\n\n\nget_line_color\nVector/Symbol\n[0,0,0,255]\nOutline color\n\n\nget_line_width\nReal/Symbol\n1\nOutline width\n\n\nfilled\nBool\ntrue\nDraw fill\n\n\nstroked\nBool\ntrue\nDraw outline\n\n\nextruded\nBool\nfalse\nExtrude as 3D\n\n\nwireframe\nBool\nfalse\nDraw 3D wireframe\n\n\nget_elevation\nReal/Symbol\n1000\nPolygon height for 3D\n\n\nelevation_scale\nReal\n1\nElevation multiplier\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\n\n\n\nTextLayer\nRenders text labels at coordinates.\nTextLayer(\n    data = cities,\n    get_position = [:lng, :lat],\n    get_text = :name,\n    get_size = 16,\n    get_color = [0, 0, 0]\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_position\nSymbol/Vector{Symbol}\nrequired\nPosition accessor\n\n\nget_text\nSymbol\nrequired\nText content column\n\n\nget_size\nReal/Symbol\n32\nText size in pixels\n\n\nget_color\nVector/Symbol\n[0,0,0,255]\nText color\n\n\nget_angle\nReal/Symbol\n0\nRotation in degrees\n\n\nget_text_anchor\nString\n\"middle\"\nHorizontal anchor\n\n\nget_alignment_baseline\nString\n\"center\"\nVertical anchor\n\n\nfont_family\nString\n\"Monaco, monospace\"\nFont family\n\n\nbillboard\nBool\ntrue\nAlways face camera\n\n\nbackground\nBool\nfalse\nDraw background\n\n\nopacity\nReal\n1\nLayer opacity (0-1)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Layers</span>"
+    ]
+  },
+  {
+    "objectID": "layers.html#aggregation-layers",
+    "href": "layers.html#aggregation-layers",
+    "title": "Layers",
+    "section": "Aggregation Layers",
+    "text": "Aggregation Layers\nAggregation layers bin data points and render aggregated values.\n\nHexagonLayer\nAggregates data into hexagonal bins and renders as 3D hexagons.\nHexagonLayer(\n    data = earthquakes,\n    get_position = [:lng, :lat],\n    get_elevation_weight = :magnitude,\n    radius = 50000,\n    elevation_scale = 100,\n    extruded = true\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_position\nSymbol/Vector{Symbol}\nrequired\nPosition accessor\n\n\nradius\nReal\n1000\nHexagon radius in meters\n\n\ncoverage\nReal\n1\nHexagon coverage (0-1)\n\n\nextruded\nBool\ntrue\nRender as 3D\n\n\nelevation_scale\nReal\n1\nElevation multiplier\n\n\nelevation_range\nVector\n[0, 1000]\nMin/max elevation\n\n\nget_color_weight\nReal/Symbol\n1\nColor aggregation weight\n\n\nget_elevation_weight\nReal/Symbol\n1\nElevation aggregation weight\n\n\ncolor_aggregation\nString\n\"SUM\"\nAggregation method\n\n\nelevation_aggregation\nString\n\"SUM\"\nAggregation method\n\n\ncolor_range\nVector\nyellow-red scale\nColor gradient\n\n\nupper_percentile\nReal\n100\nUpper filter percentile\n\n\nlower_percentile\nReal\n0\nLower filter percentile\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\n\n\n\nGridLayer\nAggregates data into rectangular grid cells.\nGridLayer(\n    data = points,\n    get_position = [:lng, :lat],\n    cell_size = 200,\n    elevation_scale = 4,\n    extruded = true\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_position\nSymbol/Vector{Symbol}\nrequired\nPosition accessor\n\n\ncell_size\nReal\n1000\nGrid cell size in meters\n\n\ncoverage\nReal\n1\nCell coverage (0-1)\n\n\nextruded\nBool\ntrue\nRender as 3D\n\n\nelevation_scale\nReal\n1\nElevation multiplier\n\n\nget_color_weight\nReal/Symbol\n1\nColor aggregation weight\n\n\nget_elevation_weight\nReal/Symbol\n1\nElevation aggregation weight\n\n\ncolor_aggregation\nString\n\"SUM\"\nAggregation method\n\n\nelevation_aggregation\nString\n\"SUM\"\nAggregation method\n\n\nopacity\nReal\n1\nLayer opacity (0-1)\n\n\n\n\n\nHeatmapLayer\nRenders a heatmap based on point density and weights.\nHeatmapLayer(\n    data = incidents,\n    get_position = [:lng, :lat],\n    get_weight = :severity,\n    radius_pixels = 50,\n    intensity = 1,\n    threshold = 0.03\n)\n\n\n\n\n\n\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nAny\nrequired\nTables.jl-compatible data source\n\n\nget_position\nSymbol/Vector{Symbol}\nrequired\nPosition accessor\n\n\nradius_pixels\nReal\n30\nRadius of influence in pixels\n\n\nintensity\nReal\n1\nIntensity multiplier\n\n\nthreshold\nReal\n0.05\nMinimum density threshold\n\n\nget_weight\nReal/Symbol\n1\nPoint weight\n\n\ncolor_range\nVector\nblue-green-yellow-red\nColor gradient\n\n\naggregation\nString\n\"SUM\"\nAggregation method\n\n\nopacity\nReal\n1\nLayer opacity (0-1)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Layers</span>"
+    ]
+  },
+  {
+    "objectID": "layers.html#composite-layers",
+    "href": "layers.html#composite-layers",
+    "title": "Layers",
+    "section": "Composite Layers",
+    "text": "Composite Layers\nComposite layers render complex data types using multiple sub-layers.\n\nGeoJsonLayer\nRenders GeoJSON data as points, lines, and polygons.\n# From Dict\ngeojson_data = Dict(\n    \"type\" =&gt; \"FeatureCollection\",\n    \"features\" =&gt; [...]\n)\n\nGeoJsonLayer(\n    data = geojson_data,\n    get_fill_color = [255, 0, 0, 100],\n    get_line_color = [255, 0, 0, 255],\n    get_point_radius = 100\n)\n\n# From URL\nGeoJsonLayer(\n    data = \"https://example.com/data.geojson\",\n    filled = true,\n    stroked = true\n)\n\n\n\nProperty\nType\nDefault\nDescription\n\n\n\n\ndata\nDict/String\nrequired\nGeoJSON Dict or URL\n\n\nfilled\nBool\ntrue\nFill polygons\n\n\nstroked\nBool\ntrue\nDraw outlines\n\n\nextruded\nBool\nfalse\nExtrude polygons\n\n\nget_fill_color\nVector/Symbol\n[0,0,0,255]\nFill color\n\n\nget_line_color\nVector/Symbol\n[0,0,0,255]\nLine color\n\n\nget_line_width\nReal/Symbol\n1\nLine width\n\n\nget_point_radius\nReal/Symbol\n1\nPoint radius\n\n\nget_elevation\nReal/Symbol\n1000\nPolygon elevation\n\n\npoint_type\nString\n\"circle\"\nPoint rendering type\n\n\nopacity\nReal\n1\nLayer opacity (0-1)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Layers</span>"
+    ]
+  },
+  {
+    "objectID": "layers.html#geointerface.jl-integration",
+    "href": "layers.html#geointerface.jl-integration",
+    "title": "Layers",
+    "section": "GeoInterface.jl Integration",
+    "text": "GeoInterface.jl Integration\nConvert GeoInterface-compatible geometries to GeoJSON:\nusing Shapefile\nusing DeckGL\n\n# Load shapefile\nshp = Shapefile.Table(\"boundaries.shp\")\n\n# Convert to GeoJSON and create layer\nlayer = geojson_layer(shp, get_fill_color=[255, 0, 0, 100])\n\n# Or manually convert\ngeojson_dict = to_geojson(shp)\nlayer = GeoJsonLayer(data=geojson_dict)\nSupported geometry types:\n\nPoint, MultiPoint\nLineString, MultiLineString\nPolygon, MultiPolygon\nGeometryCollection\nFeature, FeatureCollection",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Layers</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html",
+    "href": "examples.html",
+    "title": "Examples",
+    "section": "",
+    "text": "ScatterplotLayer\nInteractive examples demonstrating each DeckGL.jl layer type. Each visualization is generated by DeckGL.jl and rendered using deck.gl.\nRenders circles at geographic coordinates. Size and color can be data-driven.\ndata = (\n    lng = [-122.4, -122.45, -122.35, -122.42, -122.38, -122.41, -122.43, -122.39],\n    lat = [37.8, 37.75, 37.85, 37.78, 37.82, 37.79, 37.81, 37.77],\n    size = [100, 150, 80, 120, 90, 110, 95, 130]\n)\n\nlayer = ScatterplotLayer(\n    data = data,\n    get_position = [:lng, :lat],\n    get_radius = :size,\n    get_fill_color = [255, 140, 0, 200],\n    radius_min_pixels = 5,\n    radius_max_pixels = 50\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=12))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#arclayer",
+    "href": "examples.html#arclayer",
+    "title": "Examples",
+    "section": "ArcLayer",
+    "text": "ArcLayer\nRenders arcs between source and target coordinates. Great for showing connections or flows.\n\ntrips = (\n    src_lng = [-122.4, -122.4, -122.4, -73.9, -87.6],\n    src_lat = [37.8, 37.8, 37.8, 40.7, 41.9],\n    dst_lng = [-73.9, -87.6, -118.2, -87.6, -118.2],\n    dst_lat = [40.7, 41.9, 34.0, 41.9, 34.0]\n)\n\nlayer = ArcLayer(\n    data = trips,\n    get_source_position = [:src_lng, :src_lat],\n    get_target_position = [:dst_lng, :dst_lat],\n    get_source_color = [0, 128, 255],\n    get_target_color = [255, 0, 128],\n    get_width = 3\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-98, latitude=39, zoom=3, pitch=30))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#linelayer",
+    "href": "examples.html#linelayer",
+    "title": "Examples",
+    "section": "LineLayer",
+    "text": "LineLayer\nRenders straight lines between points. Simpler than arcs, useful for direct connections.\n\nconnections = (\n    from_lng = [-122.4, -122.45, -122.35, -122.42, -122.38],\n    from_lat = [37.8, 37.75, 37.85, 37.78, 37.82],\n    to_lng = [-122.45, -122.35, -122.4, -122.38, -122.43],\n    to_lat = [37.75, 37.85, 37.8, 37.82, 37.77]\n)\n\nlayer = LineLayer(\n    data = connections,\n    get_source_position = [:from_lng, :from_lat],\n    get_target_position = [:to_lng, :to_lat],\n    get_color = [64, 192, 128, 200],\n    get_width = 3\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=12))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#pathlayer",
+    "href": "examples.html#pathlayer",
+    "title": "Examples",
+    "section": "PathLayer",
+    "text": "PathLayer\nRenders polylines/paths from sequences of coordinates. Ideal for routes, tracks, or boundaries.\n\nroutes = (\n    path = [\n        [[-122.4, 37.8], [-122.42, 37.78], [-122.44, 37.76], [-122.45, 37.75]],\n        [[-122.35, 37.85], [-122.37, 37.83], [-122.39, 37.81], [-122.4, 37.8]],\n        [[-122.43, 37.82], [-122.41, 37.79], [-122.38, 37.77], [-122.36, 37.76]]\n    ],\n    color = [[0, 128, 255], [255, 128, 0], [128, 0, 255]]\n)\n\nlayer = PathLayer(\n    data = routes,\n    get_path = :path,\n    get_color = :color,\n    get_width = 5,\n    cap_rounded = true,\n    joint_rounded = true\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=12))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#polygonlayer",
+    "href": "examples.html#polygonlayer",
+    "title": "Examples",
+    "section": "PolygonLayer",
+    "text": "PolygonLayer\nRenders filled polygons. Supports 3D extrusion for building-like visualizations.\n\nregions = (\n    polygon = [\n        [[-122.42, 37.78], [-122.44, 37.76], [-122.42, 37.74], [-122.40, 37.76]],\n        [[-122.38, 37.82], [-122.40, 37.80], [-122.37, 37.79], [-122.35, 37.81]],\n        [[-122.45, 37.80], [-122.47, 37.78], [-122.45, 37.76], [-122.43, 37.78]]\n    ],\n    height = [200, 300, 150],\n    color = [[255, 140, 0, 180], [0, 140, 255, 180], [140, 255, 0, 180]]\n)\n\nlayer = PolygonLayer(\n    data = regions,\n    get_polygon = :polygon,\n    get_fill_color = :color,\n    get_line_color = [80, 80, 80],\n    extruded = true,\n    get_elevation = :height,\n    elevation_scale = 10\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.78, zoom=12, pitch=45, bearing=15))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#textlayer",
+    "href": "examples.html#textlayer",
+    "title": "Examples",
+    "section": "TextLayer",
+    "text": "TextLayer\nRenders text labels at geographic coordinates.\n\ncities = (\n    lng = [-122.4, -122.45, -122.35, -122.42, -122.38],\n    lat = [37.8, 37.75, 37.85, 37.77, 37.82],\n    name = [\"Downtown SF\", \"Daly City\", \"Berkeley\", \"Mission\", \"Marina\"],\n    size = [20, 16, 16, 14, 14]\n)\n\npoints_layer = ScatterplotLayer(\n    data = cities,\n    get_position = [:lng, :lat],\n    get_radius = 100,\n    get_fill_color = [255, 0, 0, 200],\n    radius_min_pixels = 5\n)\n\ntext_layer = TextLayer(\n    data = cities,\n    get_position = [:lng, :lat],\n    get_text = :name,\n    get_size = :size,\n    get_color = [0, 0, 0, 255],\n    get_pixel_offset = [0, -20]\n)\n\nDeck([points_layer, text_layer], initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#hexagonlayer",
+    "href": "examples.html#hexagonlayer",
+    "title": "Examples",
+    "section": "HexagonLayer",
+    "text": "HexagonLayer\nAggregates points into hexagonal bins. Height represents density or aggregated values.\n\nusing Random\nRandom.seed!(42)\n\n# Generate clustered point data\npoints_data = let\n    lngs = Float64[]\n    lats = Float64[]\n    clusters = [(-122.4, 37.8, 500), (-122.45, 37.75, 300), (-122.35, 37.82, 400)]\n    for (cx, cy, n) in clusters\n        append!(lngs, cx .+ 0.025 .* randn(n))\n        append!(lats, cy .+ 0.025 .* randn(n))\n    end\n    (lng = lngs, lat = lats)\nend\n\nlayer = HexagonLayer(\n    data = points_data,\n    get_position = [:lng, :lat],\n    radius = 200,\n    elevation_scale = 50,\n    elevation_range = [0, 500],\n    extruded = true,\n    coverage = 0.9\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45, bearing=15))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#gridlayer",
+    "href": "examples.html#gridlayer",
+    "title": "Examples",
+    "section": "GridLayer",
+    "text": "GridLayer\nSimilar to HexagonLayer but uses rectangular grid cells.\n\nRandom.seed!(123)\n\ngrid_data = let\n    lngs = Float64[]\n    lats = Float64[]\n    centers = [(-122.4, 37.8), (-122.45, 37.76), (-122.35, 37.83)]\n    for _ in 1:1000\n        cx, cy = centers[rand(1:3)]\n        push!(lngs, cx + (rand() - 0.5) * 0.04)\n        push!(lats, cy + (rand() - 0.5) * 0.04)\n    end\n    (lng = lngs, lat = lats)\nend\n\nlayer = GridLayer(\n    data = grid_data,\n    get_position = [:lng, :lat],\n    cell_size = 200,\n    elevation_scale = 50,\n    elevation_range = [0, 300],\n    extruded = true,\n    coverage = 0.9\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45, bearing=-15))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#heatmaplayer",
+    "href": "examples.html#heatmaplayer",
+    "title": "Examples",
+    "section": "HeatmapLayer",
+    "text": "HeatmapLayer\nRenders a smooth density heatmap. Great for visualizing point density.\n\nRandom.seed!(456)\n\nheatmap_data = let\n    lngs = Float64[]\n    lats = Float64[]\n    weights = Float64[]\n    clusters = [(-122.41, 37.79, 2000), (-122.43, 37.77, 1500), (-122.38, 37.81, 1200), (-122.45, 37.75, 800)]\n    for (cx, cy, n) in clusters\n        for _ in 1:n\n            push!(lngs, cx + (rand() - 0.5) * 0.03)\n            push!(lats, cy + (rand() - 0.5) * 0.03)\n            push!(weights, rand())\n        end\n    end\n    (lng = lngs, lat = lats, weight = weights)\nend\n\nlayer = HeatmapLayer(\n    data = heatmap_data,\n    get_position = [:lng, :lat],\n    get_weight = :weight,\n    radius_pixels = 40,\n    intensity = 1,\n    threshold = 0.03\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.41, latitude=37.78, zoom=12))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#geojsonlayer",
+    "href": "examples.html#geojsonlayer",
+    "title": "Examples",
+    "section": "GeoJsonLayer",
+    "text": "GeoJsonLayer\nRenders GeoJSON data including points, lines, and polygons.\n\ngeojson_data = Dict(\n    \"type\" =&gt; \"FeatureCollection\",\n    \"features\" =&gt; [\n        Dict(\n            \"type\" =&gt; \"Feature\",\n            \"geometry\" =&gt; Dict(\n                \"type\" =&gt; \"Polygon\",\n                \"coordinates\" =&gt; [[[-122.45, 37.78], [-122.43, 37.75], [-122.40, 37.76], [-122.41, 37.79], [-122.45, 37.78]]]\n            ),\n            \"properties\" =&gt; Dict(\"name\" =&gt; \"Region A\")\n        ),\n        Dict(\n            \"type\" =&gt; \"Feature\",\n            \"geometry\" =&gt; Dict(\n                \"type\" =&gt; \"Polygon\",\n                \"coordinates\" =&gt; [[[-122.40, 37.82], [-122.38, 37.80], [-122.35, 37.81], [-122.36, 37.84], [-122.40, 37.82]]]\n            ),\n            \"properties\" =&gt; Dict(\"name\" =&gt; \"Region B\")\n        ),\n        Dict(\n            \"type\" =&gt; \"Feature\",\n            \"geometry\" =&gt; Dict(\n                \"type\" =&gt; \"LineString\",\n                \"coordinates\" =&gt; [[-122.45, 37.78], [-122.42, 37.80], [-122.40, 37.82]]\n            ),\n            \"properties\" =&gt; Dict(\"name\" =&gt; \"Route 1\")\n        ),\n        Dict(\n            \"type\" =&gt; \"Feature\",\n            \"geometry\" =&gt; Dict(\"type\" =&gt; \"Point\", \"coordinates\" =&gt; [-122.42, 37.78]),\n            \"properties\" =&gt; Dict(\"name\" =&gt; \"Point A\")\n        ),\n        Dict(\n            \"type\" =&gt; \"Feature\",\n            \"geometry\" =&gt; Dict(\"type\" =&gt; \"Point\", \"coordinates\" =&gt; [-122.37, 37.82]),\n            \"properties\" =&gt; Dict(\"name\" =&gt; \"Point B\")\n        )\n    ]\n)\n\nlayer = GeoJsonLayer(\n    data = geojson_data,\n    filled = true,\n    stroked = true,\n    get_fill_color = [255, 140, 0, 150],\n    get_line_color = [0, 0, 0, 200],\n    get_line_width = 2,\n    get_point_radius = 200,\n    line_width_min_pixels = 2,\n    point_radius_min_pixels = 5\n)\n\nDeck(layer, initial_view_state = ViewState(longitude=-122.4, latitude=37.79, zoom=12))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#multiple-layers",
+    "href": "examples.html#multiple-layers",
+    "title": "Examples",
+    "section": "Multiple Layers",
+    "text": "Multiple Layers\nCombine multiple layer types in a single visualization.\n\ncities_multi = (\n    lng = [-122.4, -122.27, -122.22],\n    lat = [37.8, 37.87, 37.77],\n    name = [\"San Francisco\", \"Berkeley\", \"Oakland\"],\n    size = [300, 200, 250]\n)\n\nroutes_multi = (\n    path = [\n        [[-122.4, 37.8], [-122.35, 37.82], [-122.27, 37.87]],\n        [[-122.4, 37.8], [-122.32, 37.78], [-122.22, 37.77]],\n        [[-122.27, 37.87], [-122.25, 37.82], [-122.22, 37.77]]\n    ],\n)\n\npath_layer = PathLayer(\n    data = routes_multi,\n    get_path = :path,\n    get_color = [100, 100, 100, 150],\n    get_width = 3,\n    cap_rounded = true\n)\n\nscatter_layer = ScatterplotLayer(\n    data = cities_multi,\n    get_position = [:lng, :lat],\n    get_radius = :size,\n    get_fill_color = [0, 128, 255, 200],\n    radius_min_pixels = 10\n)\n\nlabel_layer = TextLayer(\n    data = cities_multi,\n    get_position = [:lng, :lat],\n    get_text = :name,\n    get_size = 16,\n    get_color = [0, 0, 0],\n    get_pixel_offset = [0, -30]\n)\n\nDeck([path_layer, scatter_layer, label_layer], initial_view_state = ViewState(longitude=-122.32, latitude=37.82, zoom=11))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#base-maps",
+    "href": "examples.html#base-maps",
+    "title": "Examples",
+    "section": "Base Maps",
+    "text": "Base Maps\nAdd a base map using the map_style parameter. DeckGL.jl supports any MapLibre-compatible tile source. Here are some free options:\n\nOpenStreetMap: https://basemaps.cartocdn.com/gl/positron-gl-style/style.json\nCartoDB Dark: https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json\nCartoDB Voyager: https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json\n\n\nairports = (\n    lng = [-122.38, -73.78, -87.90, -118.41, -84.43],\n    lat = [37.62, 40.64, 41.98, 33.94, 33.64],\n    name = [\"SFO\", \"JFK\", \"ORD\", \"LAX\", \"ATL\"],\n    passengers = [50, 60, 80, 85, 110]  # millions\n)\n\nlayer = ScatterplotLayer(\n    data = airports,\n    get_position = [:lng, :lat],\n    get_radius = :passengers,\n    get_fill_color = [255, 0, 80, 180],\n    radius_scale = 5000,\n    radius_min_pixels = 5,\n    pickable = true\n)\n\nDeck(\n    layer,\n    initial_view_state = ViewState(longitude=-98, latitude=38, zoom=3.5, pitch=0),\n    map_style = \"https://basemaps.cartocdn.com/gl/positron-gl-style/style.json\"\n)\n\n\n\n\n\nDark Theme Base Map\nThe dark matter style works well for visualizations with bright colors.\n\nearthquakes = (\n    lng = [-122.0, -121.5, -117.5, -116.0, -118.2, -119.5, -122.5, -120.0],\n    lat = [37.0, 36.5, 34.0, 33.5, 34.2, 35.0, 38.0, 35.5],\n    magnitude = [3.2, 4.1, 5.5, 3.8, 4.5, 3.0, 4.8, 3.5]\n)\n\nlayer = ScatterplotLayer(\n    data = earthquakes,\n    get_position = [:lng, :lat],\n    get_radius = :magnitude,\n    get_fill_color = [255, 200, 0, 200],\n    radius_scale = 20000,\n    radius_min_pixels = 3,\n    pickable = true\n)\n\nDeck(\n    layer,\n    initial_view_state = ViewState(longitude=-119, latitude=36, zoom=5.5),\n    map_style = \"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json\"\n)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "api.html",
+    "href": "api.html",
+    "title": "API",
+    "section": "",
+    "text": "Types",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#types",
+    "href": "api.html#types",
+    "title": "API",
+    "section": "",
+    "text": "AbstractLayer\n\n\nAbstractLayer\nAbstract supertype for all deck.gl layers.\n\n\n\n\nArcLayer\n\n\nArcLayer(; data, get_source_position, get_target_position, kwargs...)\nRenders arcs between source and target coordinates.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_source_position: Column accessor for source [longitude, latitude]. Can be a Symbol or Vector{Symbol} like [:src_lng, :src_lat]\nget_target_position: Column accessor for target [longitude, latitude]. Can be a Symbol or Vector{Symbol} like [:dst_lng, :dst_lat]\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nget_source_color: Source end color as [R,G,B,A] or column reference\nget_target_color: Target end color as [R,G,B,A] or column reference\nget_width::Union{Real,Symbol}: Arc width in pixels. Default: 1\nget_height::Union{Real,Symbol}: Arc height multiplier (0-1). Default: 1\nget_tilt::Union{Real,Symbol}: Arc tilt in degrees. Default: 0\ngreat_circle::Bool: Use great circle arcs. Default: false\nwidth_units::String: Width units (“pixels” or “meters”). Default: \"pixels\"\nwidth_scale::Real: Width multiplier. Default: 1\nwidth_min_pixels::Real: Minimum width. Default: 0\nwidth_max_pixels::Real: Maximum width. Default: Inf\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\ntrips = (\n    src_lng = [-122.4, -122.5],\n    src_lat = [37.8, 37.7],\n    dst_lng = [-73.9, -87.6],\n    dst_lat = [40.7, 41.9],\n    count = [100, 50]\n)\n\nlayer = ArcLayer(\n    data = trips,\n    get_source_position = [:src_lng, :src_lat],\n    get_target_position = [:dst_lng, :dst_lat],\n    get_width = :count,\n    get_source_color = [0, 128, 255],\n    get_target_color = [255, 0, 128]\n)\n\n\n\n\n\nDeck\n\n\nDeck(layers; initial_view_state=ViewState(), map_style=nothing, controller=true)\nThe top-level container representing a deck.gl visualization.\n\nArguments\n\nlayers: A single AbstractLayer or a vector of layers\n\n\n\nKeyword Arguments\n\ninitial_view_state::ViewState: Camera configuration\nmap_style::Union{String,Nothing}: Map tile style URL (Mapbox/MapLibre/Carto)\ncontroller::Bool: Enable pan/zoom/rotate controls\n\n\n\nExample\nlayer = ScatterplotLayer(data=df, get_position=[:lng, :lat])\ndeck = Deck(layer, initial_view_state=ViewState(longitude=-122.4, latitude=37.8, zoom=11))\n\n\n\n\n\nGeoJsonLayer\n\n\nGeoJsonLayer(; data, kwargs...)\nRenders GeoJSON data as points, lines, and polygons.\nThis is a composite layer that automatically renders GeoJSON features using the appropriate sub-layers (ScatterplotLayer, PathLayer, PolygonLayer).\n\nRequired Arguments\n\ndata: GeoJSON data as a Dict, String (JSON), or URL to GeoJSON file\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nfilled::Bool: Fill polygons. Default: true\nstroked::Bool: Draw polygon outlines. Default: true\nextruded::Bool: Extrude polygons in 3D. Default: false\nwireframe::Bool: Draw 3D wireframe. Default: false\npoint_type::String: Point rendering type (“circle”, “icon”, “text”). Default: \"circle\"\nget_fill_color: Fill color. Default: [0, 0, 0, 255]\nget_line_color: Line/stroke color. Default: [0, 0, 0, 255]\nget_line_width::Union{Real,Symbol}: Line width. Default: 1\nget_point_radius::Union{Real,Symbol}: Point radius. Default: 1\nget_elevation::Union{Real,Symbol}: Polygon elevation for 3D. Default: 1000\nline_width_units::String: Line width units. Default: \"meters\"\nline_width_scale::Real: Line width multiplier. Default: 1\nline_width_min_pixels::Real: Minimum line width. Default: 0\nline_width_max_pixels::Real: Maximum line width. Default: Inf\nline_joint_rounded::Bool: Round line joints. Default: false\nline_cap_rounded::Bool: Round line caps. Default: false\nline_miter_limit::Real: Miter limit. Default: 4\npoint_radius_units::String: Point radius units. Default: \"meters\"\npoint_radius_scale::Real: Point radius multiplier. Default: 1\npoint_radius_min_pixels::Real: Minimum point radius. Default: 0\npoint_radius_max_pixels::Real: Maximum point radius. Default: Inf\nelevation_scale::Real: Elevation multiplier. Default: 1\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\n# GeoJSON as a Dict\ngeojson = Dict(\n    \"type\" =&gt; \"FeatureCollection\",\n    \"features\" =&gt; [\n        Dict(\n            \"type\" =&gt; \"Feature\",\n            \"geometry\" =&gt; Dict(\n                \"type\" =&gt; \"Point\",\n                \"coordinates\" =&gt; [-122.4, 37.8]\n            ),\n            \"properties\" =&gt; Dict(\"name\" =&gt; \"San Francisco\")\n        )\n    ]\n)\n\nlayer = GeoJsonLayer(\n    data = geojson,\n    get_fill_color = [255, 0, 0, 100],\n    get_line_color = [255, 0, 0, 255],\n    get_point_radius = 100\n)\n\n# Or load from URL\nlayer = GeoJsonLayer(\n    data = \"https://example.com/data.geojson\",\n    filled = true,\n    stroked = true\n)\n\n\n\n\n\nGridLayer\n\n\nGridLayer(; data, get_position, kwargs...)\nAggregates data into rectangular grid cells and renders as 3D columns.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_position: Column accessor for [longitude, latitude]\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\ncell_size::Real: Grid cell size in meters. Default: 1000\nelevation_scale::Real: Elevation multiplier for 3D effect. Default: 1\nelevation_range::Vector{&lt;:Real}: Min/max elevation [min, max]. Default: [0, 1000]\nextruded::Bool: Render as 3D columns. Default: true\ncoverage::Real: Cell coverage (0-1). Default: 1\nget_color_weight::Union{Real,Symbol}: Weight for color aggregation. Default: 1\nget_elevation_weight::Union{Real,Symbol}: Weight for elevation aggregation. Default: 1\ncolor_aggregation::String: Aggregation method (“SUM”, “MEAN”, “MIN”, “MAX”). Default: \"SUM\"\nelevation_aggregation::String: Aggregation method. Default: \"SUM\"\ncolor_range::Vector: Array of RGB colors for color scale. Default: 6-color yellow-red scale\nupper_percentile::Real: Filter out cells above this percentile. Default: 100\nlower_percentile::Real: Filter out cells below this percentile. Default: 0\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\npoints = (\n    lng = rand(-122.5:-122.3, 5000),\n    lat = rand(37.7:37.9, 5000),\n    value = rand(5000)\n)\n\nlayer = GridLayer(\n    data = points,\n    get_position = [:lng, :lat],\n    get_elevation_weight = :value,\n    cell_size = 200,\n    elevation_scale = 4,\n    extruded = true\n)\n\n\n\n\n\nHeatmapLayer\n\n\nHeatmapLayer(; data, get_position, kwargs...)\nRenders a heatmap based on point density and weights.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_position: Column accessor for [longitude, latitude]\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nradius_pixels::Real: Radius of influence in pixels. Default: 30\nintensity::Real: Intensity multiplier. Default: 1\nthreshold::Real: Minimum density threshold (0-1). Default: 0.05\nget_weight::Union{Real,Symbol}: Point weight for aggregation. Default: 1\ncolor_range::Vector: Array of RGBA colors for heatmap gradient. Default: blue-green-yellow-red\naggregation::String: Aggregation method (“SUM” or “MEAN”). Default: \"SUM\"\nweights_texture_size::Int: Resolution of weight texture. Default: 2048\ndebounce_timeout::Int: Debounce timeout in ms. Default: 500\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\nincidents = (\n    lng = rand(-122.5:-122.3, 10000),\n    lat = rand(37.7:37.9, 10000),\n    severity = rand(1:5, 10000)\n)\n\nlayer = HeatmapLayer(\n    data = incidents,\n    get_position = [:lng, :lat],\n    get_weight = :severity,\n    radius_pixels = 50,\n    intensity = 1,\n    threshold = 0.03\n)\n\n\n\n\n\nHexagonLayer\n\n\nHexagonLayer(; data, get_position, kwargs...)\nAggregates data into hexagonal bins and renders as 3D hexagons.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_position: Column accessor for [longitude, latitude]\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nradius::Real: Hexagon radius in meters. Default: 1000\nelevation_scale::Real: Elevation multiplier for 3D effect. Default: 1\nelevation_range::Vector{&lt;:Real}: Min/max elevation [min, max]. Default: [0, 1000]\nextruded::Bool: Render as 3D hexagons. Default: true\ncoverage::Real: Hexagon coverage (0-1). Default: 1\nget_color_weight::Union{Real,Symbol}: Weight for color aggregation. Default: 1\nget_elevation_weight::Union{Real,Symbol}: Weight for elevation aggregation. Default: 1\ncolor_aggregation::String: Aggregation method (“SUM”, “MEAN”, “MIN”, “MAX”). Default: \"SUM\"\nelevation_aggregation::String: Aggregation method. Default: \"SUM\"\ncolor_range::Vector: Array of RGB colors for color scale. Default: 6-color yellow-red scale\nupper_percentile::Real: Filter out bins above this percentile. Default: 100\nlower_percentile::Real: Filter out bins below this percentile. Default: 0\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\nearthquakes = (\n    lng = rand(-180.0:0.01:180.0, 10000),\n    lat = rand(-60.0:0.01:60.0, 10000),\n    magnitude = rand(1.0:0.1:8.0, 10000)\n)\n\nlayer = HexagonLayer(\n    data = earthquakes,\n    get_position = [:lng, :lat],\n    get_elevation_weight = :magnitude,\n    radius = 50000,\n    elevation_scale = 100,\n    extruded = true\n)\n\n\n\n\n\nLineLayer\n\n\nLineLayer(; data, get_source_position, get_target_position, kwargs...)\nRenders straight lines between source and target coordinates.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_source_position: Column accessor for source [longitude, latitude]\nget_target_position: Column accessor for target [longitude, latitude]\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nget_color: Line color as [R,G,B,A] or column reference. Default: [0,0,0,255]\nget_width::Union{Real,Symbol}: Line width in pixels. Default: 1\nwidth_units::String: Width units (“pixels” or “meters”). Default: \"pixels\"\nwidth_scale::Real: Width multiplier. Default: 1\nwidth_min_pixels::Real: Minimum width. Default: 0\nwidth_max_pixels::Real: Maximum width. Default: Inf\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\nconnections = (\n    from_lng = [-122.4, -122.5],\n    from_lat = [37.8, 37.7],\n    to_lng = [-122.3, -122.4],\n    to_lat = [37.9, 37.8]\n)\n\nlayer = LineLayer(\n    data = connections,\n    get_source_position = [:from_lng, :from_lat],\n    get_target_position = [:to_lng, :to_lat],\n    get_color = [255, 0, 0, 200],\n    get_width = 2\n)\n\n\n\n\n\nPathLayer\n\n\nPathLayer(; data, get_path, kwargs...)\nRenders sequences of coordinates as paths/polylines.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_path: Column accessor for path coordinates. Should reference a column containing arrays of [lng, lat] pairs, e.g., [[lng1,lat1], [lng2,lat2], ...]\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nget_color: Path color as [R,G,B,A] or column reference. Default: [0,0,0,255]\nget_width::Union{Real,Symbol}: Path width in pixels. Default: 1\nwidth_units::String: Width units (“pixels” or “meters”). Default: \"pixels\"\nwidth_scale::Real: Width multiplier. Default: 1\nwidth_min_pixels::Real: Minimum width. Default: 0\nwidth_max_pixels::Real: Maximum width. Default: Inf\ncap_rounded::Bool: Round line caps. Default: false\njoint_rounded::Bool: Round line joints. Default: false\nbillboard::Bool: Always face camera. Default: false\nmiter_limit::Real: Miter limit for sharp corners. Default: 4\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\nroutes = (\n    path = [\n        [[-122.4, 37.8], [-122.5, 37.7], [-122.3, 37.9]],\n        [[-122.45, 37.75], [-122.35, 37.85]]\n    ],\n    name = [\"Route A\", \"Route B\"]\n)\n\nlayer = PathLayer(\n    data = routes,\n    get_path = :path,\n    get_color = [0, 128, 255, 200],\n    get_width = 5,\n    cap_rounded = true\n)\n\n\n\n\n\nPolygonLayer\n\n\nPolygonLayer(; data, get_polygon, kwargs...)\nRenders filled and/or stroked polygons.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_polygon: Column accessor for polygon coordinates. Should reference a column containing arrays of [lng, lat] rings (outer ring, then optional holes)\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nfilled::Bool: Draw fill. Default: true\nstroked::Bool: Draw outline. Default: true\nextruded::Bool: Extrude polygons in 3D. Default: false\nwireframe::Bool: Draw 3D wireframe. Default: false\nelevation_scale::Real: Elevation multiplier. Default: 1\nget_elevation::Union{Real,Symbol}: Polygon height for extrusion. Default: 1000\nget_fill_color: Fill color as [R,G,B,A] or column reference. Default: [0,0,0,255]\nget_line_color: Outline color as [R,G,B,A] or column reference. Default: [0,0,0,255]\nget_line_width::Union{Real,Symbol}: Outline width. Default: 1\nline_width_units::String: Width units. Default: \"meters\"\nline_width_scale::Real: Width multiplier. Default: 1\nline_width_min_pixels::Real: Minimum width. Default: 0\nline_width_max_pixels::Real: Maximum width. Default: Inf\nline_joint_rounded::Bool: Round line joints. Default: false\nline_miter_limit::Real: Miter limit. Default: 4\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\nregions = (\n    polygon = [\n        [[[-122.4, 37.8], [-122.5, 37.7], [-122.3, 37.7], [-122.4, 37.8]]],\n        [[[-122.45, 37.85], [-122.5, 37.8], [-122.4, 37.8], [-122.45, 37.85]]]\n    ],\n    value = [100, 200]\n)\n\nlayer = PolygonLayer(\n    data = regions,\n    get_polygon = :polygon,\n    get_fill_color = [255, 140, 0, 100],\n    get_line_color = [255, 140, 0, 255],\n    get_line_width = 2\n)\n\n\n\n\n\nScatterplotLayer\n\n\nScatterplotLayer(; data, get_position, kwargs...)\nRenders circles at given coordinates.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source (DataFrame, NamedTuple of vectors, etc.)\nget_position: Column accessor for [longitude, latitude] positions. Can be a Symbol for a column containing coordinate tuples/arrays, or a Vector{Symbol} like [:lng, :lat] for separate columns.\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier (auto-generated if not provided)\nget_radius::Union{Real,Symbol}: Circle radius in meters. Default: 1\nget_fill_color: Fill color as [R,G,B] or [R,G,B,A] (0-255), or a Symbol for data-driven color\nget_line_color: Outline color (same format as fill_color)\nget_line_width::Union{Real,Symbol}: Outline width in pixels. Default: 1\nradius_scale::Real: Global radius multiplier. Default: 1\nradius_min_pixels::Real: Minimum radius in pixels. Default: 0\nradius_max_pixels::Real: Maximum radius in pixels. Default: Inf\nline_width_units::String: Units for line width (“pixels” or “meters”). Default: \"pixels\"\nline_width_scale::Real: Global line width multiplier. Default: 1\nstroked::Bool: Draw outline. Default: false\nfilled::Bool: Draw fill. Default: true\nbillboard::Bool: If true, circles always face camera. Default: false\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable hover/click interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\nusing DataFrames\n\ndf = DataFrame(\n    longitude = [-122.4, -122.5, -122.3],\n    latitude = [37.8, 37.7, 37.9],\n    size = [100, 200, 150]\n)\n\nlayer = ScatterplotLayer(\n    data = df,\n    get_position = [:longitude, :latitude],\n    get_radius = :size,\n    get_fill_color = [255, 140, 0, 200]\n)\n\n\n\n\n\nTextLayer\n\n\nTextLayer(; data, get_position, get_text, kwargs...)\nRenders text labels at given coordinates.\n\nRequired Arguments\n\ndata: Any Tables.jl-compatible data source\nget_position: Column accessor for [longitude, latitude]\nget_text: Column accessor for text content (Symbol referencing a string column)\n\n\n\nOptional Arguments\n\nid::String: Unique layer identifier\nget_size::Union{Real,Symbol}: Text size in pixels. Default: 32\nget_color: Text color as [R,G,B,A] or column reference. Default: [0,0,0,255]\nget_angle::Union{Real,Symbol}: Text rotation in degrees. Default: 0\nget_text_anchor::String: Horizontal anchor (“start”, “middle”, “end”). Default: \"middle\"\nget_alignment_baseline::String: Vertical anchor (“top”, “center”, “bottom”). Default: \"center\"\nget_pixel_offset::Vector{&lt;:Real}: Pixel offset [x, y]. Default: [0, 0]\nbackground::Bool: Draw background. Default: false\nget_background_color: Background color. Default: [255, 255, 255, 255]\nbackground_padding::Vector{&lt;:Real}: Background padding [x, y]. Default: [0, 0]\nfont_family::String: Font family. Default: \"Monaco, monospace\"\nfont_weight::Union{String,Int}: Font weight. Default: \"normal\"\nline_height::Real: Line height multiplier. Default: 1\nbillboard::Bool: Always face camera. Default: true\nsize_scale::Real: Size multiplier. Default: 1\nsize_units::String: Size units (“pixels” or “meters”). Default: \"pixels\"\nsize_min_pixels::Real: Minimum size. Default: 0\nsize_max_pixels::Real: Maximum size. Default: Inf\nopacity::Real: Layer opacity (0-1). Default: 1\npickable::Bool: Enable interactions. Default: false\nvisible::Bool: Layer visibility. Default: true\n\n\n\nExample\ncities = (\n    lng = [-122.4, -73.9, -87.6],\n    lat = [37.8, 40.7, 41.9],\n    name = [\"San Francisco\", \"New York\", \"Chicago\"],\n    population = [883000, 8336000, 2693000]\n)\n\nlayer = TextLayer(\n    data = cities,\n    get_position = [:lng, :lat],\n    get_text = :name,\n    get_size = 16,\n    get_color = [0, 0, 0, 255],\n    get_text_anchor = \"middle\",\n    get_alignment_baseline = \"center\"\n)\n\n\n\n\n\nViewState\n\n\nViewState(; longitude=0.0, latitude=0.0, zoom=1.0, pitch=0.0, bearing=0.0)\nCamera/viewport configuration for a deck.gl visualization.\n\nFields\n\nlongitude::Float64: Center longitude\nlatitude::Float64: Center latitude\nzoom::Float64: Zoom level (0-20+)\npitch::Float64: Tilt angle in degrees (0-60)\nbearing::Float64: Rotation angle in degrees (0-360)",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#functions",
+    "href": "api.html#functions",
+    "title": "API",
+    "section": "Functions",
+    "text": "Functions\n\n\narcs\n\n\narcs(data, source, target; width=1, source_color=[0, 128, 255], target_color=[255, 0, 128], kwargs...)\nCreate an arc diagram visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\nsource: Source position as [lng_col, lat_col] or single column Symbol\ntarget: Target position as [lng_col, lat_col] or single column Symbol\n\n\n\nKeyword Arguments\n\nwidth: Arc width (number or column Symbol). Default: 1\nsource_color: Source end color. Default: [0, 128, 255]\ntarget_color: Target end color. Default: [255, 0, 128]\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 3\nkwargs...: Additional keyword arguments passed to ArcLayer\n\n\n\nExample\ntrips = (src_lng=[-122.4], src_lat=[37.8], dst_lng=[-73.9], dst_lat=[40.7])\narcs(trips, [:src_lng, :src_lat], [:dst_lng, :dst_lat])\n\n\n\n\n\ngeojson\n\n\ngeojson(data; fill_color=[0, 0, 0, 100], line_color=[0, 0, 0], kwargs...)\nCreate a GeoJSON visualization.\n\nArguments\n\ndata: GeoJSON data as Dict, JSON string, or URL\n\n\n\nKeyword Arguments\n\nfill_color: Fill color for polygons. Default: [0, 0, 0, 100]\nline_color: Line/stroke color. Default: [0, 0, 0]\nline_width: Line width. Default: 1\npoint_radius: Point radius. Default: 1\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 4\nkwargs...: Additional keyword arguments passed to GeoJsonLayer\n\n\n\n\n\n\ngeojson_layer\n\n\ngeojson_layer(geom; kwargs...) -&gt; GeoJsonLayer\nCreate a GeoJsonLayer from any GeoInterface-compatible geometry.\n\nExample\nusing Shapefile\n\nshp = Shapefile.Table(\"boundaries.shp\")\nlayer = geojson_layer(shp, get_fill_color=[255, 0, 0, 100])\n\n\n\n\n\nheatmap\n\n\nheatmap(data, lng, lat; radius=30, intensity=1, weight=1, kwargs...)\nCreate a heatmap visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\nlng: Column name for longitude\nlat: Column name for latitude\n\n\n\nKeyword Arguments\n\nradius: Radius of influence in pixels. Default: 30\nintensity: Intensity multiplier. Default: 1\nweight: Column for point weighting or constant. Default: 1\nthreshold: Minimum density threshold. Default: 0.05\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nkwargs...: Additional keyword arguments passed to HeatmapLayer\n\n\n\n\n\n\nhexbin\n\n\nhexbin(data, lng, lat; radius=1000, elevation_weight=1, kwargs...)\nCreate a hexagonal binning visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\nlng: Column name for longitude\nlat: Column name for latitude\n\n\n\nKeyword Arguments\n\nradius: Hexagon radius in meters. Default: 1000\nelevation_weight: Column for elevation weighting or constant. Default: 1\ncolor_weight: Column for color weighting or constant. Default: 1\nelevation_scale: Elevation multiplier. Default: 1\nextruded: Render as 3D hexagons. Default: true\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nkwargs...: Additional keyword arguments passed to HexagonLayer\n\n\n\n\n\n\nlines\n\n\nlines(data, source, target; width=1, color=[0, 0, 0], kwargs...)\nCreate a line visualization connecting points.\n\nArguments\n\ndata: Tables.jl-compatible data source\nsource: Source position as [lng_col, lat_col]\ntarget: Target position as [lng_col, lat_col]\n\n\n\nKeyword Arguments\n\nwidth: Line width. Default: 1\ncolor: Line color. Default: [0, 0, 0]\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nkwargs...: Additional keyword arguments passed to LineLayer\n\n\n\n\n\n\nopen_html\n\n\nopen_html(deck::Deck; width=\"100%\", height=\"500px\")\nOpen the visualization in the default web browser.\n\n\n\n\npaths\n\n\npaths(data, path_col; width=1, color=[0, 0, 0], kwargs...)\nCreate a path visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\npath_col: Column containing path coordinates (arrays of [lng, lat] pairs)\n\n\n\nKeyword Arguments\n\nwidth: Path width. Default: 1\ncolor: Path color. Default: [0, 0, 0]\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nrounded: Round line caps and joints. Default: false\nkwargs...: Additional keyword arguments passed to PathLayer\n\n\n\n\n\n\npolygons\n\n\npolygons(data, polygon_col; fill_color=[0, 0, 0, 100], line_color=[0, 0, 0], kwargs...)\nCreate a polygon visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\npolygon_col: Column containing polygon coordinates\n\n\n\nKeyword Arguments\n\nfill_color: Fill color. Default: [0, 0, 0, 100]\nline_color: Outline color. Default: [0, 0, 0]\nline_width: Outline width. Default: 1\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nkwargs...: Additional keyword arguments passed to PolygonLayer\n\n\n\n\n\n\nsave_html\n\n\nsave_html(deck::Deck, path::String; width=\"100%\", height=\"500px\")\nSave the visualization as a standalone HTML file.\n\n\n\n\nscatter\n\n\nscatter(data, lng, lat; radius=1, color=[255, 140, 0], opacity=1, zoom=10, kwargs...)\nCreate a scatterplot visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\nlng: Column name for longitude (Symbol)\nlat: Column name for latitude (Symbol)\n\n\n\nKeyword Arguments\n\nradius: Point radius (number or column Symbol). Default: 1\ncolor: Point color as [R,G,B] or [R,G,B,A]. Default: [255, 140, 0]\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nkwargs...: Additional keyword arguments passed to ScatterplotLayer\n\n\n\nExample\ndata = (lng = [-122.4, -122.5], lat = [37.8, 37.7], size = [100, 200])\nscatter(data, :lng, :lat, radius=:size, color=[0, 128, 255])\n\n\n\n\n\ntext\n\n\ntext(data, lng, lat, text_col; size=16, color=[0, 0, 0], kwargs...)\nCreate a text label visualization.\n\nArguments\n\ndata: Tables.jl-compatible data source\nlng: Column name for longitude\nlat: Column name for latitude\ntext_col: Column containing text labels\n\n\n\nKeyword Arguments\n\nsize: Text size. Default: 16\ncolor: Text color. Default: [0, 0, 0]\nopacity: Layer opacity (0-1). Default: 1\nzoom: Initial zoom level. Default: 10\nkwargs...: Additional keyword arguments passed to TextLayer\n\n\n\n\n\n\nto_geojson\n\n\nto_geojson(geom) -&gt; Dict\nConvert a GeoInterface-compatible geometry to a GeoJSON Dict.\n\n\n\n\nto_html\n\n\nto_html(deck::Deck; width=\"100%\", height=\"500px\") -&gt; String\nGenerate a standalone HTML string for the deck.gl visualization.\n\n\n\n\nto_json\n\n\nto_json(deck::Deck) -&gt; String\nConvert a Deck to its deck.gl JSON specification string.",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "resources/benchmarks.html",
+    "href": "resources/benchmarks.html",
+    "title": "Benchmarks",
+    "section": "",
+    "text": "fatal: invalid object name 'origin/benchmark-results'.\n*No benchmark results available yet.*\n\nRun benchmarks locally and push results to the `benchmark-results` branch:\n\n```bash\njulia --project=benchmark benchmark/run.jl\nbash benchmark/push_results.sh\n```",
+    "crumbs": [
+      "Resources",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Benchmarks</span>"
+    ]
+  },
+  {
+    "objectID": "resources/changelog.html",
+    "href": "resources/changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "Unreleased",
+    "crumbs": [
+      "Resources",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Changelog</span>"
+    ]
+  }
+]
