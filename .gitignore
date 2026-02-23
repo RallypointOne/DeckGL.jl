@@ -15,6 +15,7 @@ docs/*_files/
 docs/coverage/
 **/*.quarto_ipynb
 *.html
+!docs/_version-selector.html
 benchmark/results.json
 benchmark/Manifest.toml
 .benchmark-worktree/
