@@ -19,3 +19,4 @@ docs/coverage/
 benchmark/results.json
 benchmark/Manifest.toml
 .benchmark-worktree/
+*.jpg

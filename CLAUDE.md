@@ -19,6 +19,20 @@
   ```
 
 - This package was generated from https://github.com/RallypointOne/JuliaPackageTemplate.jl
+- Replace all instances of `JuliaPackageTemplate` to the name set by the user
+- Use Julia to create a new UUID
+- Enable GitHub Pages deployment from the `gh-pages` branch:
+  ```
+  gh api repos/{owner}/{repo}/pages -X POST -f source.branch=gh-pages -f source.path=/
+  ```
+  If Pages is already enabled, update it:
+  ```
+  gh api repos/{owner}/{repo}/pages -X PUT -f source.branch=gh-pages -f source.path=/
+  ```
+- Set the repository website URL to the GitHub Pages site:
+  ```
+  gh repo edit {owner}/{repo} --homepage https://{owner}.github.io/{repo}/
+  ```
 
 # Development
 
@@ -28,6 +42,27 @@
 - Each .qmd file in the docs should have `engine: julia` in the YAML frontmatter
 - Quarto YAML reference: https://quarto.org/docs/reference/
 - Never edit Project.toml or Manifest.toml manually — use Pkg
+- For Claude's plan mode, always write a "plan_$task.md" in .claude
+
+# Benchmarks (Optional)
+
+Benchmarks are not included by default. To set them up:
+
+1. Create the `benchmark/` directory with a `Project.toml` and `run.jl`:
+   ```
+   julia --project=benchmark -e 'using Pkg; Pkg.add(["BenchmarkTools", "JSON3"]); Pkg.develop(path=".")'
+   ```
+2. Create `benchmark/run.jl` that defines a `BenchmarkGroup` suite, runs it, and writes `benchmark/results.json` (see the template repo for an example)
+3. Copy `benchmark/push_results.sh` from the template repo — it pushes `results.json` to the `benchmark-results` orphan branch via a git worktree
+4. Run benchmarks locally:
+   ```
+   julia --project=benchmark benchmark/run.jl
+   bash benchmark/push_results.sh
+   ```
+5. Add the benchmarks doc page:
+   - Copy `docs/resources/benchmarks.qmd` from the template repo
+   - Add `- resources/benchmarks.qmd` to the Resources part in `docs/_quarto.yml`
+6. The Docs workflow already fetches `benchmark-results` if available (`git fetch origin benchmark-results || true`), so no CI changes are needed
 
 # Docs Sidebar
 
@@ -53,7 +88,7 @@
   - **Patch**: fixes, docs, refactoring, dependency updates (default)
 - Commit message: `bump version for new release: {x} to {y}`
 - Generate release notes from commits since last tag (group by features, fixes, etc.)
-- For major/minor bumps, release notes must include "breaking changes" section
+- Important: For major or minor version bumps, release notes must include the word "breaking"
 - Update CHANGELOG.md with each release (prepend new entry under `# Unreleased` or version heading)
 - Register via:
   ```

@@ -7,6 +7,16 @@
     font-weight: bold;
 }
 
+.sidebar-item-section .collapse {
+    display: block !important;
+}
+
+.sidebar-item-toggle {
+    display: none !important;
+}
+
+
+
 /* Fix heading inline code in dark mode */
 h1 code, h2 code, h3 code, h4 code {
     background: none;
@@ -18,6 +28,21 @@ h1 code, h2 code, h3 code, h4 code {
 #quarto-search-results .aa-Panel {
     max-width: 600px;
     font-size: 1rem;
+}
+
+/* Navbar bottom line and logo */
+.navbar {
+    border-bottom: 1px solid #EFF0F6;
+}
+
+.navbar .nav-link:hover {
+    color: #B02102 !important;
+}
+
+.navbar .navbar-logo {
+    height: 2.5rem !important;
+    max-height: 2.5rem !important;
+    margin-right: 0.75rem;
 }
 
 /* Fix search bar in dark mode */
