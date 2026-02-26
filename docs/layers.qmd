@@ -1,8 +1,15 @@
 ---
 title: "Layers"
+engine: julia
 ---
 
-DeckGL.jl provides a variety of layer types for different visualization needs. This page documents all available layers and their properties.
+DeckGL.jl provides a variety of layer types for different visualization needs. Each example below is self-contained and ready to copy-paste.
+
+```{julia}
+#| echo: false
+#| output: false
+using DeckGL
+```
 
 ## Core Layers {#core-layers}
 
@@ -12,12 +19,22 @@ Core layers render individual data points directly without aggregation.
 
 Renders circles at given coordinates.
 
-```julia
-ScatterplotLayer(
-    data = data,
-    get_position = [:lng, :lat],
-    get_radius = 100,
-    get_fill_color = [255, 140, 0, 200]
+```{julia}
+data = (
+    lng = [-122.45, -122.42, -122.38, -122.50, -122.47, -122.41],
+    lat = [37.78, 37.76, 37.79, 37.77, 37.80, 37.75],
+    size = [80, 200, 120, 300, 150, 250]
+)
+
+Deck(
+    ScatterplotLayer(
+        data = data,
+        get_position = [:lng, :lat],
+        get_radius = :size,
+        get_fill_color = [255, 140, 0, 200],
+        radius_min_pixels = 3
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
 )
 ```
 
@@ -42,14 +59,24 @@ ScatterplotLayer(
 
 Renders arcs between source and target coordinates.
 
-```julia
-ArcLayer(
-    data = trips,
-    get_source_position = [:src_lng, :src_lat],
-    get_target_position = [:dst_lng, :dst_lat],
-    get_source_color = [0, 128, 255],
-    get_target_color = [255, 0, 128],
-    get_width = 2
+```{julia}
+trips = (
+    src_lng = [-122.45, -122.50, -122.42],
+    src_lat = [37.78,   37.77,   37.76],
+    dst_lng = [-122.38, -122.41, -122.47],
+    dst_lat = [37.79,   37.75,   37.80]
+)
+
+Deck(
+    ArcLayer(
+        data = trips,
+        get_source_position = [:src_lng, :src_lat],
+        get_target_position = [:dst_lng, :dst_lat],
+        get_source_color = [0, 128, 255],
+        get_target_color = [255, 0, 128],
+        get_width = 3
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
 )
 ```
 
@@ -71,13 +98,23 @@ ArcLayer(
 
 Renders straight lines between source and target coordinates.
 
-```julia
-LineLayer(
-    data = connections,
-    get_source_position = [:from_lng, :from_lat],
-    get_target_position = [:to_lng, :to_lat],
-    get_color = [255, 0, 0],
-    get_width = 2
+```{julia}
+connections = (
+    from_lng = [-122.45, -122.50, -122.42, -122.48],
+    from_lat = [37.78,   37.77,   37.76,   37.79],
+    to_lng   = [-122.38, -122.41, -122.47, -122.43],
+    to_lat   = [37.79,   37.75,   37.80,   37.74]
+)
+
+Deck(
+    LineLayer(
+        data = connections,
+        get_source_position = [:from_lng, :from_lat],
+        get_target_position = [:to_lng, :to_lat],
+        get_color = [255, 0, 0],
+        get_width = 2
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
 )
 ```
 
@@ -95,13 +132,25 @@ LineLayer(
 
 Renders paths/polylines from coordinate sequences.
 
-```julia
-PathLayer(
-    data = routes,
-    get_path = :path,  # Column containing [[lng1,lat1], [lng2,lat2], ...]
-    get_color = [0, 128, 255],
-    get_width = 5,
-    cap_rounded = true
+```{julia}
+routes = (
+    path = [
+        [[-122.45, 37.78], [-122.43, 37.79], [-122.40, 37.78], [-122.38, 37.79]],
+        [[-122.50, 37.77], [-122.48, 37.76], [-122.45, 37.75], [-122.42, 37.76]],
+        [[-122.47, 37.80], [-122.44, 37.81], [-122.41, 37.80], [-122.39, 37.81]]
+    ],
+)
+
+Deck(
+    PathLayer(
+        data = routes,
+        get_path = :path,
+        get_color = [0, 128, 255],
+        get_width = 5,
+        cap_rounded = true,
+        joint_rounded = true
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.78, zoom=12)
 )
 ```
 
@@ -121,14 +170,28 @@ PathLayer(
 
 Renders filled and/or stroked polygons.
 
-```julia
-PolygonLayer(
-    data = regions,
-    get_polygon = :polygon,
-    get_fill_color = [255, 140, 0, 100],
-    get_line_color = [255, 140, 0, 255],
-    extruded = true,
-    get_elevation = :value
+```{julia}
+regions = (
+    polygon = [
+        [[-122.46, 37.78], [-122.44, 37.78], [-122.44, 37.80], [-122.46, 37.80], [-122.46, 37.78]],
+        [[-122.43, 37.76], [-122.40, 37.76], [-122.40, 37.78], [-122.43, 37.78], [-122.43, 37.76]],
+        [[-122.48, 37.74], [-122.45, 37.74], [-122.45, 37.76], [-122.48, 37.76], [-122.48, 37.74]]
+    ],
+    value = [500, 1200, 800]
+)
+
+Deck(
+    PolygonLayer(
+        data = regions,
+        get_polygon = :polygon,
+        get_fill_color = [255, 140, 0, 100],
+        get_line_color = [255, 140, 0, 255],
+        get_line_width = 2,
+        extruded = true,
+        get_elevation = :value,
+        elevation_scale = 1
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, pitch=45)
 )
 ```
 
@@ -151,13 +214,25 @@ PolygonLayer(
 
 Renders text labels at coordinates.
 
-```julia
-TextLayer(
-    data = cities,
-    get_position = [:lng, :lat],
-    get_text = :name,
-    get_size = 16,
-    get_color = [0, 0, 0]
+```{julia}
+cities = (
+    lng  = [-122.42, -122.47, -122.39, -122.50, -122.44],
+    lat  = [37.78,   37.76,   37.79,   37.77,   37.75],
+    name = ["Downtown", "Sunset", "Marina", "Richmond", "Mission"]
+)
+
+Deck(
+    TextLayer(
+        data = cities,
+        get_position = [:lng, :lat],
+        get_text = :name,
+        get_size = 18,
+        get_color = [0, 0, 128],
+        font_family = "Helvetica, Arial, sans-serif",
+        background = true,
+        get_background_color = [255, 255, 255, 200]
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
 )
 ```
 
@@ -184,14 +259,28 @@ Aggregation layers bin data points and render aggregated values.
 
 Aggregates data into hexagonal bins and renders as 3D hexagons.
 
-```julia
-HexagonLayer(
-    data = earthquakes,
-    get_position = [:lng, :lat],
-    get_elevation_weight = :magnitude,
-    radius = 50000,
-    elevation_scale = 100,
-    extruded = true
+```{julia}
+# Generate random earthquake-like data around San Francisco
+earthquakes = let
+    n = 200
+    (
+        lng = -122.4 .+ 0.2 * randn(n),
+        lat = 37.8 .+ 0.15 * randn(n),
+        magnitude = 1.0 .+ 3.0 * rand(n)
+    )
+end
+
+Deck(
+    HexagonLayer(
+        data = earthquakes,
+        get_position = [:lng, :lat],
+        get_elevation_weight = :magnitude,
+        radius = 500,
+        elevation_scale = 50,
+        extruded = true,
+        coverage = 0.9
+    ),
+    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45)
 )
 ```
 
@@ -217,13 +306,26 @@ HexagonLayer(
 
 Aggregates data into rectangular grid cells.
 
-```julia
-GridLayer(
-    data = points,
-    get_position = [:lng, :lat],
-    cell_size = 200,
-    elevation_scale = 4,
-    extruded = true
+```{julia}
+# Generate random points around San Francisco
+points = let
+    n = 300
+    (
+        lng = -122.4 .+ 0.15 * randn(n),
+        lat = 37.8 .+ 0.1 * randn(n),
+    )
+end
+
+Deck(
+    GridLayer(
+        data = points,
+        get_position = [:lng, :lat],
+        cell_size = 400,
+        elevation_scale = 10,
+        extruded = true,
+        coverage = 0.8
+    ),
+    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45)
 )
 ```
 
@@ -245,14 +347,32 @@ GridLayer(
 
 Renders a heatmap based on point density and weights.
 
-```julia
-HeatmapLayer(
-    data = incidents,
-    get_position = [:lng, :lat],
-    get_weight = :severity,
-    radius_pixels = 50,
-    intensity = 1,
-    threshold = 0.03
+```{julia}
+# Generate clustered incident data
+incidents = let
+    n = 500
+    # Two clusters
+    lng1 = -122.45 .+ 0.03 * randn(n ÷ 2)
+    lat1 = 37.78 .+ 0.02 * randn(n ÷ 2)
+    lng2 = -122.40 .+ 0.02 * randn(n ÷ 2)
+    lat2 = 37.76 .+ 0.015 * randn(n ÷ 2)
+    (
+        lng = vcat(lng1, lng2),
+        lat = vcat(lat1, lat2),
+        severity = 1.0 .+ 4.0 * rand(n)
+    )
+end
+
+Deck(
+    HeatmapLayer(
+        data = incidents,
+        get_position = [:lng, :lat],
+        get_weight = :severity,
+        radius_pixels = 50,
+        intensity = 1,
+        threshold = 0.03
+    ),
+    initial_view_state = ViewState(longitude=-122.43, latitude=37.77, zoom=12)
 )
 ```
 
@@ -276,25 +396,52 @@ Composite layers render complex data types using multiple sub-layers.
 
 Renders GeoJSON data as points, lines, and polygons.
 
-```julia
-# From Dict
+```{julia}
 geojson_data = Dict(
     "type" => "FeatureCollection",
-    "features" => [...]
+    "features" => [
+        Dict(
+            "type" => "Feature",
+            "geometry" => Dict(
+                "type" => "Polygon",
+                "coordinates" => [[
+                    [-122.46, 37.78], [-122.44, 37.78], [-122.44, 37.80],
+                    [-122.46, 37.80], [-122.46, 37.78]
+                ]]
+            ),
+            "properties" => Dict("name" => "Area A")
+        ),
+        Dict(
+            "type" => "Feature",
+            "geometry" => Dict(
+                "type" => "Point",
+                "coordinates" => [-122.42, 37.77]
+            ),
+            "properties" => Dict("name" => "Point B")
+        ),
+        Dict(
+            "type" => "Feature",
+            "geometry" => Dict(
+                "type" => "LineString",
+                "coordinates" => [
+                    [-122.48, 37.76], [-122.45, 37.75], [-122.42, 37.76]
+                ]
+            ),
+            "properties" => Dict("name" => "Route C")
+        )
+    ]
 )
 
-GeoJsonLayer(
-    data = geojson_data,
-    get_fill_color = [255, 0, 0, 100],
-    get_line_color = [255, 0, 0, 255],
-    get_point_radius = 100
-)
-
-# From URL
-GeoJsonLayer(
-    data = "https://example.com/data.geojson",
-    filled = true,
-    stroked = true
+Deck(
+    GeoJsonLayer(
+        data = geojson_data,
+        get_fill_color = [0, 100, 200, 100],
+        get_line_color = [0, 100, 200, 255],
+        get_line_width = 3,
+        get_point_radius = 200,
+        line_width_min_pixels = 2
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
 )
 ```
 
