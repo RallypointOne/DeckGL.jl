@@ -33,7 +33,6 @@ book:
         - api.qmd
     - part: "Resources"
       chapters:
-        - resources/benchmarks.qmd
         - resources/changelog.qmd
         - resources/coverage.qmd
 
@@ -48,8 +47,7 @@ format:
     css: styles.css
     number-sections: false
     theme:
-      light: flatly
-      dark: darkly
-    respect-user-color-scheme: true
+      - flatly
+      - theme.scss
     include-after-body:
       - file: _version-selector.html

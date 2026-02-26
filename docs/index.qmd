@@ -8,7 +8,7 @@ subtitle: "GPU-accelerated geospatial visualization for Julia"
 
 [GPU-accelerated geospatial visualization for Julia]{.tagline}
 
-[![CI](https://github.com/joshday/DeckGL.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/joshday/DeckGL.jl/actions/workflows/CI.yml)
+[![CI](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml)
 :::
 
 DeckGL.jl is a Julia package for creating interactive, GPU-accelerated visualizations using [deck.gl](https://deck.gl/). It provides a simple, Julian API for rendering large-scale geospatial data in web browsers and notebooks.
@@ -78,7 +78,7 @@ scatter(data, :longitude, :latitude, radius=:size, color=[255, 140, 0]) |> open_
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/joshday/DeckGL.jl")
+Pkg.add(url="https://github.com/RallypointOne/DeckGL.jl")
 ```
 
 ## Layer Types

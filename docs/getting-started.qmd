@@ -10,7 +10,7 @@ DeckGL.jl can be installed from GitHub:
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/joshday/DeckGL.jl")
+Pkg.add(url="https://github.com/RallypointOne/DeckGL.jl")
 ```
 
 ## Basic Concepts
