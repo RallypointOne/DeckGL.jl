@@ -41,6 +41,10 @@ jobs:
       - uses: julia-actions/cache@v2
       - name: Install docs dependencies
         run: julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
+      - name: Precompile QuartoNotebookRunner
+        run: julia -e 'import Pkg; Pkg.activate(; temp=true); Pkg.add("QuartoNotebookRunner"); using QuartoNotebookRunner'
+      - name: Precompile docs project
+        run: julia --project=docs -e 'using Pkg; Pkg.precompile()'
       - name: Install lcov
         run: sudo apt-get install -y lcov
       - name: Fetch benchmark results
