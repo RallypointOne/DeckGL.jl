@@ -37,7 +37,7 @@
     "href": "index.html#installation",
     "title": "DeckGL.jl",
     "section": "Installation",
-    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/joshday/DeckGL.jl\")",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/DeckGL.jl\")",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
@@ -81,7 +81,7 @@
     "href": "getting-started.html#installation",
     "title": "Getting Started",
     "section": "",
-    "text": "using Pkg\nPkg.add(url=\"https://github.com/joshday/DeckGL.jl\")",
+    "text": "using Pkg\nPkg.add(url=\"https://github.com/RallypointOne/DeckGL.jl\")",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
@@ -407,17 +407,6 @@
     ]
   },
   {
-    "objectID": "resources/benchmarks.html",
-    "href": "resources/benchmarks.html",
-    "title": "Benchmarks",
-    "section": "",
-    "text": "NoteNo benchmark results available\n\n\n\nBenchmarks have not been set up for this package yet. See the CLAUDE.md for instructions on how to set up benchmarks.",
-    "crumbs": [
-      "Resources",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Benchmarks</span>"
-    ]
-  },
-  {
     "objectID": "resources/changelog.html",
     "href": "resources/changelog.html",
     "title": "Changelog",
@@ -425,7 +414,7 @@
     "text": "Unreleased",
     "crumbs": [
       "Resources",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Changelog</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Changelog</span>"
     ]
   }
 ]
