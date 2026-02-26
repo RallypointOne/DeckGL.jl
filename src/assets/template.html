@@ -43,11 +43,11 @@
         const spec = {{SPEC_JSON}};
 
         // Process accessor strings that start with "@@="
-        function processAccessor(value, obj) {
+        function processAccessor(value) {
             if (typeof value === 'string' && value.startsWith('@@=')) {
-                const path = value.slice(3);
+                const field = value.slice(3);
                 return (d) => {
-                    const parts = path.split('.');
+                    const parts = field.split('.');
                     let result = d;
                     for (const part of parts) {
                         result = result[part];
@@ -71,57 +71,62 @@
             const props = {};
             for (const [key, value] of Object.entries(layerSpec)) {
                 if (key === '@@type') continue;
-                props[key] = processAccessor(value, null);
+                props[key] = processAccessor(value);
             }
 
             return new LayerClass(props);
         }
 
-        // Create layers
-        const layers = spec.layers.map(processLayer).filter(l => l !== null);
+        // Initialize deck.gl with retry for live-reload environments
+        function initDeck() {
+            if (typeof deck === 'undefined') {
+                setTimeout(initDeck, 200);
+                return;
+            }
 
-        // Check if we have a map style
-        if (spec.mapStyle) {
-            // Create MapLibre map first
-            const map = new maplibregl.Map({
-                container: 'map',
-                style: spec.mapStyle,
-                center: [spec.initialViewState.longitude, spec.initialViewState.latitude],
-                zoom: spec.initialViewState.zoom,
-                pitch: spec.initialViewState.pitch || 0,
-                bearing: spec.initialViewState.bearing || 0,
-                interactive: false  // deck.gl will handle interaction
-            });
+            const layers = spec.layers.map(processLayer).filter(l => l !== null);
 
-            // Create deck.gl overlay
-            new deck.DeckGL({
-                canvas: 'deck-overlay',
-                initialViewState: spec.initialViewState,
-                controller: spec.controller,
-                layers: layers,
-                getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null,
-                onViewStateChange: ({viewState}) => {
-                    map.jumpTo({
-                        center: [viewState.longitude, viewState.latitude],
-                        zoom: viewState.zoom,
-                        pitch: viewState.pitch,
-                        bearing: viewState.bearing
-                    });
-                }
-            });
-        } else {
-            // No base map - remove the map elements and use deck.gl directly
-            const container = document.getElementById('deck-container');
-            container.innerHTML = '';
+            if (spec.mapStyle) {
+                const map = new maplibregl.Map({
+                    container: 'map',
+                    style: spec.mapStyle,
+                    center: [spec.initialViewState.longitude, spec.initialViewState.latitude],
+                    zoom: spec.initialViewState.zoom,
+                    pitch: spec.initialViewState.pitch || 0,
+                    bearing: spec.initialViewState.bearing || 0,
+                    interactive: false
+                });
 
-            new deck.DeckGL({
-                container: container,
-                initialViewState: spec.initialViewState,
-                controller: spec.controller,
-                layers: layers,
-                getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
-            });
+                new deck.DeckGL({
+                    canvas: 'deck-overlay',
+                    initialViewState: spec.initialViewState,
+                    controller: spec.controller,
+                    layers: layers,
+                    getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null,
+                    onViewStateChange: ({viewState}) => {
+                        map.jumpTo({
+                            center: [viewState.longitude, viewState.latitude],
+                            zoom: viewState.zoom,
+                            pitch: viewState.pitch,
+                            bearing: viewState.bearing
+                        });
+                    }
+                });
+            } else {
+                const container = document.getElementById('deck-container');
+                container.innerHTML = '';
+
+                new deck.DeckGL({
+                    container: container,
+                    initialViewState: spec.initialViewState,
+                    controller: spec.controller,
+                    layers: layers,
+                    getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
+                });
+            }
         }
+
+        initDeck();
     </script>
 </body>
 </html>
