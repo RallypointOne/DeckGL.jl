@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeckGL Visualization</title>
-    <script src="https://unpkg.com/deck.gl@9.0.16/dist.min.js"></script>
-    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
         body {
@@ -42,15 +40,33 @@
     <script>
         const spec = {{SPEC_JSON}};
 
+        // Load a script with retry on failure
+        function loadScript(src, retries) {
+            retries = retries || 2;
+            return new Promise(function(resolve, reject) {
+                var script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = function() {
+                    if (retries > 0) {
+                        loadScript(src, retries - 1).then(resolve, reject);
+                    } else {
+                        reject(new Error('Failed to load: ' + src));
+                    }
+                };
+                document.head.appendChild(script);
+            });
+        }
+
         // Process accessor strings that start with "@@="
         function processAccessor(value) {
             if (typeof value === 'string' && value.startsWith('@@=')) {
-                const field = value.slice(3);
-                return (d) => {
-                    const parts = field.split('.');
-                    let result = d;
-                    for (const part of parts) {
-                        result = result[part];
+                var field = value.slice(3);
+                return function(d) {
+                    var parts = field.split('.');
+                    var result = d;
+                    for (var i = 0; i < parts.length; i++) {
+                        result = result[parts[i]];
                     }
                     return result;
                 };
@@ -60,34 +76,36 @@
 
         // Process layer specification
         function processLayer(layerSpec) {
-            const layerType = layerSpec['@@type'];
-            const LayerClass = deck[layerType];
+            var layerType = layerSpec['@@type'];
+            var LayerClass = deck[layerType];
 
             if (!LayerClass) {
                 console.error('Unknown layer type:', layerType);
                 return null;
             }
 
-            const props = {};
-            for (const [key, value] of Object.entries(layerSpec)) {
-                if (key === '@@type') continue;
-                props[key] = processAccessor(value);
+            var props = {};
+            var keys = Object.keys(layerSpec);
+            for (var i = 0; i < keys.length; i++) {
+                if (keys[i] === '@@type') continue;
+                props[keys[i]] = processAccessor(layerSpec[keys[i]]);
             }
 
             return new LayerClass(props);
         }
 
-        // Initialize deck.gl with retry for live-reload environments
-        function initDeck() {
-            if (typeof deck === 'undefined') {
-                setTimeout(initDeck, 200);
-                return;
-            }
+        // Determine which scripts to load
+        var scripts = ['https://unpkg.com/deck.gl@9.0.16/dist.min.js'];
+        if (spec.mapStyle) {
+            scripts.push('https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js');
+        }
 
-            const layers = spec.layers.map(processLayer).filter(l => l !== null);
+        // Load scripts then initialize
+        Promise.all(scripts.map(function(src) { return loadScript(src); })).then(function() {
+            var layers = spec.layers.map(processLayer).filter(function(l) { return l !== null; });
 
             if (spec.mapStyle) {
-                const map = new maplibregl.Map({
+                var map = new maplibregl.Map({
                     container: 'map',
                     style: spec.mapStyle,
                     center: [spec.initialViewState.longitude, spec.initialViewState.latitude],
@@ -102,18 +120,18 @@
                     initialViewState: spec.initialViewState,
                     controller: spec.controller,
                     layers: layers,
-                    getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null,
-                    onViewStateChange: ({viewState}) => {
+                    getTooltip: spec.pickable ? function(info) { return info.object && JSON.stringify(info.object); } : null,
+                    onViewStateChange: function(e) {
                         map.jumpTo({
-                            center: [viewState.longitude, viewState.latitude],
-                            zoom: viewState.zoom,
-                            pitch: viewState.pitch,
-                            bearing: viewState.bearing
+                            center: [e.viewState.longitude, e.viewState.latitude],
+                            zoom: e.viewState.zoom,
+                            pitch: e.viewState.pitch,
+                            bearing: e.viewState.bearing
                         });
                     }
                 });
             } else {
-                const container = document.getElementById('deck-container');
+                var container = document.getElementById('deck-container');
                 container.innerHTML = '';
 
                 new deck.DeckGL({
@@ -121,12 +139,14 @@
                     initialViewState: spec.initialViewState,
                     controller: spec.controller,
                     layers: layers,
-                    getTooltip: spec.pickable ? ({object}) => object && JSON.stringify(object) : null
+                    getTooltip: spec.pickable ? function(info) { return info.object && JSON.stringify(info.object); } : null
                 });
             }
-        }
-
-        initDeck();
+        }).catch(function(err) {
+            console.error('DeckGL initialization failed:', err);
+            var container = document.getElementById('deck-container');
+            container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;">Failed to load visualization. Please refresh the page.</div>';
+        });
     </script>
 </body>
 </html>
