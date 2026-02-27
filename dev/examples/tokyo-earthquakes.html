@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Tokyo Region Earthquakes – DeckGL.jl</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../examples/london-buildings-3d.html" rel="next">
+<link href="../examples/global-flight-routes.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c35b4686a6fabbef78126217f9bf200b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-e9512225fbbb2050a673b742e2d1457e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "/"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "Search  (/)",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="https://rallypoint1.com" class="navbar-brand navbar-brand-logo">
+    <img src="https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638" alt="" class="navbar-logo light-content">
+    <img src="https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="https://rallypoint1.com">
+    <span class="navbar-title">DeckGL.jl</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/RallypointOne/DeckGL.jl/stargazers"> <i class="bi bi-star" role="img">
+</i> 
+<span class="menu-text">Star</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/RallypointOne/DeckGL.jl"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../examples/tokyo-earthquakes.html"><span class="chapter-title">Tokyo Region Earthquakes</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Docs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">DeckGL.jl</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../getting-started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Getting Started</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../layers.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Layers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../widgets.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Widgets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/global-flight-routes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Global Flight Routes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/tokyo-earthquakes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Tokyo Region Earthquakes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/london-buildings-3d.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">London Buildings 3D</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/paris-trees.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Paris Trees</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/uk-road-accidents.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">UK Road Accidents</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/australia-earthquakes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Australia / Indo-Pacific Earthquakes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/us-fire-hotspots.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">US Fire Hotspots</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">API</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/changelog.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Changelog</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../resources/coverage.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Coverage</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../examples/tokyo-earthquakes.html"><span class="chapter-title">Tokyo Region Earthquakes</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Tokyo Region Earthquakes</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Seismic activity near Tokyo (2020–2024, M1.5+) from the USGS Earthquake Hazards Program.</p>
+<p><strong>Layers:</strong> HexagonLayer | <strong>Map:</strong> Dark Matter</p>
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="fu">string</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&amp;starttime=2020-01-01&amp;endtime=2024-12-31"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&amp;minlatitude=34.5&amp;maxlatitude=36.5"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&amp;minlongitude=138.5&amp;maxlongitude=141.0"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&amp;minmagnitude=1.5&amp;limit=5000"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> JSON3.<span class="fu">read</span>(<span class="fu">read</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url), <span class="dt">String</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> response[<span class="op">:</span>features]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="dt">Float64</span>[f[<span class="op">:</span>geometry][<span class="op">:</span>coordinates][<span class="fl">1</span>] for f <span class="kw">in</span> features],</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="dt">Float64</span>[f[<span class="op">:</span>geometry][<span class="op">:</span>coordinates][<span class="fl">2</span>] for f <span class="kw">in</span> features],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>hexagons <span class="op">=</span> <span class="fu">HexagonLayer</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    radius <span class="op">=</span> <span class="fl">3000</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">50</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    coverage <span class="op">=</span> <span class="fl">0.88</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    color_range <span class="op">=</span> [</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">178</span>],</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">254</span>, <span class="fl">204</span>, <span class="fl">92</span>],</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">253</span>, <span class="fl">141</span>, <span class="fl">60</span>],</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">240</span>, <span class="fl">59</span>, <span class="fl">32</span>],</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">189</span>, <span class="fl">0</span>, <span class="fl">38</span>],</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">128</span>, <span class="fl">0</span>, <span class="fl">38</span>],</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    opacity <span class="op">=</span> <span class="fl">0.85</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    [hexagons],</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="fl">139.9</span>, latitude <span class="op">=</span> <span class="fl">35.4</span>, zoom <span class="op">=</span> <span class="fl">8.0</span>, pitch <span class="op">=</span> <span class="fl">50.0</span>, bearing <span class="op">=</span> <span class="op">-</span><span class="fl">20.0</span>),</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KICAgIDxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KICAgIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIj4KICAgIDx0aXRsZT5EZWNrR0wgVmlzdWFsaXphdGlvbjwvdGl0bGU+CiAgICA8bGluayBocmVmPSJodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEAzLjYuMi9kaXN0L21hcGxpYnJlLWdsLmNzcyIgcmVsPSJzdHlsZXNoZWV0IiAvPgogICAgPGxpbmsgaHJlZj0iaHR0cHM6Ly91bnBrZy5jb20vZGVjay5nbEA5LjAuMTYvZGlzdC9zdHlsZXNoZWV0LmNzcyIgcmVsPSJzdHlsZXNoZWV0IiAvPgogICAgPHN0eWxlPgogICAgICAgIGJvZHkgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgIG92ZXJmbG93OiBoaWRkZW47CiAgICAgICAgfQogICAgICAgICNkZWNrLWNvbnRhaW5lciB7CiAgICAgICAgICAgIHdpZHRoOiAxMDAlOwogICAgICAgICAgICBoZWlnaHQ6IDUwMHB4OwogICAgICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICAgICAgfQogICAgICAgICNtYXAgewogICAgICAgICAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICAgICAgICAgIHRvcDogMDsKICAgICAgICAgICAgbGVmdDogMDsKICAgICAgICAgICAgd2lkdGg6IDEwMCU7CiAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICB9CiAgICAgICAgI2RlY2stb3ZlcmxheSB7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICBsZWZ0OiAwOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OiAxMDAlOwogICAgICAgIH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CiAgICA8ZGl2IGlkPSJkZWNrLWNvbnRhaW5lciI+CiAgICAgICAgPGRpdiBpZD0ibWFwIj48L2Rpdj4KICAgICAgICA8Y2FudmFzIGlkPSJkZWNrLW92ZXJsYXkiPjwvY2FudmFzPgogICAgPC9kaXY+CiAgICA8c2NyaXB0PgogICAgICAgIGNvbnN0IHNwZWMgPSB7Im1hcFN0eWxlIjoiaHR0cHM6Ly9iYXNlbWFwcy5jYXJ0b2Nkbi5jb20vZ2wvZGFyay1tYXR0ZXItZ2wtc3R5bGUvc3R5bGUuanNvbiIsImNvbnRyb2xsZXIiOnRydWUsImluaXRpYWxWaWV3U3RhdGUiOnsibGF0aXR1ZGUiOjM1LjQsInBpdGNoIjo1MC4wLCJiZWFyaW5nIjotMjAuMCwibG9uZ2l0dWRlIjoxMzkuOSwiem9vbSI6OC4wfSwibGF5ZXJzIjpbeyJleHRydWRlZCI6dHJ1ZSwiQEB0eXBlIjoiSGV4YWdvbkxheWVyIiwiZWxldmF0aW9uU2NhbGUiOjUwLCJkYXRhIjpbeyJsbmciOjE0MC41ODMxLCJsYXQiOjM1LjM2MTIsIl9wb3NpdGlvbiI6WzE0MC41ODMxLDM1LjM2MTJdfSx7ImxuZyI6MTQwLjQ4MjksImxhdCI6MzQuNTY1MiwiX3Bvc2l0aW9uIjpbMTQwLjQ4MjksMzQuNTY1Ml19LHsibG5nIjoxMzkuOTI5MiwibGF0IjozNi4yNjE1LCJfcG9zaXRpb24iOlsxMzkuOTI5MiwzNi4yNjE1XX0seyJsbmciOjE0MC42NzQsImxhdCI6MzUuNjI3OSwiX3Bvc2l0aW9uIjpbMTQwLjY3NCwzNS42Mjc5XX0seyJsbmciOjE0MC40NDQyLCJsYXQiOjM1LjI3MTksIl9wb3NpdGlvbiI6WzE0MC40NDQyLDM1LjI3MTldfSx7ImxuZyI6MTQwLjU0NTksImxhdCI6MzUuMDk3NywiX3Bvc2l0aW9uIjpbMTQwLjU0NTksMzUuMDk3N119LHsibG5nIjoxNDAuMTA4LCJsYXQiOjM1LjUxMjMsIl9wb3NpdGlvbiI6WzE0MC4xMDgsMzUuNTEyM119LHsibG5nIjoxMzkuODMyLCJsYXQiOjM2LjAwNTEsIl9wb3NpdGlvbiI6WzEzOS44MzIsMzYuMDA1MV19LHsibG5nIjoxNDAuMzY5MiwibGF0IjozNC41OTIsIl9wb3NpdGlvbiI6WzE0MC4zNjkyLDM0LjU5Ml19LHsibG5nIjoxNDAuNzQ2NywibGF0IjozNS44MDExLCJfcG9zaXRpb24iOlsxNDAuNzQ2NywzNS44MDExXX0seyJsbmciOjE0MC44NDM5LCJsYXQiOjM2LjA1MjUsIl9wb3NpdGlvbiI6WzE0MC44NDM5LDM2LjA1MjVdfSx7ImxuZyI6MTQwLjAxOTQsImxhdCI6MzQuOTM5MSwiX3Bvc2l0aW9uIjpbMTQwLjAxOTQsMzQuOTM5MV19LHsibG5nIjoxNDAuNjYxNiwibGF0IjozNS43MDAzLCJfcG9zaXRpb24iOlsxNDAuNjYxNiwzNS43MDAzXX0seyJsbmciOjE0MC4wNjQ1LCJsYXQiOjM1LjUxNjMsIl9wb3NpdGlvbiI6WzE0MC4wNjQ1LDM1LjUxNjNdfSx7ImxuZyI6MTQwLjY0ODEsImxhdCI6MzUuODEyMSwiX3Bvc2l0aW9uIjpbMTQwLjY0ODEsMzUuODEyMV19LHsibG5nIjoxNDAuODIwNiwibGF0IjozNS44NzY0LCJfcG9zaXRpb24iOlsxNDAuODIwNiwzNS44NzY0XX0seyJsbmciOjEzOS43MjIzLCJsYXQiOjM2LjEwMzMsIl9wb3NpdGlvbiI6WzEzOS43MjIzLDM2LjEwMzNdfSx7ImxuZyI6MTM5LjMwNCwibGF0IjozNS43NzMxLCJfcG9zaXRpb24iOlsxMzkuMzA0LDM1Ljc3MzFdfSx7ImxuZyI6MTQwLjUxOTEsImxhdCI6MzUuMTU2NiwiX3Bvc2l0aW9uIjpbMTQwLjUxOTEsMzUuMTU2Nl19LHsibG5nIjoxMzkuOTQ2MywibGF0IjozNS45ODg4LCJfcG9zaXRpb24iOlsxMzkuOTQ2MywzNS45ODg4XX0seyJsbmciOjE0MC4wMDE1LCJsYXQiOjM1LjQ4ODIsIl9wb3NpdGlvbiI6WzE0MC4wMDE1LDM1LjQ4ODJdfSx7ImxuZyI6MTQwLjA1NjEsImxhdCI6MzUuOTMsIl9wb3NpdGlvbiI6WzE0MC4wNTYxLDM1LjkzXX0seyJsbmciOjEzOS43NzM1LCJsYXQiOjM2LjQ1NDMsIl9wb3NpdGlvbiI6WzEzOS43NzM1LDM2LjQ1NDNdfSx7ImxuZyI6MTQwLjc3NTIsImxhdCI6MzUuNzA0LCJfcG9zaXRpb24iOlsxNDAuNzc1MiwzNS43MDRdfSx7ImxuZyI6MTQwLjEwNDgsImxhdCI6MzUuODc0LCJfcG9zaXRpb24iOlsxNDAuMTA0OCwzNS44NzRdfSx7ImxuZyI6MTQwLjIyOCwibGF0IjozNS42MjUsIl9wb3NpdGlvbiI6WzE0MC4yMjgsMzUuNjI1XX0seyJsbmciOjEzOC45Mzg4LCJsYXQiOjM1LjUwMzEsIl9wb3NpdGlvbiI6WzEzOC45Mzg4LDM1LjUwMzFdfSx7ImxuZyI6MTM5LjU5MDMsImxhdCI6MzUuNDk4NCwiX3Bvc2l0aW9uIjpbMTM5LjU5MDMsMzUuNDk4NF19LHsibG5nIjoxNDAuMDcyNSwibGF0IjozNC41NTIzLCJfcG9zaXRpb24iOlsxNDAuMDcyNSwzNC41NTIzXX0seyJsbmciOjE0MC4yNjg5LCJsYXQiOjM1Ljk2NjcsIl9wb3NpdGlvbiI6WzE0MC4yNjg5LDM1Ljk2NjddfSx7ImxuZyI6MTM5LjE5NTQsImxhdCI6MzUuMzk3MywiX3Bvc2l0aW9uIjpbMTM5LjE5NTQsMzUuMzk3M119LHsibG5nIjoxNDAuODA2NCwibGF0IjozNS42MTM1LCJfcG9zaXRpb24iOlsxNDAuODA2NCwzNS42MTM1XX0seyJsbmciOjEzOS4zMTIyLCJsYXQiOjM1LjQxMTYsIl9wb3NpdGlvbiI6WzEzOS4zMTIyLDM1LjQxMTZdfSx7ImxuZyI6MTM5LjQwMTMsImxhdCI6MzUuMjE4NywiX3Bvc2l0aW9uIjpbMTM5LjQwMTMsMzUuMjE4N119LHsibG5nIjoxMzkuNDQ2MywibGF0IjozNS42MjAzLCJfcG9zaXRpb24iOlsxMzkuNDQ2MywzNS42MjAzXX0seyJsbmciOjE0MC40MDksImxhdCI6MzUuMzQyMywiX3Bvc2l0aW9uIjpbMTQwLjQwOSwzNS4zNDIzXX0seyJsbmciOjE0MC4wNTA2LCJsYXQiOjM1Ljk3NzUsIl9wb3NpdGlvbiI6WzE0MC4wNTA2LDM1Ljk3NzVdfSx7ImxuZyI6MTQwLjA3NTQsImxhdCI6MzUuOTcxNiwiX3Bvc2l0aW9uIjpbMTQwLjA3NTQsMzUuOTcxNl19LHsibG5nIjoxNDAuNjM4NiwibGF0IjozNi40OCwiX3Bvc2l0aW9uIjpbMTQwLjYzODYsMzYuNDhdfSx7ImxuZyI6MTQwLjMwOTUsImxhdCI6MzUuMDgzOSwiX3Bvc2l0aW9uIjpbMTQwLjMwOTUsMzUuMDgzOV19LHsibG5nIjoxNDAuNjQxNiwibGF0IjozNi40NTU5LCJfcG9zaXRpb24iOlsxNDAuNjQxNiwzNi40NTU5XX0seyJsbmciOjE0MC42NTU3LCJsYXQiOjM0LjU1NywiX3Bvc2l0aW9uIjpbMTQwLjY1NTcsMzQuNTU3XX0seyJsbmciOjEzOS4zMTYzLCJsYXQiOjM1LjgxNzUsIl9wb3NpdGlvbiI6WzEzOS4zMTYzLDM1LjgxNzVdfSx7ImxuZyI6MTQwLjAzNzMsImxhdCI6MzUuNjAzNSwiX3Bvc2l0aW9uIjpbMTQwLjAzNzMsMzUuNjAzNV19LHsibG5nIjoxNDAuMTYxNCwibGF0IjozNS43MzYzLCJfcG9zaXRpb24iOlsxNDAuMTYxNCwzNS43MzYzXX0seyJsbmciOjE0MC4xNTg0LCJsYXQiOjM1LjczNDcsIl9wb3NpdGlvbiI6WzE0MC4xNTg0LDM1LjczNDddfSx7ImxuZyI6MTQwLjY4NTQsImxhdCI6MzUuNTQ5LCJfcG9zaXRpb24iOlsxNDAuNjg1NCwzNS41NDldfSx7ImxuZyI6MTM5LjczOTUsImxhdCI6MzYuMTgxOSwiX3Bvc2l0aW9uIjpbMTM5LjczOTUsMzYuMTgxOV19LHsibG5nIjoxMzkuMTExMSwibGF0IjozNS41MzIxLCJfcG9zaXRpb24iOlsxMzkuMTExMSwzNS41MzIxXX0seyJsbmciOjE0MC4wNDc1LCJsYXQiOjM2LjEwMTUsIl9wb3NpdGlvbiI6WzE0MC4wNDc1LDM2LjEwMTVdfSx7ImxuZyI6MTQwLjI3MDUsImxhdCI6MzUuNzMyOSwiX3Bvc2l0aW9uIjpbMTQwLjI3MDUsMzUuNzMyOV19LHsibG5nIjoxNDAuOTkxOSwibGF0IjozNS44MjEyLCJfcG9zaXRpb24iOlsxNDAuOTkxOSwzNS44MjEyXX0seyJsbmciOjE0MC41NDAyLCJsYXQiOjM2LjQ5MTksIl9wb3NpdGlvbiI6WzE0MC41NDAyLDM2LjQ5MTldfSx7ImxuZyI6MTQwLjU4NzQsImxhdCI6MzYuNDIzMiwiX3Bvc2l0aW9uIjpbMTQwLjU4NzQsMzYuNDIzMl19LHsibG5nIjoxNDAuMDc1OCwibGF0IjozNS41NzA5LCJfcG9zaXRpb24iOlsxNDAuMDc1OCwzNS41NzA5XX0seyJsbmciOjEzOS44ODkxLCJsYXQiOjM2LjA0ODUsIl9wb3NpdGlvbiI6WzEzOS44ODkxLDM2LjA0ODVdfSx7ImxuZyI6MTM5LjY3MjcsImxhdCI6MzUuNjQyLCJfcG9zaXRpb24iOlsxMzkuNjcyNywzNS42NDJdfSx7ImxuZyI6MTQwLjQzMDgsImxhdCI6MzUuNDgwMiwiX3Bvc2l0aW9uIjpbMTQwLjQzMDgsMzUuNDgwMl19LHsibG5nIjoxMzkuNzQ4LCJsYXQiOjM1Ljk3MzksIl9wb3NpdGlvbiI6WzEzOS43NDgsMzUuOTczOV19LHsibG5nIjoxNDAuMTk3OCwibGF0IjozNS42MDY5LCJfcG9zaXRpb24iOlsxNDAuMTk3OCwzNS42MDY5XX0seyJsbmciOjE0MC4yNjM4LCJsYXQiOjM1LjYxODksIl9wb3NpdGlvbiI6WzE0MC4yNjM4LDM1LjYxODldfSx7ImxuZyI6MTQwLjMyNjEsImxhdCI6MzUuMzA5LCJfcG9zaXRpb24iOlsxNDAuMzI2MSwzNS4zMDldfSx7ImxuZyI6MTQwLjI3NTMsImxhdCI6MzYuMTQzNSwiX3Bvc2l0aW9uIjpbMTQwLjI3NTMsMzYuMTQzNV19LHsibG5nIjoxNDAuMjAyMSwibGF0IjozNC42NDQxLCJfcG9zaXRpb24iOlsxNDAuMjAyMSwzNC42NDQxXX0seyJsbmciOjE0MC4yOTA4LCJsYXQiOjM1LjI4MzMsIl9wb3NpdGlvbiI6WzE0MC4yOTA4LDM1LjI4MzNdfSx7ImxuZyI6MTQwLjI5MzUsImxhdCI6MzUuMjM4NiwiX3Bvc2l0aW9uIjpbMTQwLjI5MzUsMzUuMjM4Nl19LHsibG5nIjoxNDAuNDAzMiwibGF0IjozNS4yNDM1LCJfcG9zaXRpb24iOlsxNDAuNDAzMiwzNS4yNDM1XX0seyJsbmciOjE0MC42MzIsImxhdCI6MzUuMzcxLCJfcG9zaXRpb24iOlsxNDAuNjMyLDM1LjM3MV19LHsibG5nIjoxNDAuMDQ3OSwibGF0IjozNi4wNDUzLCJfcG9zaXRpb24iOlsxNDAuMDQ3OSwzNi4wNDUzXX0seyJsbmciOjE0MC41NDcxLCJsYXQiOjM1LjI4NzcsIl9wb3NpdGlvbiI6WzE0MC41NDcxLDM1LjI4NzddfSx7ImxuZyI6MTQwLjQ1MSwibGF0IjozNS4yNzAyLCJfcG9zaXRpb24iOlsxNDAuNDUxLDM1LjI3MDJdfSx7ImxuZyI6MTQwLjY2MjIsImxhdCI6MzUuMjcyOCwiX3Bvc2l0aW9uIjpbMTQwLjY2MjIsMzUuMjcyOF19LHsibG5nIjoxNDAuNTM0MSwibGF0IjozNS4zMTM2LCJfcG9zaXRpb24iOlsxNDAuNTM0MSwzNS4zMTM2XX0seyJsbmciOjE0MC40NDc4LCJsYXQiOjM1LjI2OTcsIl9wb3NpdGlvbiI6WzE0MC40NDc4LDM1LjI2OTddfSx7ImxuZyI6MTQwLjYxMTksImxhdCI6MzUuMTU2NiwiX3Bvc2l0aW9uIjpbMTQwLjYxMTksMzUuMTU2Nl19LHsibG5nIjoxNDAuMDI3LCJsYXQiOjM1LjM4NzQsIl9wb3NpdGlvbiI6WzE0MC4wMjcsMzUuMzg3NF19LHsibG5nIjoxMzkuNzEwMiwibGF0IjozNi4wMDUxLCJfcG9zaXRpb24iOlsxMzkuNzEwMiwzNi4wMDUxXX0seyJsbmciOjEzOS45NzI0LCJsYXQiOjM2LjE1MTcsIl9wb3NpdGlvbiI6WzEzOS45NzI0LDM2LjE1MTddfSx7ImxuZyI6MTQwLjAyNjMsImxhdCI6MzYuMzM1OSwiX3Bvc2l0aW9uIjpbMTQwLjAyNjMsMzYuMzM1OV19LHsibG5nIjoxMzkuNzYyMSwibGF0IjozNS45MzI0LCJfcG9zaXRpb24iOlsxMzkuNzYyMSwzNS45MzI0XX0seyJsbmciOjEzOS4xNjUzLCJsYXQiOjM0Ljk0NjUsIl9wb3NpdGlvbiI6WzEzOS4xNjUzLDM0Ljk0NjVdfSx7ImxuZyI6MTQwLjA5NTQsImxhdCI6MzUuOTgzNCwiX3Bvc2l0aW9uIjpbMTQwLjA5NTQsMzUuOTgzNF19LHsibG5nIjoxMzkuODE3NiwibGF0IjozNS4yMTU0LCJfcG9zaXRpb24iOlsxMzkuODE3NiwzNS4yMTU0XX0seyJsbmciOjEzOS4wNzIyLCJsYXQiOjM1LjUxMTksIl9wb3NpdGlvbiI6WzEzOS4wNzIyLDM1LjUxMTldfSx7ImxuZyI6MTM5Ljk1NTgsImxhdCI6MzUuNTMzMSwiX3Bvc2l0aW9uIjpbMTM5Ljk1NTgsMzUuNTMzMV19LHsibG5nIjoxNDAuNTU4MywibGF0IjozNS42NTQ3LCJfcG9zaXRpb24iOlsxNDAuNTU4MywzNS42NTQ3XX0seyJsbmciOjE0MC45NDIyLCJsYXQiOjM1LjIwNDUsIl9wb3NpdGlvbiI6WzE0MC45NDIyLDM1LjIwNDVdfSx7ImxuZyI6MTQwLjg1NjMsImxhdCI6MzUuMTU5NSwiX3Bvc2l0aW9uIjpbMTQwLjg1NjMsMzUuMTU5NV19LHsibG5nIjoxMzkuNjgyNiwibGF0IjozNi4yMTk3LCJfcG9zaXRpb24iOlsxMzkuNjgyNiwzNi4yMTk3XX0seyJsbmciOjE0MC4xNywibGF0IjozNS41Njg4LCJfcG9zaXRpb24iOlsxNDAuMTcsMzUuNTY4OF19LHsibG5nIjoxMzkuOTEyNCwibGF0IjozNS45MDg4LCJfcG9zaXRpb24iOlsxMzkuOTEyNCwzNS45MDg4XX0seyJsbmciOjE0MC4zMzgyLCJsYXQiOjM2LjAxODQsIl9wb3NpdGlvbiI6WzE0MC4zMzgyLDM2LjAxODRdfSx7ImxuZyI6MTM5Ljg3MzcsImxhdCI6MzYuMDQyMiwiX3Bvc2l0aW9uIjpbMTM5Ljg3MzcsMzYuMDQyMl19LHsibG5nIjoxNDAuNDUzNiwibGF0IjozNS4wMTI0LCJfcG9zaXRpb24iOlsxNDAuNDUzNiwzNS4wMTI0XX0seyJsbmciOjE0MC41Njk3LCJsYXQiOjM2LjQ5NzgsIl9wb3NpdGlvbiI6WzE0MC41Njk3LDM2LjQ5NzhdfSx7ImxuZyI6MTM4LjgxNzksImxhdCI6MzQuODEzNSwiX3Bvc2l0aW9uIjpbMTM4LjgxNzksMzQuODEzNV19LHsibG5nIjoxMzkuNDc1NiwibGF0IjozNS41Mjc1LCJfcG9zaXRpb24iOlsxMzkuNDc1NiwzNS41Mjc1XX0seyJsbmciOjEzOS43OTg4LCJsYXQiOjM2LjEyMDUsIl9wb3NpdGlvbiI6WzEzOS43OTg4LDM2LjEyMDVdfSx7ImxuZyI6MTQwLjMyNCwibGF0IjozNi40MDE2LCJfcG9zaXRpb24iOlsxNDAuMzI0LDM2LjQwMTZdfSx7ImxuZyI6MTM4Ljk4MSwibGF0IjozNS4zNTE4LCJfcG9zaXRpb24iOlsxMzguOTgxLDM1LjM1MThdfSx7ImxuZyI6MTQwLjgyNjUsImxhdCI6MzUuNzI5MiwiX3Bvc2l0aW9uIjpbMTQwLjgyNjUsMzUuNzI5Ml19LHsibG5nIjoxNDAuMzkyMiwibGF0IjozNS42OTg5LCJfcG9zaXRpb24iOlsxNDAuMzkyMiwzNS42OTg5XX0seyJsbmciOjE0MC42NTgxLCJsYXQiOjM1LjYxNDQsIl9wb3NpdGlvbiI6WzE0MC42NTgxLDM1LjYxNDRdfSx7ImxuZyI6MTQwLjI3MTksImxhdCI6MzUuOTMxLCJfcG9zaXRpb24iOlsxNDAuMjcxOSwzNS45MzFdfSx7ImxuZyI6MTQwLjI1ODMsImxhdCI6MzUuNzc5NSwiX3Bvc2l0aW9uIjpbMTQwLjI1ODMsMzUuNzc5NV19LHsibG5nIjoxNDAuMTYzNSwibGF0IjozNS42NjA1LCJfcG9zaXRpb24iOlsxNDAuMTYzNSwzNS42NjA1XX0seyJsbmciOjE0MC4xMzU4LCJsYXQiOjM1LjcwMDQsIl9wb3NpdGlvbiI6WzE0MC4xMzU4LDM1LjcwMDRdfSx7ImxuZyI6MTQwLjQ3NzMsImxhdCI6MzUuNDg4MSwiX3Bvc2l0aW9uIjpbMTQwLjQ3NzMsMzUuNDg4MV19LHsibG5nIjoxNDAuNzcyLCJsYXQiOjM1LjcwMzksIl9wb3NpdGlvbiI6WzE0MC43NzIsMzUuNzAzOV19LHsibG5nIjoxNDAuNzI5MywibGF0IjozNS4xMjMsIl9wb3NpdGlvbiI6WzE0MC43MjkzLDM1LjEyM119LHsibG5nIjoxMzkuOTI1MywibGF0IjozNi4zNjY0LCJfcG9zaXRpb24iOlsxMzkuOTI1MywzNi4zNjY0XX0seyJsbmciOjE0MC4wOTQ2LCJsYXQiOjM1LjkzNTUsIl9wb3NpdGlvbiI6WzE0MC4wOTQ2LDM1LjkzNTVdfSx7ImxuZyI6MTQwLjU5MjgsImxhdCI6MzYuNDQ4LCJfcG9zaXRpb24iOlsxNDAuNTkyOCwzNi40NDhdfSx7ImxuZyI6MTQwLjc0OTksImxhdCI6MzUuNjc5OSwiX3Bvc2l0aW9uIjpbMTQwLjc0OTksMzUuNjc5OV19LHsibG5nIjoxNDAuNzEyMywibGF0IjozNS42MzMyLCJfcG9zaXRpb24iOlsxNDAuNzEyMywzNS42MzMyXX0seyJsbmciOjE0MC40MTAxLCJsYXQiOjM1LjYwNjcsIl9wb3NpdGlvbiI6WzE0MC40MTAxLDM1LjYwNjddfSx7ImxuZyI6MTQwLjU4NTUsImxhdCI6MzUuMDM2MywiX3Bvc2l0aW9uIjpbMTQwLjU4NTUsMzUuMDM2M119LHsibG5nIjoxNDAuMjkyNCwibGF0IjozNS41MDA2LCJfcG9zaXRpb24iOlsxNDAuMjkyNCwzNS41MDA2XX0seyJsbmciOjEzOS43NDk4LCJsYXQiOjM1Ljg3NDUsIl9wb3NpdGlvbiI6WzEzOS43NDk4LDM1Ljg3NDVdfSx7ImxuZyI6MTQwLjc2MDcsImxhdCI6MzUuNjI4OCwiX3Bvc2l0aW9uIjpbMTQwLjc2MDcsMzUuNjI4OF19LHsibG5nIjoxNDAuMTk0NSwibGF0IjozNS43MzA5LCJfcG9zaXRpb24iOlsxNDAuMTk0NSwzNS43MzA5XX0seyJsbmciOjE0MC43Mjk2LCJsYXQiOjM1LjY4OTUsIl9wb3NpdGlvbiI6WzE0MC43Mjk2LDM1LjY4OTVdfSx7ImxuZyI6MTQwLjcxODQsImxhdCI6MzUuNjc1MiwiX3Bvc2l0aW9uIjpbMTQwLjcxODQsMzUuNjc1Ml19LHsibG5nIjoxNDAuMjcyOSwibGF0IjozNS41Njg1LCJfcG9zaXRpb24iOlsxNDAuMjcyOSwzNS41Njg1XX0seyJsbmciOjE0MC4wNTAyLCJsYXQiOjM1LjcxMzIsIl9wb3NpdGlvbiI6WzE0MC4wNTAyLDM1LjcxMzJdfSx7ImxuZyI6MTQwLjI1NjMsImxhdCI6MzUuNTQ0NCwiX3Bvc2l0aW9uIjpbMTQwLjI1NjMsMzUuNTQ0NF19LHsibG5nIjoxNDAuODY1LCJsYXQiOjM1LjY3ODYsIl9wb3NpdGlvbiI6WzE0MC44NjUsMzUuNjc4Nl19LHsibG5nIjoxNDAuODIwNywibGF0IjozNS42MjI2LCJfcG9zaXRpb24iOlsxNDAuODIwNywzNS42MjI2XX0seyJsbmciOjE0MC43MTM2LCJsYXQiOjM1LjU4MjMsIl9wb3NpdGlvbiI6WzE0MC43MTM2LDM1LjU4MjNdfSx7ImxuZyI6MTQwLjYwNiwibGF0IjozNS41MTU5LCJfcG9zaXRpb24iOlsxNDAuNjA2LDM1LjUxNTldfSx7ImxuZyI6MTQwLjUyODEsImxhdCI6MzUuNTI5NCwiX3Bvc2l0aW9uIjpbMTQwLjUyODEsMzUuNTI5NF19LHsibG5nIjoxNDAuODI2OCwibGF0IjozNC44NDMyLCJfcG9zaXRpb24iOlsxNDAuODI2OCwzNC44NDMyXX0seyJsbmciOjE0MC4xODgyLCJsYXQiOjM0LjkzOSwiX3Bvc2l0aW9uIjpbMTQwLjE4ODIsMzQuOTM5XX0seyJsbmciOjEzOS4yNTU2LCJsYXQiOjM1LjU4NDksIl9wb3NpdGlvbiI6WzEzOS4yNTU2LDM1LjU4NDldfSx7ImxuZyI6MTQwLjA5MTMsImxhdCI6MzUuMTE3MSwiX3Bvc2l0aW9uIjpbMTQwLjA5MTMsMzUuMTE3MV19LHsibG5nIjoxMzkuOTg5OSwibGF0IjozNS43MjQsIl9wb3NpdGlvbiI6WzEzOS45ODk5LDM1LjcyNF19LHsibG5nIjoxNDAuNjIxOSwibGF0IjozNi40MTg4LCJfcG9zaXRpb24iOlsxNDAuNjIxOSwzNi40MTg4XX0seyJsbmciOjE0MC4yNTg5LCJsYXQiOjM1LjU2NTYsIl9wb3NpdGlvbiI6WzE0MC4yNTg5LDM1LjU2NTZdfSx7ImxuZyI6MTM5LjUzNTgsImxhdCI6MzYuMDQ0NSwiX3Bvc2l0aW9uIjpbMTM5LjUzNTgsMzYuMDQ0NV19LHsibG5nIjoxNDAuNjAyMiwibGF0IjozNi4xMDI3LCJfcG9zaXRpb24iOlsxNDAuNjAyMiwzNi4xMDI3XX0seyJsbmciOjE0MC41NjQzLCJsYXQiOjM2LjQ1LCJfcG9zaXRpb24iOlsxNDAuNTY0MywzNi40NV19LHsibG5nIjoxMzkuNTUyNywibGF0IjozNi4zMzA2LCJfcG9zaXRpb24iOlsxMzkuNTUyNywzNi4zMzA2XX0seyJsbmciOjE0MC4zNDM0LCJsYXQiOjM2LjQwNTgsIl9wb3NpdGlvbiI6WzE0MC4zNDM0LDM2LjQwNThdfSx7ImxuZyI6MTQwLjk0MDMsImxhdCI6MzUuNDU1LCJfcG9zaXRpb24iOlsxNDAuOTQwMywzNS40NTVdfSx7ImxuZyI6MTQwLjIxNjYsImxhdCI6MzUuNDY1OCwiX3Bvc2l0aW9uIjpbMTQwLjIxNjYsMzUuNDY1OF19LHsibG5nIjoxMzkuNzYwMSwibGF0IjozNi4wNDg1LCJfcG9zaXRpb24iOlsxMzkuNzYwMSwzNi4wNDg1XX0seyJsbmciOjE0MC4xMDkzLCJsYXQiOjM1LjcwMzQsIl9wb3NpdGlvbiI6WzE0MC4xMDkzLDM1LjcwMzRdfSx7ImxuZyI6MTQwLjQ0OTIsImxhdCI6MzYuMzc1NiwiX3Bvc2l0aW9uIjpbMTQwLjQ0OTIsMzYuMzc1Nl19LHsibG5nIjoxNDAuODM1NSwibGF0IjozNS44ODQ1LCJfcG9zaXRpb24iOlsxNDAuODM1NSwzNS44ODQ1XX0seyJsbmciOjE0MC43Mzc4LCJsYXQiOjM1LjY3NTgsIl9wb3NpdGlvbiI6WzE0MC43Mzc4LDM1LjY3NThdfSx7ImxuZyI6MTQwLjk4MjYsImxhdCI6MzUuODczNiwiX3Bvc2l0aW9uIjpbMTQwLjk4MjYsMzUuODczNl19LHsibG5nIjoxNDAuMDc4NSwibGF0IjozNC44OTgsIl9wb3NpdGlvbiI6WzE0MC4wNzg1LDM0Ljg5OF19LHsibG5nIjoxMzkuODU5NywibGF0IjozNS45MjUyLCJfcG9zaXRpb24iOlsxMzkuODU5NywzNS45MjUyXX0seyJsbmciOjEzOS44Nzk3LCJsYXQiOjM2LjM2MTgsIl9wb3NpdGlvbiI6WzEzOS44Nzk3LDM2LjM2MThdfSx7ImxuZyI6MTM5LjI5MzcsImxhdCI6MzUuMzUzMiwiX3Bvc2l0aW9uIjpbMTM5LjI5MzcsMzUuMzUzMl19LHsibG5nIjoxNDAuMTg2OSwibGF0IjozNS45MjYyLCJfcG9zaXRpb24iOlsxNDAuMTg2OSwzNS45MjYyXX0seyJsbmciOjEzOS4yMDI0LCJsYXQiOjM1LjQ1NDEsIl9wb3NpdGlvbiI6WzEzOS4yMDI0LDM1LjQ1NDFdfSx7ImxuZyI6MTM5LjkwMDEsImxhdCI6MzYuMDA5LCJfcG9zaXRpb24iOlsxMzkuOTAwMSwzNi4wMDldfSx7ImxuZyI6MTM5Ljg1NzYsImxhdCI6MzYuMTEzOSwiX3Bvc2l0aW9uIjpbMTM5Ljg1NzYsMzYuMTEzOV19LHsibG5nIjoxMzkuOTIwOSwibGF0IjozNS4yODk4LCJfcG9zaXRpb24iOlsxMzkuOTIwOSwzNS4yODk4XX0seyJsbmciOjE0MC4zNjE3LCJsYXQiOjM1LjM1NTQsIl9wb3NpdGlvbiI6WzE0MC4zNjE3LDM1LjM1NTRdfSx7ImxuZyI6MTM5LjczOTIsImxhdCI6MzYuMDI2OSwiX3Bvc2l0aW9uIjpbMTM5LjczOTIsMzYuMDI2OV19LHsibG5nIjoxMzkuODY2NiwibGF0IjozNS42NzEyLCJfcG9zaXRpb24iOlsxMzkuODY2NiwzNS42NzEyXX0seyJsbmciOjE0MC45NjY0LCJsYXQiOjM2LjQyMTUsIl9wb3NpdGlvbiI6WzE0MC45NjY0LDM2LjQyMTVdfSx7ImxuZyI6MTQwLjQyNDIsImxhdCI6MzUuMzY5OSwiX3Bvc2l0aW9uIjpbMTQwLjQyNDIsMzUuMzY5OV19LHsibG5nIjoxNDAuMjY2NSwibGF0IjozNS43MzcxLCJfcG9zaXRpb24iOlsxNDAuMjY2NSwzNS43MzcxXX0seyJsbmciOjE0MC4wMDg2LCJsYXQiOjM1Ljg5NzksIl9wb3NpdGlvbiI6WzE0MC4wMDg2LDM1Ljg5NzldfSx7ImxuZyI6MTQwLjE1MTksImxhdCI6MzUuNjA3OSwiX3Bvc2l0aW9uIjpbMTQwLjE1MTksMzUuNjA3OV19LHsibG5nIjoxNDAuMDM0MywibGF0IjozNi4xODU1LCJfcG9zaXRpb24iOlsxNDAuMDM0MywzNi4xODU1XX0seyJsbmciOjE0MC4xMzQ4LCJsYXQiOjM1LjA4MDMsIl9wb3NpdGlvbiI6WzE0MC4xMzQ4LDM1LjA4MDNdfSx7ImxuZyI6MTQwLjE3NSwibGF0IjozNS4wODQ3LCJfcG9zaXRpb24iOlsxNDAuMTc1LDM1LjA4NDddfSx7ImxuZyI6MTQwLjIxNDcsImxhdCI6MzUuNTg0NiwiX3Bvc2l0aW9uIjpbMTQwLjIxNDcsMzUuNTg0Nl19LHsibG5nIjoxNDAuMTQyMiwibGF0IjozNS41Njg0LCJfcG9zaXRpb24iOlsxNDAuMTQyMiwzNS41Njg0XX0seyJsbmciOjE0MC4yNzE2LCJsYXQiOjM1LjYyNzUsIl9wb3NpdGlvbiI6WzE0MC4yNzE2LDM1LjYyNzVdfSx7ImxuZyI6MTQwLjQ2OCwibGF0IjozNS42MjY5LCJfcG9zaXRpb24iOlsxNDAuNDY4LDM1LjYyNjldfSx7ImxuZyI6MTM5LjA5MTQsImxhdCI6MzUuOTQ2LCJfcG9zaXRpb24iOlsxMzkuMDkxNCwzNS45NDZdfSx7ImxuZyI6MTQwLjU3ODIsImxhdCI6MzUuNTM3NSwiX3Bvc2l0aW9uIjpbMTQwLjU3ODIsMzUuNTM3NV19LHsibG5nIjoxNDAuMTE5NSwibGF0IjozNi4wMTk1LCJfcG9zaXRpb24iOlsxNDAuMTE5NSwzNi4wMTk1XX0seyJsbmciOjE0MC43MTg2LCJsYXQiOjM2LjQwODYsIl9wb3NpdGlvbiI6WzE0MC43MTg2LDM2LjQwODZdfSx7ImxuZyI6MTQwLjM0MTQsImxhdCI6MzUuNjUzMywiX3Bvc2l0aW9uIjpbMTQwLjM0MTQsMzUuNjUzM119LHsibG5nIjoxMzkuODM3OCwibGF0IjozNi4wOTI5LCJfcG9zaXRpb24iOlsxMzkuODM3OCwzNi4wOTI5XX0seyJsbmciOjE0MC4zNDQ2LCJsYXQiOjM2LjAxODIsIl9wb3NpdGlvbiI6WzE0MC4zNDQ2LDM2LjAxODJdfSx7ImxuZyI6MTM5LjY2NDIsImxhdCI6MzYuMjg2MywiX3Bvc2l0aW9uIjpbMTM5LjY2NDIsMzYuMjg2M119LHsibG5nIjoxNDAuNzY5MSwibGF0IjozNS44MTM2LCJfcG9zaXRpb24iOlsxNDAuNzY5MSwzNS44MTM2XX0seyJsbmciOjEzOS43ODA1LCJsYXQiOjM1Ljc5MDQsIl9wb3NpdGlvbiI6WzEzOS43ODA1LDM1Ljc5MDRdfSx7ImxuZyI6MTQwLjQ3MDksImxhdCI6MzUuMzcyMSwiX3Bvc2l0aW9uIjpbMTQwLjQ3MDksMzUuMzcyMV19LHsibG5nIjoxNDAuOTU3NSwibGF0IjozNi4yNzY1LCJfcG9zaXRpb24iOlsxNDAuOTU3NSwzNi4yNzY1XX0seyJsbmciOjE0MC45NzY4LCJsYXQiOjM1LjQ4MDIsIl9wb3NpdGlvbiI6WzE0MC45NzY4LDM1LjQ4MDJdfSx7ImxuZyI6MTQwLjk1OTgsImxhdCI6MzUuNDc3NiwiX3Bvc2l0aW9uIjpbMTQwLjk1OTgsMzUuNDc3Nl19LHsibG5nIjoxNDAuMjE3OSwibGF0IjozNS42MTg1LCJfcG9zaXRpb24iOlsxNDAuMjE3OSwzNS42MTg1XX0seyJsbmciOjE0MC4zMjQ3LCJsYXQiOjM1LjU0MTgsIl9wb3NpdGlvbiI6WzE0MC4zMjQ3LDM1LjU0MThdfSx7ImxuZyI6MTM5LjkzMDQsImxhdCI6MzUuOTk2LCJfcG9zaXRpb24iOlsxMzkuOTMwNCwzNS45OTZdfSx7ImxuZyI6MTQwLjg5MDUsImxhdCI6MzYuMTg1LCJfcG9zaXRpb24iOlsxNDAuODkwNSwzNi4xODVdfSx7ImxuZyI6MTQwLjcyNTYsImxhdCI6MzQuNzU4NCwiX3Bvc2l0aW9uIjpbMTQwLjcyNTYsMzQuNzU4NF19LHsibG5nIjoxNDAuMTY3OSwibGF0IjozNS45NzY3LCJfcG9zaXRpb24iOlsxNDAuMTY3OSwzNS45NzY3XX0seyJsbmciOjE0MC4yNjczLCJsYXQiOjM2LjE1NTIsIl9wb3NpdGlvbiI6WzE0MC4yNjczLDM2LjE1NTJdfSx7ImxuZyI6MTQwLjk3MzMsImxhdCI6MzYuMjc4NSwiX3Bvc2l0aW9uIjpbMTQwLjk3MzMsMzYuMjc4NV19LHsibG5nIjoxNDAuMDM1NiwibGF0IjozNS43NTEyLCJfcG9zaXRpb24iOlsxNDAuMDM1NiwzNS43NTEyXX0seyJsbmciOjE0MC4yNjQzLCJsYXQiOjM1LjAzNywiX3Bvc2l0aW9uIjpbMTQwLjI2NDMsMzUuMDM3XX0seyJsbmciOjEzOS42NDgsImxhdCI6MzQuNzc5NiwiX3Bvc2l0aW9uIjpbMTM5LjY0OCwzNC43Nzk2XX0seyJsbmciOjE0MC41MDcsImxhdCI6MzQuNjEzNCwiX3Bvc2l0aW9uIjpbMTQwLjUwNywzNC42MTM0XX0seyJsbmciOjEzOS43OTM4LCJsYXQiOjM2LjE1OTksIl9wb3NpdGlvbiI6WzEzOS43OTM4LDM2LjE1OTldfSx7ImxuZyI6MTM5LjQ2MDcsImxhdCI6MzUuNjIxNSwiX3Bvc2l0aW9uIjpbMTM5LjQ2MDcsMzUuNjIxNV19LHsibG5nIjoxNDAuNDM1LCJsYXQiOjM1LjE4MDMsIl9wb3NpdGlvbiI6WzE0MC40MzUsMzUuMTgwM119LHsibG5nIjoxNDAuNDA1OSwibGF0IjozNC41NTIzLCJfcG9zaXRpb24iOlsxNDAuNDA1OSwzNC41NTIzXX0seyJsbmciOjE0MC4wMzE1LCJsYXQiOjM1LjY3ODMsIl9wb3NpdGlvbiI6WzE0MC4wMzE1LDM1LjY3ODNdfSx7ImxuZyI6MTQwLjAyNTYsImxhdCI6MzUuNzEwNSwiX3Bvc2l0aW9uIjpbMTQwLjAyNTYsMzUuNzEwNV19LHsibG5nIjoxNDAuNjIyMSwibGF0IjozNi40NjM1LCJfcG9zaXRpb24iOlsxNDAuNjIyMSwzNi40NjM1XX0seyJsbmciOjE0MC4wNTYxLCJsYXQiOjM1LjU3LCJfcG9zaXRpb24iOlsxNDAuMDU2MSwzNS41N119LHsibG5nIjoxMzkuMjYzNywibGF0IjozNi4xMjQzLCJfcG9zaXRpb24iOlsxMzkuMjYzNywzNi4xMjQzXX0seyJsbmciOjEzOS44NDI4LCJsYXQiOjM2LjAxNCwiX3Bvc2l0aW9uIjpbMTM5Ljg0MjgsMzYuMDE0XX0seyJsbmciOjE0MC4zMTg5LCJsYXQiOjM1LjM1ODIsIl9wb3NpdGlvbiI6WzE0MC4zMTg5LDM1LjM1ODJdfSx7ImxuZyI6MTQwLjA5MjIsImxhdCI6MzYuMTQ1OCwiX3Bvc2l0aW9uIjpbMTQwLjA5MjIsMzYuMTQ1OF19LHsibG5nIjoxNDAuNjk3MiwibGF0IjozNS45MTE0LCJfcG9zaXRpb24iOlsxNDAuNjk3MiwzNS45MTE0XX0seyJsbmciOjE0MC44MDU4LCJsYXQiOjM1LjkxOSwiX3Bvc2l0aW9uIjpbMTQwLjgwNTgsMzUuOTE5XX0seyJsbmciOjE0MC45ODQsImxhdCI6MzYuMjE3NiwiX3Bvc2l0aW9uIjpbMTQwLjk4NCwzNi4yMTc2XX0seyJsbmciOjE0MC41Nzk0LCJsYXQiOjM1Ljg2NTgsIl9wb3NpdGlvbiI6WzE0MC41Nzk0LDM1Ljg2NThdfSx7ImxuZyI6MTM5Ljg3MTYsImxhdCI6MzYuMDAxNywiX3Bvc2l0aW9uIjpbMTM5Ljg3MTYsMzYuMDAxN119LHsibG5nIjoxMzkuNjM3NiwibGF0IjozNS40OTQ1LCJfcG9zaXRpb24iOlsxMzkuNjM3NiwzNS40OTQ1XX0seyJsbmciOjE0MC44MjAyLCJsYXQiOjM1LjYzODQsIl9wb3NpdGlvbiI6WzE0MC44MjAyLDM1LjYzODRdfSx7ImxuZyI6MTQwLjk1NDIsImxhdCI6MzUuOTM2NCwiX3Bvc2l0aW9uIjpbMTQwLjk1NDIsMzUuOTM2NF19LHsibG5nIjoxMzkuODgyNywibGF0IjozNi4xMTc4LCJfcG9zaXRpb24iOlsxMzkuODgyNywzNi4xMTc4XX0seyJsbmciOjEzOS42MDU0LCJsYXQiOjM1LjQwMTksIl9wb3NpdGlvbiI6WzEzOS42MDU0LDM1LjQwMTldfSx7ImxuZyI6MTQwLjI1NDcsImxhdCI6MzUuNjExOCwiX3Bvc2l0aW9uIjpbMTQwLjI1NDcsMzUuNjExOF19LHsibG5nIjoxNDAuOTEyNCwibGF0IjozNS42MzQ0LCJfcG9zaXRpb24iOlsxNDAuOTEyNCwzNS42MzQ0XX0seyJsbmciOjE0MC40ODM5LCJsYXQiOjM1Ljk3NjksIl9wb3NpdGlvbiI6WzE0MC40ODM5LDM1Ljk3NjldfSx7ImxuZyI6MTQwLjQ1MjMsImxhdCI6MzUuMzYyNiwiX3Bvc2l0aW9uIjpbMTQwLjQ1MjMsMzUuMzYyNl19LHsibG5nIjoxNDAuNDg2MiwibGF0IjozNS40NTkyLCJfcG9zaXRpb24iOlsxNDAuNDg2MiwzNS40NTkyXX0seyJsbmciOjE0MC43ODM3LCJsYXQiOjM2LjIyMzMsIl9wb3NpdGlvbiI6WzE0MC43ODM3LDM2LjIyMzNdfSx7ImxuZyI6MTQwLjA3LCJsYXQiOjM2LjA2NzQsIl9wb3NpdGlvbiI6WzE0MC4wNywzNi4wNjc0XX0seyJsbmciOjE0MC4yMTczLCJsYXQiOjM1LjMwNiwiX3Bvc2l0aW9uIjpbMTQwLjIxNzMsMzUuMzA2XX0seyJsbmciOjE0MC43NTg0LCJsYXQiOjM1LjY4NTYsIl9wb3NpdGlvbiI6WzE0MC43NTg0LDM1LjY4NTZdfSx7ImxuZyI6MTQwLjIxMjQsImxhdCI6MzUuNTk3NSwiX3Bvc2l0aW9uIjpbMTQwLjIxMjQsMzUuNTk3NV19LHsibG5nIjoxMzkuNzQzMSwibGF0IjozNS42NjI5LCJfcG9zaXRpb24iOlsxMzkuNzQzMSwzNS42NjI5XX0seyJsbmciOjE0MC42Mjk1LCJsYXQiOjM1Ljc0NzcsIl9wb3NpdGlvbiI6WzE0MC42Mjk1LDM1Ljc0NzddfSx7ImxuZyI6MTM5LjkzNDQsImxhdCI6MzUuNzI2MSwiX3Bvc2l0aW9uIjpbMTM5LjkzNDQsMzUuNzI2MV19LHsibG5nIjoxMzkuNzg3MywibGF0IjozNi4xMzg0LCJfcG9zaXRpb24iOlsxMzkuNzg3MywzNi4xMzg0XX0seyJsbmciOjEzOS4wMTc5LCJsYXQiOjM1LjU1NywiX3Bvc2l0aW9uIjpbMTM5LjAxNzksMzUuNTU3XX0seyJsbmciOjEzOS4wMzQsImxhdCI6MzUuNTQ2LCJfcG9zaXRpb24iOlsxMzkuMDM0LDM1LjU0Nl19LHsibG5nIjoxNDAuMDkxMSwibGF0IjozNi4xODc1LCJfcG9zaXRpb24iOlsxNDAuMDkxMSwzNi4xODc1XX0seyJsbmciOjE0MC4yMjY1LCJsYXQiOjM2LjE5NTYsIl9wb3NpdGlvbiI6WzE0MC4yMjY1LDM2LjE5NTZdfSx7ImxuZyI6MTM5LjUxNDYsImxhdCI6MzUuNzk4NywiX3Bvc2l0aW9uIjpbMTM5LjUxNDYsMzUuNzk4N119LHsibG5nIjoxMzkuMTcxOSwibGF0IjozNS40MzAzLCJfcG9zaXRpb24iOlsxMzkuMTcxOSwzNS40MzAzXX0seyJsbmciOjEzOS44NjM2LCJsYXQiOjM0LjkxNTMsIl9wb3NpdGlvbiI6WzEzOS44NjM2LDM0LjkxNTNdfSx7ImxuZyI6MTQwLjE2MTQsImxhdCI6MzUuNjQ2NiwiX3Bvc2l0aW9uIjpbMTQwLjE2MTQsMzUuNjQ2Nl19LHsibG5nIjoxNDAuMDQ0LCJsYXQiOjM2LjIwNjUsIl9wb3NpdGlvbiI6WzE0MC4wNDQsMzYuMjA2NV19LHsibG5nIjoxMzkuODU1OSwibGF0IjozNi4wMDcsIl9wb3NpdGlvbiI6WzEzOS44NTU5LDM2LjAwN119LHsibG5nIjoxMzkuNTQ5NiwibGF0IjozNS4zNTc2LCJfcG9zaXRpb24iOlsxMzkuNTQ5NiwzNS4zNTc2XX0seyJsbmciOjE0MC4xNzI3LCJsYXQiOjM1LjYwOTEsIl9wb3NpdGlvbiI6WzE0MC4xNzI3LDM1LjYwOTFdfSx7ImxuZyI6MTM5Ljg4MzMsImxhdCI6MzYuMDQyOSwiX3Bvc2l0aW9uIjpbMTM5Ljg4MzMsMzYuMDQyOV19LHsibG5nIjoxNDAuNDE4OCwibGF0IjozNS40ODM2LCJfcG9zaXRpb24iOlsxNDAuNDE4OCwzNS40ODM2XX0seyJsbmciOjE0MC4xMTE5LCJsYXQiOjM1LjU1MjgsIl9wb3NpdGlvbiI6WzE0MC4xMTE5LDM1LjU1MjhdfSx7ImxuZyI6MTQwLjA3MDUsImxhdCI6MzUuNTczNiwiX3Bvc2l0aW9uIjpbMTQwLjA3MDUsMzUuNTczNl19LHsibG5nIjoxNDAuNjk0MywibGF0IjozNi40NTc2LCJfcG9zaXRpb24iOlsxNDAuNjk0MywzNi40NTc2XX0seyJsbmciOjE0MC40OTMsImxhdCI6MzYuNDUwNSwiX3Bvc2l0aW9uIjpbMTQwLjQ5MywzNi40NTA1XX0seyJsbmciOjE0MC43ODE3LCJsYXQiOjM1LjA3NDQsIl9wb3NpdGlvbiI6WzE0MC43ODE3LDM1LjA3NDRdfSx7ImxuZyI6MTM5Ljk0OTksImxhdCI6MzQuODE5NSwiX3Bvc2l0aW9uIjpbMTM5Ljk0OTksMzQuODE5NV19LHsibG5nIjoxNDAuMTczMSwibGF0IjozNi4xMDU3LCJfcG9zaXRpb24iOlsxNDAuMTczMSwzNi4xMDU3XX0seyJsbmciOjE0MC40MDA3LCJsYXQiOjM1LjY4MzksIl9wb3NpdGlvbiI6WzE0MC40MDA3LDM1LjY4MzldfSx7ImxuZyI6MTQwLjMzNjMsImxhdCI6MzQuOTM0MSwiX3Bvc2l0aW9uIjpbMTQwLjMzNjMsMzQuOTM0MV19LHsibG5nIjoxNDAuMDM4NSwibGF0IjozNi4zNjg2LCJfcG9zaXRpb24iOlsxNDAuMDM4NSwzNi4zNjg2XX0seyJsbmciOjE0MC44NTk2LCJsYXQiOjM1Ljg2MDUsIl9wb3NpdGlvbiI6WzE0MC44NTk2LDM1Ljg2MDVdfSx7ImxuZyI6MTQwLjM1NTIsImxhdCI6MzUuNjQxOSwiX3Bvc2l0aW9uIjpbMTQwLjM1NTIsMzUuNjQxOV19LHsibG5nIjoxNDAuNjU1NCwibGF0IjozNC41MDM0LCJfcG9zaXRpb24iOlsxNDAuNjU1NCwzNC41MDM0XX0seyJsbmciOjEzOS43MjE1LCJsYXQiOjM1LjU1NzcsIl9wb3NpdGlvbiI6WzEzOS43MjE1LDM1LjU1NzddfSx7ImxuZyI6MTQwLjI5NjYsImxhdCI6MzQuNTYzOSwiX3Bvc2l0aW9uIjpbMTQwLjI5NjYsMzQuNTYzOV19LHsibG5nIjoxNDAuMTM1OCwibGF0IjozNS44OTA0LCJfcG9zaXRpb24iOlsxNDAuMTM1OCwzNS44OTA0XX0seyJsbmciOjE0MC4wMDcxLCJsYXQiOjM1Ljk3OTMsIl9wb3NpdGlvbiI6WzE0MC4wMDcxLDM1Ljk3OTNdfSx7ImxuZyI6MTM5LjY5NzgsImxhdCI6MzUuNjU2NCwiX3Bvc2l0aW9uIjpbMTM5LjY5NzgsMzUuNjU2NF19LHsibG5nIjoxNDAuMTUzNSwibGF0IjozNi4xNDA3LCJfcG9zaXRpb24iOlsxNDAuMTUzNSwzNi4xNDA3XX0seyJsbmciOjE0MC40NDMxLCJsYXQiOjM2LjM0NDksIl9wb3NpdGlvbiI6WzE0MC40NDMxLDM2LjM0NDldfSx7ImxuZyI6MTM4LjUzMzEsImxhdCI6MzYuMzM3NCwiX3Bvc2l0aW9uIjpbMTM4LjUzMzEsMzYuMzM3NF19LHsibG5nIjoxNDAuNDg3NywibGF0IjozNS42Mjk4LCJfcG9zaXRpb24iOlsxNDAuNDg3NywzNS42Mjk4XX0seyJsbmciOjE0MC4wODgxLCJsYXQiOjM2LjEzNzQsIl9wb3NpdGlvbiI6WzE0MC4wODgxLDM2LjEzNzRdfSx7ImxuZyI6MTQwLjQ0NzMsImxhdCI6MzUuNzA1NywiX3Bvc2l0aW9uIjpbMTQwLjQ0NzMsMzUuNzA1N119LHsibG5nIjoxNDAuNDUyNSwibGF0IjozNS43MDk2LCJfcG9zaXRpb24iOlsxNDAuNDUyNSwzNS43MDk2XX0seyJsbmciOjEzOS43NzAzLCJsYXQiOjM2LjE3NDIsIl9wb3NpdGlvbiI6WzEzOS43NzAzLDM2LjE3NDJdfSx7ImxuZyI6MTQwLjg0ODIsImxhdCI6MzYuMzQ0OSwiX3Bvc2l0aW9uIjpbMTQwLjg0ODIsMzYuMzQ0OV19LHsibG5nIjoxNDAuODk5LCJsYXQiOjM1Ljc3OTQsIl9wb3NpdGlvbiI6WzE0MC44OTksMzUuNzc5NF19LHsibG5nIjoxNDAuMTA1MSwibGF0IjozNS43Mzc4LCJfcG9zaXRpb24iOlsxNDAuMTA1MSwzNS43Mzc4XX0seyJsbmciOjE0MC42NDk4LCJsYXQiOjM2LjQ0MzksIl9wb3NpdGlvbiI6WzE0MC42NDk4LDM2LjQ0MzldfSx7ImxuZyI6MTQwLjE4NDgsImxhdCI6MzUuNjE1NywiX3Bvc2l0aW9uIjpbMTQwLjE4NDgsMzUuNjE1N119LHsibG5nIjoxNDAuNjA5NywibGF0IjozNi40ODU4LCJfcG9zaXRpb24iOlsxNDAuNjA5NywzNi40ODU4XX0seyJsbmciOjE0MC4wMDM4LCJsYXQiOjM1Ljk5OTQsIl9wb3NpdGlvbiI6WzE0MC4wMDM4LDM1Ljk5OTRdfSx7ImxuZyI6MTQwLjA1ODgsImxhdCI6MzYuMDE1LCJfcG9zaXRpb24iOlsxNDAuMDU4OCwzNi4wMTVdfSx7ImxuZyI6MTQwLjUxOSwibGF0IjozNS44NTIxLCJfcG9zaXRpb24iOlsxNDAuNTE5LDM1Ljg1MjFdfSx7ImxuZyI6MTM4LjY4ODYsImxhdCI6MzUuNTU1MiwiX3Bvc2l0aW9uIjpbMTM4LjY4ODYsMzUuNTU1Ml19LHsibG5nIjoxNDAuMDQ1NSwibGF0IjozNi4wMjA1LCJfcG9zaXRpb24iOlsxNDAuMDQ1NSwzNi4wMjA1XX0seyJsbmciOjE0MC4xOTQsImxhdCI6MzUuODcyLCJfcG9zaXRpb24iOlsxNDAuMTk0LDM1Ljg3Ml19LHsibG5nIjoxNDAuMzQ4NiwibGF0IjozNS44NjA2LCJfcG9zaXRpb24iOlsxNDAuMzQ4NiwzNS44NjA2XX0seyJsbmciOjE0MC4zNDMxLCJsYXQiOjM0LjY2MjgsIl9wb3NpdGlvbiI6WzE0MC4zNDMxLDM0LjY2MjhdfSx7ImxuZyI6MTM5Ljk1MDgsImxhdCI6MzUuOTk1MiwiX3Bvc2l0aW9uIjpbMTM5Ljk1MDgsMzUuOTk1Ml19LHsibG5nIjoxNDAuODQwNCwibGF0IjozNS41NjI1LCJfcG9zaXRpb24iOlsxNDAuODQwNCwzNS41NjI1XX0seyJsbmciOjE0MC4xNjY1LCJsYXQiOjM1LjcxMiwiX3Bvc2l0aW9uIjpbMTQwLjE2NjUsMzUuNzEyXX0seyJsbmciOjE0MC44MjQ0LCJsYXQiOjM2LjMxMDMsIl9wb3NpdGlvbiI6WzE0MC44MjQ0LDM2LjMxMDNdfSx7ImxuZyI6MTQwLjI0OTQsImxhdCI6MzQuOTc0LCJfcG9zaXRpb24iOlsxNDAuMjQ5NCwzNC45NzRdfSx7ImxuZyI6MTQwLjU4MjcsImxhdCI6MzUuOTQyMiwiX3Bvc2l0aW9uIjpbMTQwLjU4MjcsMzUuOTQyMl19LHsibG5nIjoxNDAuNzczMywibGF0IjozNi40NjU5LCJfcG9zaXRpb24iOlsxNDAuNzczMywzNi40NjU5XX0seyJsbmciOjEzOS43NjE1LCJsYXQiOjM2LjE5MzEsIl9wb3NpdGlvbiI6WzEzOS43NjE1LDM2LjE5MzFdfSx7ImxuZyI6MTM4Ljg1OTYsImxhdCI6MzQuOTk4MSwiX3Bvc2l0aW9uIjpbMTM4Ljg1OTYsMzQuOTk4MV19LHsibG5nIjoxNDAuOTg5NCwibGF0IjozNS43MjI4LCJfcG9zaXRpb24iOlsxNDAuOTg5NCwzNS43MjI4XX0seyJsbmciOjE0MC4zOTMzLCJsYXQiOjM1LjI5NTEsIl9wb3NpdGlvbiI6WzE0MC4zOTMzLDM1LjI5NTFdfSx7ImxuZyI6MTQwLjMxNTIsImxhdCI6MzUuMjg4OSwiX3Bvc2l0aW9uIjpbMTQwLjMxNTIsMzUuMjg4OV19LHsibG5nIjoxNDAuMjAxNSwibGF0IjozNS42NTcyLCJfcG9zaXRpb24iOlsxNDAuMjAxNSwzNS42NTcyXX0seyJsbmciOjE0MC43MDcyLCJsYXQiOjM1Ljg3NSwiX3Bvc2l0aW9uIjpbMTQwLjcwNzIsMzUuODc1XX0seyJsbmciOjEzOC42NTA0LCJsYXQiOjM1LjY5MzIsIl9wb3NpdGlvbiI6WzEzOC42NTA0LDM1LjY5MzJdfSx7ImxuZyI6MTQwLjEzMDUsImxhdCI6MzUuOTY0OSwiX3Bvc2l0aW9uIjpbMTQwLjEzMDUsMzUuOTY0OV19LHsibG5nIjoxNDAuOTk2OSwibGF0IjozNi40NDkxLCJfcG9zaXRpb24iOlsxNDAuOTk2OSwzNi40NDkxXX0seyJsbmciOjE0MC4yNTg1LCJsYXQiOjM2LjA1NDIsIl9wb3NpdGlvbiI6WzE0MC4yNTg1LDM2LjA1NDJdfSx7ImxuZyI6MTM5Ljc1MjksImxhdCI6MzYuMDQsIl9wb3NpdGlvbiI6WzEzOS43NTI5LDM2LjA0XX0seyJsbmciOjE0MC41MTI3LCJsYXQiOjM0LjYzNDUsIl9wb3NpdGlvbiI6WzE0MC41MTI3LDM0LjYzNDVdfSx7ImxuZyI6MTQwLjUyMDksImxhdCI6MzUuMzQ1MywiX3Bvc2l0aW9uIjpbMTQwLjUyMDksMzUuMzQ1M119LHsibG5nIjoxNDAuODYxLCJsYXQiOjM1LjYxNTEsIl9wb3NpdGlvbiI6WzE0MC44NjEsMzUuNjE1MV19LHsibG5nIjoxMzkuNzkzOSwibGF0IjozNC45NzgxLCJfcG9zaXRpb24iOlsxMzkuNzkzOSwzNC45NzgxXX0seyJsbmciOjE0MC43OTgyLCJsYXQiOjM1LjYwOCwiX3Bvc2l0aW9uIjpbMTQwLjc5ODIsMzUuNjA4XX0seyJsbmciOjEzOS41MTA2LCJsYXQiOjM1LjQ3NDMsIl9wb3NpdGlvbiI6WzEzOS41MTA2LDM1LjQ3NDNdfSx7ImxuZyI6MTQwLjY1OSwibGF0IjozNi40NzYxLCJfcG9zaXRpb24iOlsxNDAuNjU5LDM2LjQ3NjFdfSx7ImxuZyI6MTQwLjA3NzIsImxhdCI6MzUuNDcxNiwiX3Bvc2l0aW9uIjpbMTQwLjA3NzIsMzUuNDcxNl19LHsibG5nIjoxNDAuMzY0OCwibGF0IjozNi4yMDM0LCJfcG9zaXRpb24iOlsxNDAuMzY0OCwzNi4yMDM0XX0seyJsbmciOjEzOS4wMTI0LCJsYXQiOjM1LjM4NjIsIl9wb3NpdGlvbiI6WzEzOS4wMTI0LDM1LjM4NjJdfSx7ImxuZyI6MTQwLjE3MjEsImxhdCI6MzYuMjczOCwiX3Bvc2l0aW9uIjpbMTQwLjE3MjEsMzYuMjczOF19LHsibG5nIjoxNDAuODk2OSwibGF0IjozNi4zMTIyLCJfcG9zaXRpb24iOlsxNDAuODk2OSwzNi4zMTIyXX0seyJsbmciOjE0MC4wNTQ4LCJsYXQiOjM1LjU1ODksIl9wb3NpdGlvbiI6WzE0MC4wNTQ4LDM1LjU1ODldfSx7ImxuZyI6MTQwLjg3NDksImxhdCI6MzUuNjg2NSwiX3Bvc2l0aW9uIjpbMTQwLjg3NDksMzUuNjg2NV19LHsibG5nIjoxNDAuMDc3MSwibGF0IjozNi4xNzMsIl9wb3NpdGlvbiI6WzE0MC4wNzcxLDM2LjE3M119LHsibG5nIjoxNDAuNTQ1MiwibGF0IjozNS43NTU5LCJfcG9zaXRpb24iOlsxNDAuNTQ1MiwzNS43NTU5XX0seyJsbmciOjE0MC4wMDk2LCJsYXQiOjM2LjIxNCwiX3Bvc2l0aW9uIjpbMTQwLjAwOTYsMzYuMjE0XX0seyJsbmciOjE0MC41NDAyLCJsYXQiOjM1Ljc3MTEsIl9wb3NpdGlvbiI6WzE0MC41NDAyLDM1Ljc3MTFdfSx7ImxuZyI6MTQwLjM0NTEsImxhdCI6MzUuMjYwMSwiX3Bvc2l0aW9uIjpbMTQwLjM0NTEsMzUuMjYwMV19LHsibG5nIjoxMzkuNjQxNSwibGF0IjozNi4yMzM1LCJfcG9zaXRpb24iOlsxMzkuNjQxNSwzNi4yMzM1XX0seyJsbmciOjE0MC4yMTA4LCJsYXQiOjM1Ljg1NTQsIl9wb3NpdGlvbiI6WzE0MC4yMTA4LDM1Ljg1NTRdfSx7ImxuZyI6MTQwLjA2NjIsImxhdCI6MzUuMTk3NywiX3Bvc2l0aW9uIjpbMTQwLjA2NjIsMzUuMTk3N119LHsibG5nIjoxNDAuNDcyOSwibGF0IjozNS4zMzM4LCJfcG9zaXRpb24iOlsxNDAuNDcyOSwzNS4zMzM4XX0seyJsbmciOjE0MC4xNDcyLCJsYXQiOjM1Ljg5NTYsIl9wb3NpdGlvbiI6WzE0MC4xNDcyLDM1Ljg5NTZdfSx7ImxuZyI6MTM5LjUxMzUsImxhdCI6MzUuNTM0MywiX3Bvc2l0aW9uIjpbMTM5LjUxMzUsMzUuNTM0M119LHsibG5nIjoxNDAuNTg0MiwibGF0IjozNS44MzQ5LCJfcG9zaXRpb24iOlsxNDAuNTg0MiwzNS44MzQ5XX0seyJsbmciOjEzOC43ODY0LCJsYXQiOjM1LjUzNDMsIl9wb3NpdGlvbiI6WzEzOC43ODY0LDM1LjUzNDNdfSx7ImxuZyI6MTQwLjA2MzksImxhdCI6MzUuODg0LCJfcG9zaXRpb24iOlsxNDAuMDYzOSwzNS44ODRdfSx7ImxuZyI6MTQwLjcyODEsImxhdCI6MzUuNjUxMywiX3Bvc2l0aW9uIjpbMTQwLjcyODEsMzUuNjUxM119LHsibG5nIjoxNDAuOTQ4OCwibGF0IjozNS42MDY5LCJfcG9zaXRpb24iOlsxNDAuOTQ4OCwzNS42MDY5XX0seyJsbmciOjE0MC42MDgyLCJsYXQiOjM2LjQzOTMsIl9wb3NpdGlvbiI6WzE0MC42MDgyLDM2LjQzOTNdfSx7ImxuZyI6MTQwLjkzODEsImxhdCI6MzYuMTM2NiwiX3Bvc2l0aW9uIjpbMTQwLjkzODEsMzYuMTM2Nl19LHsibG5nIjoxMzkuOTE2MiwibGF0IjozNi4wODIxLCJfcG9zaXRpb24iOlsxMzkuOTE2MiwzNi4wODIxXX0seyJsbmciOjEzOS45MTU1LCJsYXQiOjM2LjEyNTMsIl9wb3NpdGlvbiI6WzEzOS45MTU1LDM2LjEyNTNdfV0sIm9wYWNpdHkiOjAuODUsImVsZXZhdGlvblJhbmdlIjpbMCwxMDAwXSwiaWQiOiJoZXhhZ29uLWYxOWRiMWNiIiwicmFkaXVzIjozMDAwLCJjb3ZlcmFnZSI6MC44OCwidXBwZXJQZXJjZW50aWxlIjoxMDAsImNvbG9yUmFuZ2UiOltbMjU1LDI1NSwxNzhdLFsyNTQsMjA0LDkyXSxbMjUzLDE0MSw2MF0sWzI0MCw1OSwzMl0sWzE4OSwwLDM4XSxbMTI4LDAsMzhdXSwidmlzaWJsZSI6dHJ1ZSwiZ2V0UG9zaXRpb24iOiJAQD1fcG9zaXRpb24iLCJwaWNrYWJsZSI6ZmFsc2UsImNvbG9yQWdncmVnYXRpb24iOiJTVU0iLCJsb3dlclBlcmNlbnRpbGUiOjAsImVsZXZhdGlvbkFnZ3JlZ2F0aW9uIjoiU1VNIiwiZ2V0RWxldmF0aW9uV2VpZ2h0IjoxLCJnZXRDb2xvcldlaWdodCI6MX1dfTsKCiAgICAgICAgLy8gTG9hZCBhIHNjcmlwdCB3aXRoIHJldHJ5IG9uIGZhaWx1cmUKICAgICAgICBmdW5jdGlvbiBsb2FkU2NyaXB0KHNyYywgcmV0cmllcykgewogICAgICAgICAgICByZXRyaWVzID0gcmV0cmllcyB8fCAyOwogICAgICAgICAgICByZXR1cm4gbmV3IFByb21pc2UoZnVuY3Rpb24ocmVzb2x2ZSwgcmVqZWN0KSB7CiAgICAgICAgICAgICAgICB2YXIgc2NyaXB0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc2NyaXB0Jyk7CiAgICAgICAgICAgICAgICBzY3JpcHQuc3JjID0gc3JjOwogICAgICAgICAgICAgICAgc2NyaXB0Lm9ubG9hZCA9IHJlc29sdmU7CiAgICAgICAgICAgICAgICBzY3JpcHQub25lcnJvciA9IGZ1bmN0aW9uKCkgewogICAgICAgICAgICAgICAgICAgIGlmIChyZXRyaWVzID4gMCkgewogICAgICAgICAgICAgICAgICAgICAgICBsb2FkU2NyaXB0KHNyYywgcmV0cmllcyAtIDEpLnRoZW4ocmVzb2x2ZSwgcmVqZWN0KTsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICByZWplY3QobmV3IEVycm9yKCdGYWlsZWQgdG8gbG9hZDogJyArIHNyYykpOwogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH07CiAgICAgICAgICAgICAgICBkb2N1bWVudC5oZWFkLmFwcGVuZENoaWxkKHNjcmlwdCk7CiAgICAgICAgICAgIH0pOwogICAgICAgIH0KCiAgICAgICAgLy8gUHJvY2VzcyBhY2Nlc3NvciBzdHJpbmdzIHRoYXQgc3RhcnQgd2l0aCAiQEA9IgogICAgICAgIGZ1bmN0aW9uIHByb2Nlc3NBY2Nlc3Nvcih2YWx1ZSkgewogICAgICAgICAgICBpZiAodHlwZW9mIHZhbHVlID09PSAnc3RyaW5nJyAmJiB2YWx1ZS5zdGFydHNXaXRoKCdAQD0nKSkgewogICAgICAgICAgICAgICAgdmFyIGZpZWxkID0gdmFsdWUuc2xpY2UoMyk7CiAgICAgICAgICAgICAgICByZXR1cm4gZnVuY3Rpb24oZCkgewogICAgICAgICAgICAgICAgICAgIHZhciBwYXJ0cyA9IGZpZWxkLnNwbGl0KCcuJyk7CiAgICAgICAgICAgICAgICAgICAgdmFyIHJlc3VsdCA9IGQ7CiAgICAgICAgICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBwYXJ0cy5sZW5ndGg7IGkrKykgewogICAgICAgICAgICAgICAgICAgICAgICByZXN1bHQgPSByZXN1bHRbcGFydHNbaV1dOwogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmVzdWx0OwogICAgICAgICAgICAgICAgfTsKICAgICAgICAgICAgfQogICAgICAgICAgICByZXR1cm4gdmFsdWU7CiAgICAgICAgfQoKICAgICAgICAvLyBQcm9jZXNzIGxheWVyIHNwZWNpZmljYXRpb24KICAgICAgICBmdW5jdGlvbiBwcm9jZXNzTGF5ZXIobGF5ZXJTcGVjKSB7CiAgICAgICAgICAgIHZhciBsYXllclR5cGUgPSBsYXllclNwZWNbJ0BAdHlwZSddOwogICAgICAgICAgICB2YXIgTGF5ZXJDbGFzcyA9IGRlY2tbbGF5ZXJUeXBlXTsKCiAgICAgICAgICAgIGlmICghTGF5ZXJDbGFzcykgewogICAgICAgICAgICAgICAgY29uc29sZS5lcnJvcignVW5rbm93biBsYXllciB0eXBlOicsIGxheWVyVHlwZSk7CiAgICAgICAgICAgICAgICByZXR1cm4gbnVsbDsKICAgICAgICAgICAgfQoKICAgICAgICAgICAgdmFyIHByb3BzID0ge307CiAgICAgICAgICAgIHZhciBrZXlzID0gT2JqZWN0LmtleXMobGF5ZXJTcGVjKTsKICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBrZXlzLmxlbmd0aDsgaSsrKSB7CiAgICAgICAgICAgICAgICBpZiAoa2V5c1tpXSA9PT0gJ0BAdHlwZScpIGNvbnRpbnVlOwogICAgICAgICAgICAgICAgcHJvcHNba2V5c1tpXV0gPSBwcm9jZXNzQWNjZXNzb3IobGF5ZXJTcGVjW2tleXNbaV1dKTsKICAgICAgICAgICAgfQoKICAgICAgICAgICAgcmV0dXJuIG5ldyBMYXllckNsYXNzKHByb3BzKTsKICAgICAgICB9CgogICAgICAgIC8vIFByb2Nlc3Mgd2lkZ2V0IHNwZWNpZmljYXRpb24KICAgICAgICBmdW5jdGlvbiBwcm9jZXNzV2lkZ2V0KHdpZGdldFNwZWMpIHsKICAgICAgICAgICAgdmFyIHdpZGdldFR5cGUgPSB3aWRnZXRTcGVjWydAQHR5cGUnXTsKICAgICAgICAgICAgdmFyIFdpZGdldENsYXNzID0gZGVja1t3aWRnZXRUeXBlXTsKCiAgICAgICAgICAgIGlmICghV2lkZ2V0Q2xhc3MpIHsKICAgICAgICAgICAgICAgIGNvbnNvbGUuZXJyb3IoJ1Vua25vd24gd2lkZ2V0IHR5cGU6Jywgd2lkZ2V0VHlwZSk7CiAgICAgICAgICAgICAgICByZXR1cm4gbnVsbDsKICAgICAgICAgICAgfQoKICAgICAgICAgICAgdmFyIHByb3BzID0ge307CiAgICAgICAgICAgIHZhciBrZXlzID0gT2JqZWN0LmtleXMod2lkZ2V0U3BlYyk7CiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwga2V5cy5sZW5ndGg7IGkrKykgewogICAgICAgICAgICAgICAgaWYgKGtleXNbaV0gPT09ICdAQHR5cGUnKSBjb250aW51ZTsKICAgICAgICAgICAgICAgIHByb3BzW2tleXNbaV1dID0gd2lkZ2V0U3BlY1trZXlzW2ldXTsKICAgICAgICAgICAgfQoKICAgICAgICAgICAgcmV0dXJuIG5ldyBXaWRnZXRDbGFzcyhwcm9wcyk7CiAgICAgICAgfQoKICAgICAgICAvLyBEZXRlcm1pbmUgd2hpY2ggc2NyaXB0cyB0byBsb2FkCiAgICAgICAgdmFyIHNjcmlwdHMgPSBbJ2h0dHBzOi8vdW5wa2cuY29tL2RlY2suZ2xAOS4wLjE2L2Rpc3QubWluLmpzJ107CiAgICAgICAgaWYgKHNwZWMubWFwU3R5bGUpIHsKICAgICAgICAgICAgc2NyaXB0cy5wdXNoKCdodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEAzLjYuMi9kaXN0L21hcGxpYnJlLWdsLmpzJyk7CiAgICAgICAgfQoKICAgICAgICAvLyBMb2FkIHNjcmlwdHMgdGhlbiBpbml0aWFsaXplCiAgICAgICAgUHJvbWlzZS5hbGwoc2NyaXB0cy5tYXAoZnVuY3Rpb24oc3JjKSB7IHJldHVybiBsb2FkU2NyaXB0KHNyYyk7IH0pKS50aGVuKGZ1bmN0aW9uKCkgewogICAgICAgICAgICB2YXIgbGF5ZXJzID0gc3BlYy5sYXllcnMubWFwKHByb2Nlc3NMYXllcikuZmlsdGVyKGZ1bmN0aW9uKGwpIHsgcmV0dXJuIGwgIT09IG51bGw7IH0pOwogICAgICAgICAgICB2YXIgd2lkZ2V0cyA9IChzcGVjLndpZGdldHMgfHwgW10pLm1hcChwcm9jZXNzV2lkZ2V0KS5maWx0ZXIoZnVuY3Rpb24odykgeyByZXR1cm4gdyAhPT0gbnVsbDsgfSk7CgogICAgICAgICAgICBpZiAoc3BlYy5tYXBTdHlsZSkgewogICAgICAgICAgICAgICAgdmFyIG1hcCA9IG5ldyBtYXBsaWJyZWdsLk1hcCh7CiAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyOiAnbWFwJywKICAgICAgICAgICAgICAgICAgICBzdHlsZTogc3BlYy5tYXBTdHlsZSwKICAgICAgICAgICAgICAgICAgICBjZW50ZXI6IFtzcGVjLmluaXRpYWxWaWV3U3RhdGUubG9uZ2l0dWRlLCBzcGVjLmluaXRpYWxWaWV3U3RhdGUubGF0aXR1ZGVdLAogICAgICAgICAgICAgICAgICAgIHpvb206IHNwZWMuaW5pdGlhbFZpZXdTdGF0ZS56b29tLAogICAgICAgICAgICAgICAgICAgIHBpdGNoOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUucGl0Y2ggfHwgMCwKICAgICAgICAgICAgICAgICAgICBiZWFyaW5nOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUuYmVhcmluZyB8fCAwLAogICAgICAgICAgICAgICAgICAgIGludGVyYWN0aXZlOiBmYWxzZQogICAgICAgICAgICAgICAgfSk7CgogICAgICAgICAgICAgICAgbmV3IGRlY2suRGVja0dMKHsKICAgICAgICAgICAgICAgICAgICBjYW52YXM6ICdkZWNrLW92ZXJsYXknLAogICAgICAgICAgICAgICAgICAgIGluaXRpYWxWaWV3U3RhdGU6IHNwZWMuaW5pdGlhbFZpZXdTdGF0ZSwKICAgICAgICAgICAgICAgICAgICBjb250cm9sbGVyOiBzcGVjLmNvbnRyb2xsZXIsCiAgICAgICAgICAgICAgICAgICAgbGF5ZXJzOiBsYXllcnMsCiAgICAgICAgICAgICAgICAgICAgd2lkZ2V0czogd2lkZ2V0cywKICAgICAgICAgICAgICAgICAgICBnZXRUb29sdGlwOiBzcGVjLnBpY2thYmxlID8gZnVuY3Rpb24oaW5mbykgeyByZXR1cm4gaW5mby5vYmplY3QgJiYgSlNPTi5zdHJpbmdpZnkoaW5mby5vYmplY3QpOyB9IDogbnVsbCwKICAgICAgICAgICAgICAgICAgICBvblZpZXdTdGF0ZUNoYW5nZTogZnVuY3Rpb24oZSkgewogICAgICAgICAgICAgICAgICAgICAgICBtYXAuanVtcFRvKHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNlbnRlcjogW2Uudmlld1N0YXRlLmxvbmdpdHVkZSwgZS52aWV3U3RhdGUubGF0aXR1ZGVdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogZS52aWV3U3RhdGUuem9vbSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpdGNoOiBlLnZpZXdTdGF0ZS5waXRjaCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJlYXJpbmc6IGUudmlld1N0YXRlLmJlYXJpbmcKICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICB2YXIgY29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2RlY2stY29udGFpbmVyJyk7CiAgICAgICAgICAgICAgICBjb250YWluZXIuaW5uZXJIVE1MID0gJyc7CgogICAgICAgICAgICAgICAgbmV3IGRlY2suRGVja0dMKHsKICAgICAgICAgICAgICAgICAgICBjb250YWluZXI6IGNvbnRhaW5lciwKICAgICAgICAgICAgICAgICAgICBpbml0aWFsVmlld1N0YXRlOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUsCiAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlcjogc3BlYy5jb250cm9sbGVyLAogICAgICAgICAgICAgICAgICAgIGxheWVyczogbGF5ZXJzLAogICAgICAgICAgICAgICAgICAgIHdpZGdldHM6IHdpZGdldHMsCiAgICAgICAgICAgICAgICAgICAgZ2V0VG9vbHRpcDogc3BlYy5waWNrYWJsZSA/IGZ1bmN0aW9uKGluZm8pIHsgcmV0dXJuIGluZm8ub2JqZWN0ICYmIEpTT04uc3RyaW5naWZ5KGluZm8ub2JqZWN0KTsgfSA6IG51bGwKICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICB9CiAgICAgICAgfSkuY2F0Y2goZnVuY3Rpb24oZXJyKSB7CiAgICAgICAgICAgIGNvbnNvbGUuZXJyb3IoJ0RlY2tHTCBpbml0aWFsaXphdGlvbiBmYWlsZWQ6JywgZXJyKTsKICAgICAgICAgICAgdmFyIGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdkZWNrLWNvbnRhaW5lcicpOwogICAgICAgICAgICBjb250YWluZXIuaW5uZXJIVE1MID0gJzxkaXYgc3R5bGU9ImRpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7anVzdGlmeS1jb250ZW50OmNlbnRlcjtoZWlnaHQ6MTAwJTtjb2xvcjojNjY2OyI+RmFpbGVkIHRvIGxvYWQgdmlzdWFsaXphdGlvbi4gUGxlYXNlIHJlZnJlc2ggdGhlIHBhZ2UuPC9kaXY+JzsKICAgICAgICB9KTsKICAgIDwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K" style="width:100%; height:520px; border:none;"></iframe>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../examples/global-flight-routes.html" class="pagination-link" aria-label="Global Flight Routes">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Global Flight Routes</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../examples/london-buildings-3d.html" class="pagination-link" aria-label="London Buildings 3D">
+        <span class="nav-page-text"><span class="chapter-title">London Buildings 3D</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Built on 2026-02-27</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script>
+(function() {
+    // Detect repo name and current version from URL path
+    // Deployed: /{repoName}/{version}/...
+    // Local preview: /page.html (no repo/version segments)
+    var pathParts = window.location.pathname.split('/').filter(Boolean);
+    var isLocal = pathParts.length < 2 || !pathParts[0].includes('.');
+    var currentVersion, basePath;
+
+    if (pathParts.length >= 2 && pathParts[1].match(/^(dev|stable|v\d)/)) {
+        currentVersion = pathParts[1];
+        basePath = '/' + pathParts[0] + '/';
+    } else {
+        currentVersion = 'dev';
+        basePath = '/';
+    }
+
+    // Build dropdown HTML
+    function buildDropdown(versions) {
+        var navbar = document.querySelector('.navbar-nav.navbar-nav-scroll.ms-auto');
+        if (!navbar) return;
+
+        var li = document.createElement('li');
+        li.className = 'nav-item dropdown';
+        li.innerHTML =
+            '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">' +
+                currentVersion +
+            '</a>' +
+            '<ul class="dropdown-menu dropdown-menu-end"></ul>';
+
+        var menu = li.querySelector('.dropdown-menu');
+
+        // Always add dev and stable
+        var fixed = ['stable', 'dev'];
+        fixed.forEach(function(v) {
+            var a = document.createElement('a');
+            a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
+            a.href = basePath + v + '/';
+            a.textContent = v;
+            var item = document.createElement('li');
+            item.appendChild(a);
+            menu.appendChild(item);
+        });
+
+        // Add release versions from versions.json
+        if (versions && versions.length > 0) {
+            var divider = document.createElement('li');
+            divider.innerHTML = '<hr class="dropdown-divider">';
+            menu.appendChild(divider);
+
+            versions.forEach(function(v) {
+                var a = document.createElement('a');
+                a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
+                a.href = basePath + v + '/';
+                a.textContent = v;
+                var item = document.createElement('li');
+                item.appendChild(a);
+                menu.appendChild(item);
+            });
+        }
+
+        navbar.prepend(li);
+
+        // Show outdated version banner
+        if (versions && versions.length > 0 && currentVersion !== 'stable' && currentVersion !== 'dev') {
+            var latest = versions[0]; // versions.json is sorted descending
+            if (currentVersion !== latest) {
+                var banner = document.createElement('div');
+                banner.className = 'alert alert-warning text-center mb-0 rounded-0';
+                banner.setAttribute('role', 'alert');
+                banner.innerHTML = 'You are viewing docs for <strong>' + currentVersion + '</strong>. ' +
+                    'The latest stable release is <a href="' + basePath + 'stable/" class="alert-link">' + latest + '</a>.';
+                document.body.prepend(banner);
+            }
+        }
+    }
+
+    // Fetch versions.json, then build dropdown
+    fetch(basePath + 'versions.json')
+        .then(function(res) { return res.ok ? res.json() : []; })
+        .catch(function() { return []; })
+        .then(buildDropdown);
+
+    // Fix navbar-brand title link to point to docs home (logo stays external)
+    var titleLink = document.querySelector('a.navbar-brand:not(.navbar-brand-logo)');
+    if (titleLink) {
+        titleLink.href = basePath + currentVersion + '/';
+    }
+
+    // Fetch star count from GitHub API
+    var starLink = document.querySelector('a.nav-link[href*="/stargazers"]');
+    if (starLink) {
+        var match = starLink.href.match(/github\.com\/([^/]+\/[^/]+)\/stargazers/);
+        if (match) {
+            fetch('https://api.github.com/repos/' + match[1])
+                .then(function(res) { return res.ok ? res.json() : null; })
+                .then(function(data) {
+                    if (!data) return;
+                    var text = starLink.querySelector('.menu-text');
+                    if (text) text.textContent = data.stargazers_count;
+                })
+                .catch(function() {});
+        }
+    }
+})();
+</script>
+
+
+
+
+</body></html>
