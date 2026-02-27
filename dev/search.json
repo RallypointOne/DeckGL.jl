@@ -301,7 +301,73 @@
     "href": "examples.html",
     "title": "Examples",
     "section": "",
-    "text": "Multi-layer, map-backed visualizations using real public datasets. Each example downloads live data, builds layers, and renders an interactive deck.gl map.\nClick any example to view the full visualization and source code.\n\n\n\nExample\nLayers\nDescription\n\n\n\n\nGlobal Flight Routes\nArcLayer, ScatterplotLayer, TextLayer\nAirline routes between the world’s 40 busiest airports from the OpenFlights database, rendered as great-circle arcs with labeled airport markers on a dark basemap.\n\n\nTokyo Region Earthquakes\nHexagonLayer\nUSGS seismic data (2020–2024, M1.5+) near Tokyo aggregated into extruded 3D hexagonal bins colored by density.\n\n\nLondon Buildings 3D\nPolygonLayer\nReal building footprints with heights from OpenStreetMap in the City of London financial district, extruded to actual height and colored by elevation.\n\n\nParis Trees\nHeatmapLayer, ScatterplotLayer\n5,000 trees managed by the City of Paris shown as a height-weighted heatmap overlaid with individual tree points.\n\n\nUK Road Accidents\nGridLayer\n~140,000 personal injury road accidents aggregated into an extruded 3D grid over central London.\n\n\nAustralia / Indo-Pacific Earthquakes\nScatterplotLayer, HexagonLayer, ArcLayer\n2024 M4.5+ earthquakes across the Indo-Pacific with magnitude-colored scatter points, hexagonal density bins, and monitoring station arcs.\n\n\nUS Fire Hotspots\nHeatmapLayer, ScatterplotLayer, TextLayer\nNear real-time satellite fire detections (NASA FIRMS, VIIRS NOAA-20, 7-day window) as a fire-radiative-power-weighted heatmap with city reference labels.",
+    "text": "Global Flight Routes\nMulti-layer, map-backed visualizations using real public datasets. Each example downloads live data, builds layers, and renders an interactive deck.gl map.\nAirline routes between the world’s 40 busiest airports from the OpenFlights database, rendered as great-circle arcs with labeled airport markers on a dark basemap.\nLayers: ArcLayer, ScatterplotLayer, TextLayer | View source",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#tokyo-region-earthquakes",
+    "href": "examples.html#tokyo-region-earthquakes",
+    "title": "Examples",
+    "section": "Tokyo Region Earthquakes",
+    "text": "Tokyo Region Earthquakes\nUSGS seismic data (2020–2024, M1.5+) near Tokyo aggregated into extruded 3D hexagonal bins colored by density.\nLayers: HexagonLayer | View source",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#london-buildings-3d",
+    "href": "examples.html#london-buildings-3d",
+    "title": "Examples",
+    "section": "London Buildings 3D",
+    "text": "London Buildings 3D\nReal building footprints with heights from OpenStreetMap in the City of London financial district, extruded to actual height and colored by elevation.\nLayers: PolygonLayer | View source",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#paris-trees",
+    "href": "examples.html#paris-trees",
+    "title": "Examples",
+    "section": "Paris Trees",
+    "text": "Paris Trees\n5,000 trees managed by the City of Paris shown as a height-weighted heatmap overlaid with individual tree points.\nLayers: HeatmapLayer, ScatterplotLayer | View source",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#uk-road-accidents",
+    "href": "examples.html#uk-road-accidents",
+    "title": "Examples",
+    "section": "UK Road Accidents",
+    "text": "UK Road Accidents\n~140,000 personal injury road accidents aggregated into an extruded 3D grid over central London.\nLayers: GridLayer | View source",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#australia-indo-pacific-earthquakes",
+    "href": "examples.html#australia-indo-pacific-earthquakes",
+    "title": "Examples",
+    "section": "Australia / Indo-Pacific Earthquakes",
+    "text": "Australia / Indo-Pacific Earthquakes\n2024 M4.5+ earthquakes across the Indo-Pacific with magnitude-colored scatter points, hexagonal density bins, and monitoring station arcs.\nLayers: ScatterplotLayer, HexagonLayer, ArcLayer | View source",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "examples.html#us-fire-hotspots",
+    "href": "examples.html#us-fire-hotspots",
+    "title": "Examples",
+    "section": "US Fire Hotspots",
+    "text": "US Fire Hotspots\nNear real-time satellite fire detections (NASA FIRMS, VIIRS NOAA-20, 7-day window) as a fire-radiative-power-weighted heatmap with city reference labels.\nLayers: HeatmapLayer, ScatterplotLayer, TextLayer | View source",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Examples</span>"

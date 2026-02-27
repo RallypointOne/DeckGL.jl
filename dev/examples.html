@@ -246,8 +246,20 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#global-flight-routes" id="toc-global-flight-routes" class="nav-link active" data-scroll-target="#global-flight-routes">Global Flight Routes</a></li>
+  <li><a href="#tokyo-region-earthquakes" id="toc-tokyo-region-earthquakes" class="nav-link" data-scroll-target="#tokyo-region-earthquakes">Tokyo Region Earthquakes</a></li>
+  <li><a href="#london-buildings-3d" id="toc-london-buildings-3d" class="nav-link" data-scroll-target="#london-buildings-3d">London Buildings 3D</a></li>
+  <li><a href="#paris-trees" id="toc-paris-trees" class="nav-link" data-scroll-target="#paris-trees">Paris Trees</a></li>
+  <li><a href="#uk-road-accidents" id="toc-uk-road-accidents" class="nav-link" data-scroll-target="#uk-road-accidents">UK Road Accidents</a></li>
+  <li><a href="#australia-indo-pacific-earthquakes" id="toc-australia-indo-pacific-earthquakes" class="nav-link" data-scroll-target="#australia-indo-pacific-earthquakes">Australia / Indo-Pacific Earthquakes</a></li>
+  <li><a href="#us-fire-hotspots" id="toc-us-fire-hotspots" class="nav-link" data-scroll-target="#us-fire-hotspots">US Fire Hotspots</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -272,55 +284,57 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Multi-layer, map-backed visualizations using real public datasets. Each example downloads live data, builds layers, and renders an interactive deck.gl map.</p>
-<p>Click any example to view the full visualization and source code.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Example</th>
-<th>Layers</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="./examples/global-flight-routes.html" target="_blank">Global Flight Routes</a></td>
-<td>ArcLayer, ScatterplotLayer, TextLayer</td>
-<td>Airline routes between the world’s 40 busiest airports from the OpenFlights database, rendered as great-circle arcs with labeled airport markers on a dark basemap.</td>
-</tr>
-<tr class="even">
-<td><a href="./examples/tokyo-earthquakes.html" target="_blank">Tokyo Region Earthquakes</a></td>
-<td>HexagonLayer</td>
-<td>USGS seismic data (2020–2024, M1.5+) near Tokyo aggregated into extruded 3D hexagonal bins colored by density.</td>
-</tr>
-<tr class="odd">
-<td><a href="./examples/london-buildings-3d.html" target="_blank">London Buildings 3D</a></td>
-<td>PolygonLayer</td>
-<td>Real building footprints with heights from OpenStreetMap in the City of London financial district, extruded to actual height and colored by elevation.</td>
-</tr>
-<tr class="even">
-<td><a href="./examples/paris-trees.html" target="_blank">Paris Trees</a></td>
-<td>HeatmapLayer, ScatterplotLayer</td>
-<td>5,000 trees managed by the City of Paris shown as a height-weighted heatmap overlaid with individual tree points.</td>
-</tr>
-<tr class="odd">
-<td><a href="./examples/uk-road-accidents.html" target="_blank">UK Road Accidents</a></td>
-<td>GridLayer</td>
-<td>~140,000 personal injury road accidents aggregated into an extruded 3D grid over central London.</td>
-</tr>
-<tr class="even">
-<td><a href="./examples/australia-earthquakes.html" target="_blank">Australia / Indo-Pacific Earthquakes</a></td>
-<td>ScatterplotLayer, HexagonLayer, ArcLayer</td>
-<td>2024 M4.5+ earthquakes across the Indo-Pacific with magnitude-colored scatter points, hexagonal density bins, and monitoring station arcs.</td>
-</tr>
-<tr class="odd">
-<td><a href="./examples/us-fire-hotspots.html" target="_blank">US Fire Hotspots</a></td>
-<td>HeatmapLayer, ScatterplotLayer, TextLayer</td>
-<td>Near real-time satellite fire detections (NASA FIRMS, VIIRS NOAA-20, 7-day window) as a fire-radiative-power-weighted heatmap with city reference labels.</td>
-</tr>
-</tbody>
-</table>
+<section id="global-flight-routes" class="level2">
+<h2 class="anchored" data-anchor-id="global-flight-routes">Global Flight Routes</h2>
+<p>Airline routes between the world’s 40 busiest airports from the OpenFlights database, rendered as great-circle arcs with labeled airport markers on a dark basemap.</p>
+<p><strong>Layers:</strong> ArcLayer, ScatterplotLayer, TextLayer | <a href="./examples/global-flight-routes.html">View source</a></p>
+<iframe src="examples/global-flight-routes.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
+</section>
+<section id="tokyo-region-earthquakes" class="level2">
+<h2 class="anchored" data-anchor-id="tokyo-region-earthquakes">Tokyo Region Earthquakes</h2>
+<p>USGS seismic data (2020–2024, M1.5+) near Tokyo aggregated into extruded 3D hexagonal bins colored by density.</p>
+<p><strong>Layers:</strong> HexagonLayer | <a href="./examples/tokyo-earthquakes.html">View source</a></p>
+<iframe src="examples/tokyo-earthquakes.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
+</section>
+<section id="london-buildings-3d" class="level2">
+<h2 class="anchored" data-anchor-id="london-buildings-3d">London Buildings 3D</h2>
+<p>Real building footprints with heights from OpenStreetMap in the City of London financial district, extruded to actual height and colored by elevation.</p>
+<p><strong>Layers:</strong> PolygonLayer | <a href="./examples/london-buildings-3d.html">View source</a></p>
+<iframe src="examples/london-buildings-3d.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
+</section>
+<section id="paris-trees" class="level2">
+<h2 class="anchored" data-anchor-id="paris-trees">Paris Trees</h2>
+<p>5,000 trees managed by the City of Paris shown as a height-weighted heatmap overlaid with individual tree points.</p>
+<p><strong>Layers:</strong> HeatmapLayer, ScatterplotLayer | <a href="./examples/paris-trees.html">View source</a></p>
+<iframe src="examples/paris-trees.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
+</section>
+<section id="uk-road-accidents" class="level2">
+<h2 class="anchored" data-anchor-id="uk-road-accidents">UK Road Accidents</h2>
+<p>~140,000 personal injury road accidents aggregated into an extruded 3D grid over central London.</p>
+<p><strong>Layers:</strong> GridLayer | <a href="./examples/uk-road-accidents.html">View source</a></p>
+<iframe src="examples/uk-road-accidents.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
+</section>
+<section id="australia-indo-pacific-earthquakes" class="level2">
+<h2 class="anchored" data-anchor-id="australia-indo-pacific-earthquakes">Australia / Indo-Pacific Earthquakes</h2>
+<p>2024 M4.5+ earthquakes across the Indo-Pacific with magnitude-colored scatter points, hexagonal density bins, and monitoring station arcs.</p>
+<p><strong>Layers:</strong> ScatterplotLayer, HexagonLayer, ArcLayer | <a href="./examples/australia-earthquakes.html">View source</a></p>
+<iframe src="examples/australia-earthquakes.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
+</section>
+<section id="us-fire-hotspots" class="level2">
+<h2 class="anchored" data-anchor-id="us-fire-hotspots">US Fire Hotspots</h2>
+<p>Near real-time satellite fire detections (NASA FIRMS, VIIRS NOAA-20, 7-day window) as a fire-radiative-power-weighted heatmap with city reference labels.</p>
+<p><strong>Layers:</strong> HeatmapLayer, ScatterplotLayer, TextLayer | <a href="./examples/us-fire-hotspots.html">View source</a></p>
+<iframe src="examples/us-fire-hotspots.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
+</iframe>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
