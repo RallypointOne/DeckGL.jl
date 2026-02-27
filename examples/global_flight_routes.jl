@@ -1,0 +1,123 @@
+# Global Flight Routes — Real airline routes between major world airports
+# Data: OpenFlights (https://openflights.org/data) — Open Database License
+using DeckGL, Downloads, JSON3
+
+#--------------------------------------------------------------------------------# CSV parser for OpenFlights format (handles quoted fields)
+function parse_of_line(line)
+    fields = String[]
+    buf = IOBuffer()
+    in_q = false
+    for c in line
+        if c == '"'
+            in_q = !in_q
+        elseif c == ',' && !in_q
+            push!(fields, String(take!(buf)))
+        else
+            write(buf, c)
+        end
+    end
+    push!(fields, String(take!(buf)))
+    return fields
+end
+
+#--------------------------------------------------------------------------------# Download OpenFlights data
+airports_file = Downloads.download(
+    "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat"
+)
+routes_file = Downloads.download(
+    "https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat"
+)
+
+# Parse airports: IATA → (lat, lng)
+airport_db = Dict{String, @NamedTuple{lat::Float64, lng::Float64}}()
+for line in readlines(airports_file)
+    f = parse_of_line(line)
+    length(f) >= 8 || continue
+    iata = f[5]
+    (iata == "" || iata == "\\N" || length(iata) != 3) && continue
+    lat = tryparse(Float64, f[7])
+    lng = tryparse(Float64, f[8])
+    (lat === nothing || lng === nothing) && continue
+    airport_db[iata] = (lat = lat, lng = lng)
+end
+
+# Parse routes: collect direct-flight pairs (deduplicated)
+route_set = Set{Tuple{String,String}}()
+for line in readlines(routes_file)
+    f = split(line, ',')
+    length(f) >= 8 || continue
+    src, dst, stops = f[3], f[5], f[8]
+    stops == "0" || continue
+    haskey(airport_db, src) && haskey(airport_db, dst) || continue
+    push!(route_set, src < dst ? (src, dst) : (dst, src))
+end
+
+# Rank airports by connectivity, pick top 40
+counts = Dict{String,Int}()
+for (s, d) in route_set
+    counts[s] = get(counts, s, 0) + 1
+    counts[d] = get(counts, d, 0) + 1
+end
+top = Set(first.(sort(collect(counts), by = last, rev = true)[1:min(40, length(counts))]))
+
+# Filter to routes between top airports
+sel_routes = [(s, d) for (s, d) in route_set if s in top && d in top]
+sel_routes = sel_routes[1:min(250, length(sel_routes))]
+
+# Collect airports used in selected routes
+used = sort(collect(union(Set(first.(sel_routes)), Set(last.(sel_routes)))))
+
+#--------------------------------------------------------------------------------# Build data tables
+airports = (
+    lng  = [airport_db[a].lng for a in used],
+    lat  = [airport_db[a].lat for a in used],
+    name = used,
+)
+
+routes = (
+    src_lng = [airport_db[r[1]].lng for r in sel_routes],
+    src_lat = [airport_db[r[1]].lat for r in sel_routes],
+    tgt_lng = [airport_db[r[2]].lng for r in sel_routes],
+    tgt_lat = [airport_db[r[2]].lat for r in sel_routes],
+)
+
+#--------------------------------------------------------------------------------# Layers
+arcs = ArcLayer(
+    data = routes,
+    get_source_position = [:src_lng, :src_lat],
+    get_target_position = [:tgt_lng, :tgt_lat],
+    get_source_color = [0, 180, 235, 160],
+    get_target_color = [160, 90, 255, 160],
+    get_width = 1,
+    great_circle = true,
+)
+
+dots = ScatterplotLayer(
+    data = airports,
+    get_position = [:lng, :lat],
+    get_fill_color = [0, 210, 235, 220],
+    get_radius = 50000,
+    radius_min_pixels = 3,
+)
+
+labels = TextLayer(
+    data = airports,
+    get_position = [:lng, :lat],
+    get_text = :name,
+    get_size = 11,
+    get_color = [255, 255, 255, 230],
+    get_pixel_offset = [0, -14],
+    background = true,
+    get_background_color = [30, 30, 30, 180],
+    background_padding = [4, 2, 4, 2],
+    font_family = "Helvetica, Arial, sans-serif",
+    font_weight = 700,
+)
+
+#--------------------------------------------------------------------------------# Display
+deck = Deck(
+    [arcs, dots, labels],
+    initial_view_state = ViewState(longitude = 20.0, latitude = 15.0, zoom = 1.5, pitch = 15.0),
+    map_style = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+)
+open_html(deck; height = "100vh")

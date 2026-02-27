@@ -1,0 +1,59 @@
+# Paris Trees — Heatmap of 5,000 trees managed by the City of Paris
+# Data: opendata.paris.fr "Les Arbres" (ODbL license)
+using DeckGL, Downloads, JSON3
+
+#--------------------------------------------------------------------------------# Download tree location data (GeoJSON, limited to 5000 records)
+url = "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/les-arbres/exports/geojson?limit=5000"
+response = JSON3.read(read(Downloads.download(url), String))
+features = response[:features]
+
+lngs = Float64[]
+lats = Float64[]
+heights = Float64[]
+for f in features
+    geo = f[:geometry]
+    geo === nothing && continue
+    coords = geo[:coordinates]
+    push!(lngs, Float64(coords[1]))
+    push!(lats, Float64(coords[2]))
+    h = get(f[:properties], :hauteurenm, nothing)
+    push!(heights, h !== nothing && h isa Number ? Float64(h) : 5.0)
+end
+
+data = (lng = lngs, lat = lats, height = heights)
+
+#--------------------------------------------------------------------------------# Layers
+heat = HeatmapLayer(
+    data = data,
+    get_position = [:lng, :lat],
+    get_weight = :height,
+    radius_pixels = 30,
+    intensity = 1.2,
+    threshold = 0.03,
+    color_range = [
+        [255, 255, 178, 25],
+        [254, 217, 118, 85],
+        [254, 178, 76, 127],
+        [253, 141, 60, 170],
+        [240, 59, 32, 210],
+        [189, 0, 38, 240],
+    ],
+    opacity = 0.7,
+)
+
+scatter = ScatterplotLayer(
+    data = data,
+    get_position = [:lng, :lat],
+    get_fill_color = [34, 139, 34, 80],
+    get_radius = 5,
+    radius_min_pixels = 1,
+    opacity = 0.3,
+)
+
+#--------------------------------------------------------------------------------# Display
+deck = Deck(
+    [heat, scatter],
+    initial_view_state = ViewState(longitude = 2.34, latitude = 48.86, zoom = 12.5),
+    map_style = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+)
+open_html(deck; height = "100vh")
