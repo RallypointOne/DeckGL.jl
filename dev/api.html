@@ -194,6 +194,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./widgets.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Widgets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./examples.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Examples</span></a>
   </div>
 </li>
@@ -285,11 +290,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="card mb-3">
+<section id="abstractwidget" class="level4 card-header api-item-header">
+<h4 class="anchored" data-anchor-id="abstractwidget"><code>AbstractWidget</code></h4>
+</section>
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>AbstractWidget</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Abstract supertype for all deck.gl widgets.</p>
+</div>
+</div>
+<div class="card mb-3">
 <section id="arclayer" class="level4 card-header api-item-header">
 <h4 class="anchored" data-anchor-id="arclayer"><code>ArcLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArcLayer</span>(; data, get_source_position, get_target_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArcLayer</span>(; data, get_source_position, get_target_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders arcs between source and target coordinates.</p>
 <section id="required-arguments" class="level1">
 <h1>Required Arguments</h1>
@@ -320,22 +334,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    src_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>],</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    src_lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>],</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    dst_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">73.9</span>, <span class="op">-</span><span class="fl">87.6</span>],</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    dst_lat <span class="op">=</span> [<span class="fl">40.7</span>, <span class="fl">41.9</span>],</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">50</span>]</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ArcLayer</span>(</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> trips,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    get_source_position <span class="op">=</span> [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat],</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    get_target_position <span class="op">=</span> [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat],</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="op">:</span>count,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    get_source_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>],</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    get_target_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>]</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    src_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>],</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    src_lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>],</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    dst_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">73.9</span>, <span class="op">-</span><span class="fl">87.6</span>],</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    dst_lat <span class="op">=</span> [<span class="fl">40.7</span>, <span class="fl">41.9</span>],</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">50</span>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ArcLayer</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> trips,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    get_source_position <span class="op">=</span> [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat],</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    get_target_position <span class="op">=</span> [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat],</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="op">:</span>count,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    get_source_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>],</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    get_target_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>]</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</div>
+</div>
+<div class="card mb-3">
+<section id="compasswidget" class="level4 card-header api-item-header">
+<h4 class="anchored" data-anchor-id="compasswidget"><code>CompassWidget</code></h4>
+</section>
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">CompassWidget</span>(; id<span class="op">=</span><span class="st">"compass"</span>, placement<span class="op">=</span><span class="st">"top-right"</span>, transition_duration<span class="op">=</span><span class="fl">200</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Displays a compass rose showing the current bearing. Click to reset bearing to north.</p>
+<section id="keyword-arguments" class="level1">
+<h1>Keyword Arguments</h1>
+<ul>
+<li><code>id::String</code>: Widget identifier. Default: <code>"compass"</code></li>
+<li><code>placement::String</code>: Widget position (<code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code>). Default: <code>"top-right"</code></li>
+<li><code>transition_duration::Int</code>: Reset animation duration in ms. Default: <code>200</code></li>
+</ul>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">CompassWidget</span>()])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">CompassWidget</span>(placement<span class="op">=</span><span class="st">"bottom-right"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
 </section>
 </div>
 </div>
@@ -344,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="deck"><code>Deck</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layers; initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(), map_style<span class="op">=</span><span class="cn">nothing</span>, controller<span class="op">=</span><span class="cn">true</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layers; initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(), map_style<span class="op">=</span><span class="cn">nothing</span>, controller<span class="op">=</span><span class="cn">true</span>, widgets<span class="op">=</span>AbstractWidget[])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The top-level container representing a deck.gl visualization.</p>
 <section id="arguments" class="level1">
 <h1>Arguments</h1>
@@ -352,18 +388,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>layers</code>: A single <code>AbstractLayer</code> or a vector of layers</li>
 </ul>
 </section>
-<section id="keyword-arguments" class="level1">
+<section id="keyword-arguments-1" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>initial_view_state::ViewState</code>: Camera configuration</li>
 <li><code>map_style::Union{String,Nothing}</code>: Map tile style URL (Mapbox/MapLibre/Carto)</li>
 <li><code>controller::Bool</code>: Enable pan/zoom/rotate controls</li>
+<li><code>widgets::Vector{AbstractWidget}</code>: UI widgets (zoom, compass, fullscreen)</li>
 </ul>
 </section>
 <section id="example-1" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>df, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat])</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(layer, initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(longitude<span class="op">=-</span><span class="fl">122.4</span>, latitude<span class="op">=</span><span class="fl">37.8</span>, zoom<span class="op">=</span><span class="fl">11</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>df, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat])</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(layer,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(longitude<span class="op">=-</span><span class="fl">122.4</span>, latitude<span class="op">=</span><span class="fl">37.8</span>, zoom<span class="op">=</span><span class="fl">11</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    widgets<span class="op">=</span>[<span class="fu">ZoomWidget</span>(), <span class="fu">CompassWidget</span>()]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</div>
+</div>
+<div class="card mb-3">
+<section id="fullscreenwidget" class="level4 card-header api-item-header">
+<h4 class="anchored" data-anchor-id="fullscreenwidget"><code>FullscreenWidget</code></h4>
+</section>
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FullscreenWidget</span>(; id<span class="op">=</span><span class="st">"fullscreen"</span>, placement<span class="op">=</span><span class="st">"top-right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Adds a button to toggle fullscreen mode.</p>
+<section id="keyword-arguments-2" class="level1">
+<h1>Keyword Arguments</h1>
+<ul>
+<li><code>id::String</code>: Widget identifier. Default: <code>"fullscreen"</code></li>
+<li><code>placement::String</code>: Widget position (<code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code>). Default: <code>"top-right"</code></li>
+</ul>
+<section id="examples-1" class="level3">
+<h3 class="anchored" data-anchor-id="examples-1">Examples</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">FullscreenWidget</span>()])</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">FullscreenWidget</span>(placement<span class="op">=</span><span class="st">"top-left"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
 </section>
 </div>
 </div>
@@ -372,7 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="geojsonlayer"><code>GeoJsonLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GeoJsonLayer</span>(; data, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GeoJsonLayer</span>(; data, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders GeoJSON data as points, lines, and polygons.</p>
 <p>This is a composite layer that automatically renders GeoJSON features using the appropriate sub-layers (ScatterplotLayer, PathLayer, PolygonLayer).</p>
 <section id="required-arguments-1" class="level1">
@@ -414,34 +475,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-2" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GeoJSON as a Dict</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>geojson <span class="op">=</span> <span class="fu">Dict</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"FeatureCollection"</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"features"</span> <span class="op">=&gt;</span> [</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">Dict</span>(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"Feature"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"geometry"</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>(</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"Point"</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">"coordinates"</span> <span class="op">=&gt;</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>]</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"properties"</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>(<span class="st">"name"</span> <span class="op">=&gt;</span> <span class="st">"San Francisco"</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GeoJsonLayer</span>(</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> geojson,</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>],</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    get_point_radius <span class="op">=</span> <span class="fl">100</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Or load from URL</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GeoJsonLayer</span>(</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="st">"https://example.com/data.geojson"</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> <span class="cn">true</span>,</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    stroked <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GeoJSON as a Dict</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>geojson <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"FeatureCollection"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"features"</span> <span class="op">=&gt;</span> [</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">Dict</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"Feature"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"geometry"</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"Point"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">"coordinates"</span> <span class="op">=&gt;</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>]</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"properties"</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>(<span class="st">"name"</span> <span class="op">=&gt;</span> <span class="st">"San Francisco"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GeoJsonLayer</span>(</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> geojson,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>],</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    get_point_radius <span class="op">=</span> <span class="fl">100</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Or load from URL</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GeoJsonLayer</span>(</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="st">"https://example.com/data.geojson"</span>,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    stroked <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -450,7 +511,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="gridlayer"><code>GridLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GridLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GridLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Aggregates data into rectangular grid cells and renders as 3D columns.</p>
 <section id="required-arguments-2" class="level1">
 <h1>Required Arguments</h1>
@@ -482,20 +543,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-3" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> (</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">122.5</span><span class="op">:-</span><span class="fl">122.3</span>, <span class="fl">5000</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">37.7</span><span class="op">:</span><span class="fl">37.9</span>, <span class="fl">5000</span>),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5000</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GridLayer</span>(</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> points,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    get_elevation_weight <span class="op">=</span> <span class="op">:</span>value,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    cell_size <span class="op">=</span> <span class="fl">200</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">4</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> (</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">122.5</span><span class="op">:-</span><span class="fl">122.3</span>, <span class="fl">5000</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">37.7</span><span class="op">:</span><span class="fl">37.9</span>, <span class="fl">5000</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5000</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GridLayer</span>(</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> points,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    get_elevation_weight <span class="op">=</span> <span class="op">:</span>value,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    cell_size <span class="op">=</span> <span class="fl">200</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">4</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -504,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="heatmaplayer"><code>HeatmapLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HeatmapLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HeatmapLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders a heatmap based on point density and weights.</p>
 <section id="required-arguments-3" class="level1">
 <h1>Required Arguments</h1>
@@ -532,20 +593,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-4" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>incidents <span class="op">=</span> (</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">122.5</span><span class="op">:-</span><span class="fl">122.3</span>, <span class="fl">10000</span>),</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">37.7</span><span class="op">:</span><span class="fl">37.9</span>, <span class="fl">10000</span>),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    severity <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">10000</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">HeatmapLayer</span>(</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> incidents,</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    get_weight <span class="op">=</span> <span class="op">:</span>severity,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    radius_pixels <span class="op">=</span> <span class="fl">50</span>,</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    intensity <span class="op">=</span> <span class="fl">1</span>,</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    threshold <span class="op">=</span> <span class="fl">0.03</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>incidents <span class="op">=</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">122.5</span><span class="op">:-</span><span class="fl">122.3</span>, <span class="fl">10000</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">37.7</span><span class="op">:</span><span class="fl">37.9</span>, <span class="fl">10000</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    severity <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">10000</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">HeatmapLayer</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> incidents,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    get_weight <span class="op">=</span> <span class="op">:</span>severity,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    radius_pixels <span class="op">=</span> <span class="fl">50</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    intensity <span class="op">=</span> <span class="fl">1</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    threshold <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -554,7 +615,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="hexagonlayer"><code>HexagonLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HexagonLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HexagonLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Aggregates data into hexagonal bins and renders as 3D hexagons.</p>
 <section id="required-arguments-4" class="level1">
 <h1>Required Arguments</h1>
@@ -586,20 +647,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-5" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>earthquakes <span class="op">=</span> (</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">180.0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="fl">180.0</span>, <span class="fl">10000</span>),</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">60.0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="fl">60.0</span>, <span class="fl">10000</span>),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    magnitude <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1.0</span><span class="op">:</span><span class="fl">0.1</span><span class="op">:</span><span class="fl">8.0</span>, <span class="fl">10000</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">HexagonLayer</span>(</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> earthquakes,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    get_elevation_weight <span class="op">=</span> <span class="op">:</span>magnitude,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    radius <span class="op">=</span> <span class="fl">50000</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">100</span>,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>earthquakes <span class="op">=</span> (</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">180.0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="fl">180.0</span>, <span class="fl">10000</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">60.0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="fl">60.0</span>, <span class="fl">10000</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    magnitude <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1.0</span><span class="op">:</span><span class="fl">0.1</span><span class="op">:</span><span class="fl">8.0</span>, <span class="fl">10000</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">HexagonLayer</span>(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> earthquakes,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    get_elevation_weight <span class="op">=</span> <span class="op">:</span>magnitude,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    radius <span class="op">=</span> <span class="fl">50000</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">100</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -608,7 +669,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="linelayer"><code>LineLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">LineLayer</span>(; data, get_source_position, get_target_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">LineLayer</span>(; data, get_source_position, get_target_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders straight lines between source and target coordinates.</p>
 <section id="required-arguments-5" class="level1">
 <h1>Required Arguments</h1>
@@ -635,20 +696,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-6" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>connections <span class="op">=</span> (</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    from_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>],</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    from_lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>],</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    to_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.3</span>, <span class="op">-</span><span class="fl">122.4</span>],</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    to_lat <span class="op">=</span> [<span class="fl">37.9</span>, <span class="fl">37.8</span>]</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">LineLayer</span>(</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> connections,</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    get_source_position <span class="op">=</span> [<span class="op">:</span>from_lng, <span class="op">:</span>from_lat],</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    get_target_position <span class="op">=</span> [<span class="op">:</span>to_lng, <span class="op">:</span>to_lat],</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">200</span>],</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="fl">2</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>connections <span class="op">=</span> (</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    from_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>],</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    from_lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>],</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    to_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.3</span>, <span class="op">-</span><span class="fl">122.4</span>],</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    to_lat <span class="op">=</span> [<span class="fl">37.9</span>, <span class="fl">37.8</span>]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">LineLayer</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> connections,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    get_source_position <span class="op">=</span> [<span class="op">:</span>from_lng, <span class="op">:</span>from_lat],</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    get_target_position <span class="op">=</span> [<span class="op">:</span>to_lng, <span class="op">:</span>to_lat],</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">200</span>],</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="fl">2</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -657,7 +718,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="pathlayer"><code>PathLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PathLayer</span>(; data, get_path, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PathLayer</span>(; data, get_path, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders sequences of coordinates as paths/polylines.</p>
 <section id="required-arguments-6" class="level1">
 <h1>Required Arguments</h1>
@@ -687,21 +748,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-7" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>routes <span class="op">=</span> (</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> [</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        [[<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.9</span>]],</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        [[<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.75</span>], [<span class="op">-</span><span class="fl">122.35</span>, <span class="fl">37.85</span>]]</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> [<span class="st">"Route A"</span>, <span class="st">"Route B"</span>]</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">PathLayer</span>(</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> routes,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    get_path <span class="op">=</span> <span class="op">:</span>path,</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>, <span class="fl">200</span>],</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="fl">5</span>,</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    cap_rounded <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>routes <span class="op">=</span> (</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> [</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        [[<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.9</span>]],</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        [[<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.75</span>], [<span class="op">-</span><span class="fl">122.35</span>, <span class="fl">37.85</span>]]</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> [<span class="st">"Route A"</span>, <span class="st">"Route B"</span>]</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">PathLayer</span>(</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> routes,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    get_path <span class="op">=</span> <span class="op">:</span>path,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>, <span class="fl">200</span>],</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="fl">5</span>,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    cap_rounded <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -710,7 +771,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="polygonlayer"><code>PolygonLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PolygonLayer</span>(; data, get_polygon, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PolygonLayer</span>(; data, get_polygon, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders filled and/or stroked polygons.</p>
 <section id="required-arguments-7" class="level1">
 <h1>Required Arguments</h1>
@@ -745,21 +806,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-8" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>regions <span class="op">=</span> (</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    polygon <span class="op">=</span> [</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        [[[<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>]]],</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        [[[<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.85</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.85</span>]]]</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>]</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">PolygonLayer</span>(</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> regions,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    get_polygon <span class="op">=</span> <span class="op">:</span>polygon,</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">100</span>],</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    get_line_width <span class="op">=</span> <span class="fl">2</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>regions <span class="op">=</span> (</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    polygon <span class="op">=</span> [</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        [[[<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>]]],</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        [[[<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.85</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.85</span>]]]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>]</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">PolygonLayer</span>(</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> regions,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    get_polygon <span class="op">=</span> <span class="op">:</span>polygon,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">100</span>],</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    get_line_width <span class="op">=</span> <span class="fl">2</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -768,7 +829,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="scatterplotlayer"><code>ScatterplotLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ScatterplotLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ScatterplotLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders circles at given coordinates.</p>
 <section id="required-arguments-8" class="level1">
 <h1>Required Arguments</h1>
@@ -800,20 +861,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-9" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    longitude <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>, <span class="op">-</span><span class="fl">122.3</span>],</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    latitude <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>, <span class="fl">37.9</span>],</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">150</span>]</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> df,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>longitude, <span class="op">:</span>latitude],</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">200</span>]</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    longitude <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>, <span class="op">-</span><span class="fl">122.3</span>],</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    latitude <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>, <span class="fl">37.9</span>],</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">150</span>]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> df,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>longitude, <span class="op">:</span>latitude],</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">200</span>]</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -822,7 +883,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="textlayer"><code>TextLayer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TextLayer</span>(; data, get_position, get_text, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TextLayer</span>(; data, get_position, get_text, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Renders text labels at given coordinates.</p>
 <section id="required-arguments-9" class="level1">
 <h1>Required Arguments</h1>
@@ -860,22 +921,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-10" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> (</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">73.9</span>, <span class="op">-</span><span class="fl">87.6</span>],</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">40.7</span>, <span class="fl">41.9</span>],</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> [<span class="st">"San Francisco"</span>, <span class="st">"New York"</span>, <span class="st">"Chicago"</span>],</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    population <span class="op">=</span> [<span class="fl">883000</span>, <span class="fl">8336000</span>, <span class="fl">2693000</span>]</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">TextLayer</span>(</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> cities,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    get_text <span class="op">=</span> <span class="op">:</span>name,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    get_size <span class="op">=</span> <span class="fl">16</span>,</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    get_text_anchor <span class="op">=</span> <span class="st">"middle"</span>,</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    get_alignment_baseline <span class="op">=</span> <span class="st">"center"</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> (</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">73.9</span>, <span class="op">-</span><span class="fl">87.6</span>],</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">40.7</span>, <span class="fl">41.9</span>],</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> [<span class="st">"San Francisco"</span>, <span class="st">"New York"</span>, <span class="st">"Chicago"</span>],</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    population <span class="op">=</span> [<span class="fl">883000</span>, <span class="fl">8336000</span>, <span class="fl">2693000</span>]</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">TextLayer</span>(</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> cities,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    get_text <span class="op">=</span> <span class="op">:</span>name,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    get_size <span class="op">=</span> <span class="fl">16</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    get_text_anchor <span class="op">=</span> <span class="st">"middle"</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    get_alignment_baseline <span class="op">=</span> <span class="st">"center"</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -884,7 +945,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="viewstate"><code>ViewState</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(; longitude<span class="op">=</span><span class="fl">0.0</span>, latitude<span class="op">=</span><span class="fl">0.0</span>, zoom<span class="op">=</span><span class="fl">1.0</span>, pitch<span class="op">=</span><span class="fl">0.0</span>, bearing<span class="op">=</span><span class="fl">0.0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(; longitude<span class="op">=</span><span class="fl">0.0</span>, latitude<span class="op">=</span><span class="fl">0.0</span>, zoom<span class="op">=</span><span class="fl">1.0</span>, pitch<span class="op">=</span><span class="fl">0.0</span>, bearing<span class="op">=</span><span class="fl">0.0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Camera/viewport configuration for a deck.gl visualization.</p>
 <section id="fields" class="level1">
 <h1>Fields</h1>
@@ -898,6 +959,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </div>
 </div>
+<div class="card mb-3">
+<section id="zoomwidget" class="level4 card-header api-item-header">
+<h4 class="anchored" data-anchor-id="zoomwidget"><code>ZoomWidget</code></h4>
+</section>
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ZoomWidget</span>(; id<span class="op">=</span><span class="st">"zoom"</span>, placement<span class="op">=</span><span class="st">"top-right"</span>, orientation<span class="op">=</span><span class="st">"vertical"</span>, transition_duration<span class="op">=</span><span class="fl">200</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Adds +/- zoom buttons to the map.</p>
+<section id="keyword-arguments-3" class="level1">
+<h1>Keyword Arguments</h1>
+<ul>
+<li><code>id::String</code>: Widget identifier. Default: <code>"zoom"</code></li>
+<li><code>placement::String</code>: Widget position (<code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code>). Default: <code>"top-right"</code></li>
+<li><code>orientation::String</code>: Button layout (<code>"vertical"</code> or <code>"horizontal"</code>). Default: <code>"vertical"</code></li>
+<li><code>transition_duration::Int</code>: Zoom animation duration in ms. Default: <code>200</code></li>
+</ul>
+<section id="examples-2" class="level3">
+<h3 class="anchored" data-anchor-id="examples-2">Examples</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">ZoomWidget</span>()])</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">ZoomWidget</span>(placement<span class="op">=</span><span class="st">"top-left"</span>, orientation<span class="op">=</span><span class="st">"horizontal"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+</div>
+</div>
 </section>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
@@ -906,7 +990,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="arcs"><code>arcs</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, source_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>], target_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, source_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>], target_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create an arc diagram visualization.</p>
 <section id="arguments-1" class="level1">
 <h1>Arguments</h1>
@@ -916,7 +1000,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>target</code>: Target position as <code>[lng_col, lat_col]</code> or single column Symbol</li>
 </ul>
 </section>
-<section id="keyword-arguments-1" class="level1">
+<section id="keyword-arguments-4" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>width</code>: Arc width (number or column Symbol). Default: <code>1</code></li>
@@ -929,8 +1013,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-11" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (src_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">122.4</span>], src_lat<span class="op">=</span>[<span class="fl">37.8</span>], dst_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">73.9</span>], dst_lat<span class="op">=</span>[<span class="fl">40.7</span>])</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(trips, [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat], [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (src_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">122.4</span>], src_lat<span class="op">=</span>[<span class="fl">37.8</span>], dst_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">73.9</span>], dst_lat<span class="op">=</span>[<span class="fl">40.7</span>])</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(trips, [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat], [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -939,7 +1023,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="geojson"><code>geojson</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson</span>(data; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson</span>(data; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a GeoJSON visualization.</p>
 <section id="arguments-2" class="level1">
 <h1>Arguments</h1>
@@ -947,7 +1031,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>data</code>: GeoJSON data as Dict, JSON string, or URL</li>
 </ul>
 </section>
-<section id="keyword-arguments-2" class="level1">
+<section id="keyword-arguments-5" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>fill_color</code>: Fill color for polygons. Default: <code>[0, 0, 0, 100]</code></li>
@@ -966,14 +1050,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="geojson_layer"><code>geojson_layer</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson_layer</span>(geom; kwargs<span class="op">...</span>) <span class="op">-&gt;</span> GeoJsonLayer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson_layer</span>(geom; kwargs<span class="op">...</span>) <span class="op">-&gt;</span> GeoJsonLayer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a GeoJsonLayer from any GeoInterface-compatible geometry.</p>
 <section id="example-12" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Shapefile</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>shp <span class="op">=</span> Shapefile.<span class="fu">Table</span>(<span class="st">"boundaries.shp"</span>)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">geojson_layer</span>(shp, get_fill_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Shapefile</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>shp <span class="op">=</span> Shapefile.<span class="fu">Table</span>(<span class="st">"boundaries.shp"</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">geojson_layer</span>(shp, get_fill_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -982,7 +1066,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="heatmap"><code>heatmap</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">30</span>, intensity<span class="op">=</span><span class="fl">1</span>, weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">30</span>, intensity<span class="op">=</span><span class="fl">1</span>, weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a heatmap visualization.</p>
 <section id="arguments-3" class="level1">
 <h1>Arguments</h1>
@@ -992,7 +1076,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>lat</code>: Column name for latitude</li>
 </ul>
 </section>
-<section id="keyword-arguments-3" class="level1">
+<section id="keyword-arguments-6" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>radius</code>: Radius of influence in pixels. Default: <code>30</code></li>
@@ -1011,7 +1095,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="hexbin"><code>hexbin</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hexbin</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1000</span>, elevation_weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hexbin</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1000</span>, elevation_weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a hexagonal binning visualization.</p>
 <section id="arguments-4" class="level1">
 <h1>Arguments</h1>
@@ -1021,7 +1105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>lat</code>: Column name for latitude</li>
 </ul>
 </section>
-<section id="keyword-arguments-4" class="level1">
+<section id="keyword-arguments-7" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>radius</code>: Hexagon radius in meters. Default: <code>1000</code></li>
@@ -1041,7 +1125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="lines"><code>lines</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a line visualization connecting points.</p>
 <section id="arguments-5" class="level1">
 <h1>Arguments</h1>
@@ -1051,7 +1135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>target</code>: Target position as <code>[lng_col, lat_col]</code></li>
 </ul>
 </section>
-<section id="keyword-arguments-5" class="level1">
+<section id="keyword-arguments-8" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>width</code>: Line width. Default: <code>1</code></li>
@@ -1068,7 +1152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="open_html"><code>open_html</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Open the visualization in the default web browser.</p>
 </div>
 </div>
@@ -1077,7 +1161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="paths"><code>paths</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(data, path_col; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(data, path_col; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a path visualization.</p>
 <section id="arguments-6" class="level1">
 <h1>Arguments</h1>
@@ -1086,7 +1170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>path_col</code>: Column containing path coordinates (arrays of [lng, lat] pairs)</li>
 </ul>
 </section>
-<section id="keyword-arguments-6" class="level1">
+<section id="keyword-arguments-9" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>width</code>: Path width. Default: <code>1</code></li>
@@ -1104,7 +1188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="polygons"><code>polygons</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">polygons</span>(data, polygon_col; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">polygons</span>(data, polygon_col; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a polygon visualization.</p>
 <section id="arguments-7" class="level1">
 <h1>Arguments</h1>
@@ -1113,7 +1197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>polygon_col</code>: Column containing polygon coordinates</li>
 </ul>
 </section>
-<section id="keyword-arguments-7" class="level1">
+<section id="keyword-arguments-10" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>fill_color</code>: Fill color. Default: <code>[0, 0, 0, 100]</code></li>
@@ -1131,7 +1215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="save_html"><code>save_html</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>, path<span class="op">::</span><span class="dt">String</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>, path<span class="op">::</span><span class="dt">String</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Save the visualization as a standalone HTML file.</p>
 </div>
 </div>
@@ -1140,7 +1224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="scatter"><code>scatter</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>], opacity<span class="op">=</span><span class="fl">1</span>, zoom<span class="op">=</span><span class="fl">10</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>], opacity<span class="op">=</span><span class="fl">1</span>, zoom<span class="op">=</span><span class="fl">10</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a scatterplot visualization.</p>
 <section id="arguments-8" class="level1">
 <h1>Arguments</h1>
@@ -1150,7 +1234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>lat</code>: Column name for latitude (Symbol)</li>
 </ul>
 </section>
-<section id="keyword-arguments-8" class="level1">
+<section id="keyword-arguments-11" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>radius</code>: Point radius (number or column Symbol). Default: <code>1</code></li>
@@ -1162,8 +1246,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-13" class="level1">
 <h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>], lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>], size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>])</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>], lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>], size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>])</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </div>
 </div>
@@ -1172,7 +1256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="text"><code>text</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(data, lng, lat, text_col; size<span class="op">=</span><span class="fl">16</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(data, lng, lat, text_col; size<span class="op">=</span><span class="fl">16</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a text label visualization.</p>
 <section id="arguments-9" class="level1">
 <h1>Arguments</h1>
@@ -1183,7 +1267,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>text_col</code>: Column containing text labels</li>
 </ul>
 </section>
-<section id="keyword-arguments-9" class="level1">
+<section id="keyword-arguments-12" class="level1">
 <h1>Keyword Arguments</h1>
 <ul>
 <li><code>size</code>: Text size. Default: <code>16</code></li>
@@ -1200,7 +1284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="to_geojson"><code>to_geojson</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_geojson</span>(geom) <span class="op">-&gt;</span> <span class="dt">Dict</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_geojson</span>(geom) <span class="op">-&gt;</span> <span class="dt">Dict</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Convert a GeoInterface-compatible geometry to a GeoJSON Dict.</p>
 </div>
 </div>
@@ -1209,7 +1293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="to_html"><code>to_html</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Generate a standalone HTML string for the deck.gl visualization.</p>
 </div>
 </div>
@@ -1218,7 +1302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="to_json"><code>to_json</code></h4>
 </section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_json</span>(deck<span class="op">::</span><span class="dt">Deck</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_json</span>(deck<span class="op">::</span><span class="dt">Deck</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Convert a Deck to its deck.gl JSON specification string.</p>
 </div>
 </div>
