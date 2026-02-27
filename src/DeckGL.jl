@@ -8,6 +8,9 @@ using Base64: base64encode
 # Core types
 export Deck, ViewState, AbstractLayer
 
+# Widgets
+export AbstractWidget, ZoomWidget, CompassWidget, FullscreenWidget
+
 # Core layers
 export ScatterplotLayer, ArcLayer, LineLayer, PathLayer, PolygonLayer, TextLayer
 
@@ -29,6 +32,7 @@ export to_geojson, geojson_layer
 
 # Include source files
 include("types.jl")
+include("widgets.jl")
 include("layers/layers.jl")
 include("json.jl")
 include("render.jl")

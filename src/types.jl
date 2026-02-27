@@ -30,9 +30,20 @@ abstract type AbstractLayer end
 # Get the deck.gl layer type name (e.g., "ScatterplotLayer")
 layer_type(::T) where {T<:AbstractLayer} = string(nameof(T))
 
+#-----------------------------------------------------------------------------# AbstractWidget
+"""
+    AbstractWidget
+
+Abstract supertype for all deck.gl widgets.
+"""
+abstract type AbstractWidget end
+
+# Get the deck.gl widget type name (e.g., "ZoomWidget")
+widget_type(::T) where {T<:AbstractWidget} = string(nameof(T))
+
 #-----------------------------------------------------------------------------# Deck
 """
-    Deck(layers; initial_view_state=ViewState(), map_style=nothing, controller=true)
+    Deck(layers; initial_view_state=ViewState(), map_style=nothing, controller=true, widgets=AbstractWidget[])
 
 The top-level container representing a deck.gl visualization.
 
@@ -43,11 +54,15 @@ The top-level container representing a deck.gl visualization.
 - `initial_view_state::ViewState`: Camera configuration
 - `map_style::Union{String,Nothing}`: Map tile style URL (Mapbox/MapLibre/Carto)
 - `controller::Bool`: Enable pan/zoom/rotate controls
+- `widgets::Vector{AbstractWidget}`: UI widgets (zoom, compass, fullscreen)
 
 # Example
 ```julia
 layer = ScatterplotLayer(data=df, get_position=[:lng, :lat])
-deck = Deck(layer, initial_view_state=ViewState(longitude=-122.4, latitude=37.8, zoom=11))
+deck = Deck(layer,
+    initial_view_state=ViewState(longitude=-122.4, latitude=37.8, zoom=11),
+    widgets=[ZoomWidget(), CompassWidget()]
+)
 ```
 """
 struct Deck
@@ -55,13 +70,15 @@ struct Deck
     initial_view_state::ViewState
     map_style::Union{String,Nothing}
     controller::Bool
+    widgets::Vector{AbstractWidget}
 end
 
 function Deck(layers;
     initial_view_state::ViewState = ViewState(),
     map_style::Union{String,Nothing} = nothing,
-    controller::Bool = true
+    controller::Bool = true,
+    widgets::Vector{<:AbstractWidget} = AbstractWidget[]
 )
     layers_vec = layers isa AbstractLayer ? [layers] : collect(AbstractLayer, layers)
-    Deck(layers_vec, initial_view_state, map_style, controller)
+    Deck(layers_vec, initial_view_state, map_style, controller, convert(Vector{AbstractWidget}, widgets))
 end

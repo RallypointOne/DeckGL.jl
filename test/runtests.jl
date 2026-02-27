@@ -404,6 +404,50 @@ using Test
         @test deck3.layers[1] isa GeoJsonLayer
     end
 
+    @testset "Widgets" begin
+        # Default construction
+        zw = ZoomWidget()
+        @test zw.id == "zoom"
+        @test zw.placement == "top-right"
+        @test zw.orientation == "vertical"
+        @test zw.transition_duration == 200
+
+        cw = CompassWidget()
+        @test cw.id == "compass"
+        @test cw.placement == "top-right"
+
+        fw = FullscreenWidget()
+        @test fw.id == "fullscreen"
+        @test fw.placement == "top-right"
+
+        # Custom construction
+        zw2 = ZoomWidget(placement="top-left", orientation="horizontal")
+        @test zw2.placement == "top-left"
+        @test zw2.orientation == "horizontal"
+
+        # Deck with widgets
+        data = (lng = [-122.4], lat = [37.8])
+        layer = ScatterplotLayer(data=data, get_position=[:lng, :lat])
+        deck = Deck(layer, widgets=[ZoomWidget(), CompassWidget()])
+        @test length(deck.widgets) == 2
+        @test deck.widgets[1] isa ZoomWidget
+        @test deck.widgets[2] isa CompassWidget
+
+        # Deck without widgets (default)
+        deck2 = Deck(layer)
+        @test isempty(deck2.widgets)
+
+        # JSON serialization with widgets
+        json_str = to_json(deck)
+        @test occursin("ZoomWidget", json_str)
+        @test occursin("CompassWidget", json_str)
+        @test occursin("transitionDuration", json_str)
+
+        # JSON without widgets omits key
+        json_str2 = to_json(deck2)
+        @test !occursin("widgets", json_str2)
+    end
+
     @testset "GeoInterface integration" begin
         using DeckGL: to_geojson, geojson_layer
         import GeoInterface as GI

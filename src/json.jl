@@ -312,6 +312,34 @@ function layer_to_dict(layer::GeoJsonLayer)
     ))
 end
 
+#-----------------------------------------------------------------------------# Widget JSON
+function widget_to_dict(w::ZoomWidget)
+    Dict{String,Any}(
+        "@@type" => widget_type(w),
+        "id" => w.id,
+        "placement" => w.placement,
+        "orientation" => w.orientation,
+        "transitionDuration" => w.transition_duration,
+    )
+end
+
+function widget_to_dict(w::CompassWidget)
+    Dict{String,Any}(
+        "@@type" => widget_type(w),
+        "id" => w.id,
+        "placement" => w.placement,
+        "transitionDuration" => w.transition_duration,
+    )
+end
+
+function widget_to_dict(w::FullscreenWidget)
+    Dict{String,Any}(
+        "@@type" => widget_type(w),
+        "id" => w.id,
+        "placement" => w.placement,
+    )
+end
+
 #-----------------------------------------------------------------------------# ViewState JSON
 function viewstate_to_dict(vs::ViewState)
     Dict{String,Any}(
@@ -333,6 +361,10 @@ function deck_to_dict(deck::Deck)
 
     if deck.map_style !== nothing
         spec["mapStyle"] = deck.map_style
+    end
+
+    if !isempty(deck.widgets)
+        spec["widgets"] = [widget_to_dict(w) for w in deck.widgets]
     end
 
     return spec

@@ -1,0 +1,136 @@
+---
+title: "Widgets"
+engine: julia
+---
+
+Widgets are UI controls that overlay your deck.gl visualization. DeckGL.jl supports three built-in widgets from deck.gl v9.0:
+
+- **ZoomWidget** -- +/- zoom buttons
+- **CompassWidget** -- Compass rose showing bearing (click to reset)
+- **FullscreenWidget** -- Toggle fullscreen mode
+
+Pass widgets to the `Deck` constructor via the `widgets` keyword argument.
+
+```{julia}
+#| echo: false
+#| output: false
+using DeckGL
+```
+
+## ZoomWidget
+
+Adds zoom in/out buttons.
+
+```{julia}
+data = (
+    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
+    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
+    size = [80, 200, 120, 300, 150]
+)
+
+Deck(
+    ScatterplotLayer(
+        data = data,
+        get_position = [:lng, :lat],
+        get_radius = :size,
+        get_fill_color = [255, 140, 0, 200],
+        radius_min_pixels = 3
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    widgets = [ZoomWidget()]
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `id` | String | `"zoom"` | Widget identifier |
+| `placement` | String | `"top-right"` | Position on the map |
+| `orientation` | String | `"vertical"` | Button layout (`"vertical"` or `"horizontal"`) |
+| `transition_duration` | Int | `200` | Zoom animation duration (ms) |
+
+## CompassWidget
+
+Shows a compass rose indicating the current bearing. Click to reset bearing to north.
+
+```{julia}
+data = (
+    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
+    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
+    size = [80, 200, 120, 300, 150]
+)
+
+Deck(
+    ScatterplotLayer(
+        data = data,
+        get_position = [:lng, :lat],
+        get_radius = :size,
+        get_fill_color = [0, 128, 255, 200],
+        radius_min_pixels = 3
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, bearing=45),
+    widgets = [CompassWidget()]
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `id` | String | `"compass"` | Widget identifier |
+| `placement` | String | `"top-right"` | Position on the map |
+| `transition_duration` | Int | `200` | Reset animation duration (ms) |
+
+## FullscreenWidget
+
+Adds a button to toggle the visualization into fullscreen mode.
+
+```{julia}
+data = (
+    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
+    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
+    size = [80, 200, 120, 300, 150]
+)
+
+Deck(
+    ScatterplotLayer(
+        data = data,
+        get_position = [:lng, :lat],
+        get_radius = :size,
+        get_fill_color = [0, 200, 100, 200],
+        radius_min_pixels = 3
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    widgets = [FullscreenWidget()]
+)
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `id` | String | `"fullscreen"` | Widget identifier |
+| `placement` | String | `"top-right"` | Position on the map |
+
+## Combining Widgets
+
+You can use multiple widgets together. Use the `placement` option to avoid overlap.
+
+```{julia}
+data = (
+    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
+    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
+    size = [80, 200, 120, 300, 150]
+)
+
+Deck(
+    ScatterplotLayer(
+        data = data,
+        get_position = [:lng, :lat],
+        get_radius = :size,
+        get_fill_color = [255, 100, 50, 200],
+        radius_min_pixels = 3
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, pitch=30, bearing=15),
+    widgets = [
+        ZoomWidget(placement="top-left"),
+        CompassWidget(placement="top-right"),
+        FullscreenWidget(placement="bottom-right")
+    ]
+)
+```

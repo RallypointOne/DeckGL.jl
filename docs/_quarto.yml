@@ -27,6 +27,7 @@ book:
         - index.qmd
         - getting-started.qmd
         - layers.qmd
+        - widgets.qmd
         - examples.qmd
     - part: "API"
       chapters:

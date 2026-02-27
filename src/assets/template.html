@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeckGL Visualization</title>
     <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+    <link href="https://unpkg.com/deck.gl@9.0.16/dist/stylesheet.css" rel="stylesheet" />
     <style>
         body {
             margin: 0;
@@ -94,6 +95,26 @@
             return new LayerClass(props);
         }
 
+        // Process widget specification
+        function processWidget(widgetSpec) {
+            var widgetType = widgetSpec['@@type'];
+            var WidgetClass = deck[widgetType];
+
+            if (!WidgetClass) {
+                console.error('Unknown widget type:', widgetType);
+                return null;
+            }
+
+            var props = {};
+            var keys = Object.keys(widgetSpec);
+            for (var i = 0; i < keys.length; i++) {
+                if (keys[i] === '@@type') continue;
+                props[keys[i]] = widgetSpec[keys[i]];
+            }
+
+            return new WidgetClass(props);
+        }
+
         // Determine which scripts to load
         var scripts = ['https://unpkg.com/deck.gl@9.0.16/dist.min.js'];
         if (spec.mapStyle) {
@@ -103,6 +124,7 @@
         // Load scripts then initialize
         Promise.all(scripts.map(function(src) { return loadScript(src); })).then(function() {
             var layers = spec.layers.map(processLayer).filter(function(l) { return l !== null; });
+            var widgets = (spec.widgets || []).map(processWidget).filter(function(w) { return w !== null; });
 
             if (spec.mapStyle) {
                 var map = new maplibregl.Map({
@@ -120,6 +142,7 @@
                     initialViewState: spec.initialViewState,
                     controller: spec.controller,
                     layers: layers,
+                    widgets: widgets,
                     getTooltip: spec.pickable ? function(info) { return info.object && JSON.stringify(info.object); } : null,
                     onViewStateChange: function(e) {
                         map.jumpTo({
@@ -139,6 +162,7 @@
                     initialViewState: spec.initialViewState,
                     controller: spec.controller,
                     layers: layers,
+                    widgets: widgets,
                     getTooltip: spec.pickable ? function(info) { return info.object && JSON.stringify(info.object); } : null
                 });
             }
