@@ -14,6 +14,7 @@ using DeckGL, Downloads, JSON3
 ```
 
 ```{julia}
+#| code-fold: true
 url = string(
     "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson",
     "&starttime=2024-01-01&endtime=2024-12-31",

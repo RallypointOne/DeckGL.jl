@@ -14,6 +14,7 @@ using DeckGL, Downloads
 ```
 
 ```{julia}
+#| code-fold: true
 url = "https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv"
 lines = readlines(Downloads.download(url))
 

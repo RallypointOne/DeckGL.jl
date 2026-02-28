@@ -14,6 +14,7 @@ using DeckGL, Downloads, JSON3
 ```
 
 ```{julia}
+#| code-fold: true
 #--------------------------------------------------------------------------------# CSV parser for OpenFlights format (handles quoted fields)
 function parse_of_line(line)
     fields = String[]
