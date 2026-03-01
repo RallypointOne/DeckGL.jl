@@ -29,13 +29,6 @@ book:
         - layers.qmd
         - widgets.qmd
         - examples.qmd
-        - examples/global-flight-routes.qmd
-        - examples/tokyo-earthquakes.qmd
-        - examples/london-buildings-3d.qmd
-        - examples/paris-trees.qmd
-        - examples/uk-road-accidents.qmd
-        - examples/australia-earthquakes.qmd
-        - examples/us-fire-hotspots.qmd
     - part: "API"
       chapters:
         - api.qmd
