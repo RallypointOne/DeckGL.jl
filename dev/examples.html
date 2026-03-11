@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./examples/global-flight-routes.html" rel="next">
+<link href="./api.html" rel="next">
 <link href="./widgets.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -167,41 +202,6 @@ ul.task-list li input[type="checkbox"] {
   <a href="./examples.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Examples</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/global-flight-routes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Global Flight Routes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/tokyo-earthquakes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Tokyo Region Earthquakes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/london-buildings-3d.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">London Buildings 3D</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/paris-trees.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Paris Trees</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/uk-road-accidents.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">UK Road Accidents</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/australia-earthquakes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Australia / Indo-Pacific Earthquakes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/us-fire-hotspots.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">US Fire Hotspots</span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -286,52 +286,513 @@ ul.task-list li input[type="checkbox"] {
 <p>Multi-layer, map-backed visualizations using real public datasets. Each example downloads live data, builds layers, and renders an interactive deck.gl map.</p>
 <section id="global-flight-routes" class="level2">
 <h2 class="anchored" data-anchor-id="global-flight-routes">Global Flight Routes</h2>
-<p>Airline routes between the world’s 40 busiest airports from the OpenFlights database, rendered as great-circle arcs with labeled airport markers on a dark basemap.</p>
-<p><strong>Layers:</strong> ArcLayer, ScatterplotLayer, TextLayer | <a href="./examples/global-flight-routes.html">View source</a></p>
-<iframe src="examples/global-flight-routes.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>Real airline routes between the world’s 40 busiest airports, from the OpenFlights database.</p>
+<p><strong>Layers:</strong> ArcLayer + ScatterplotLayer + TextLayer | <strong>Map:</strong> Dark Matter</p>
+<p><strong><a href="examples/global-flight-routes.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="4" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">#--------------------------------------------------------------------------------# CSV parser for OpenFlights format (handles quoted fields)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">parse_of_line</span>(line)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        fields <span class="op">=</span> <span class="dt">String</span>[]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        buf <span class="op">=</span> <span class="fu">IOBuffer</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        in_q <span class="op">=</span> <span class="cn">false</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c <span class="kw">in</span> line</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> c <span class="op">==</span> <span class="ch">'"'</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                in_q <span class="op">=</span> !in_q</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elseif</span> c <span class="op">==</span> <span class="ch">','</span> <span class="op">&amp;&amp;</span> !in_q</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                <span class="fu">push!</span>(fields, <span class="fu">String</span>(<span class="fu">take!</span>(buf)))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                <span class="fu">write</span>(buf, c)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(fields, <span class="fu">String</span>(<span class="fu">take!</span>(buf)))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> fields</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#--------------------------------------------------------------------------------# Download OpenFlights data</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    airports_file <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat"</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    routes_file <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat"</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Parse airports: IATA → (lat, lng)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    airport_db <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{String, @NamedTuple{lat::Float64, lng::Float64}}</span>()</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="fu">readlines</span>(airports_file)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        f <span class="op">=</span> <span class="fu">parse_of_line</span>(line)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">length</span>(f) <span class="op">&gt;=</span> <span class="fl">8</span> <span class="op">||</span> <span class="cf">continue</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        iata <span class="op">=</span> f[<span class="fl">5</span>]</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        (iata <span class="op">==</span> <span class="st">""</span> <span class="op">||</span> iata <span class="op">==</span> <span class="st">"</span><span class="sc">\\</span><span class="st">N"</span> <span class="op">||</span> <span class="fu">length</span>(iata) <span class="op">!=</span> <span class="fl">3</span>) <span class="op">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        lat <span class="op">=</span> <span class="fu">tryparse</span>(<span class="dt">Float64</span>, f[<span class="fl">7</span>])</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        lng <span class="op">=</span> <span class="fu">tryparse</span>(<span class="dt">Float64</span>, f[<span class="fl">8</span>])</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        (lat <span class="op">===</span> <span class="cn">nothing</span> <span class="op">||</span> lng <span class="op">===</span> <span class="cn">nothing</span>) <span class="op">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        airport_db[iata] <span class="op">=</span> (lat <span class="op">=</span> lat, lng <span class="op">=</span> lng)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Parse routes: collect direct-flight pairs (deduplicated)</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    route_set <span class="op">=</span> <span class="fu">Set</span><span class="dt">{Tuple{String,String}}</span>()</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="fu">readlines</span>(routes_file)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        f <span class="op">=</span> <span class="fu">split</span>(line, <span class="ch">','</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">length</span>(f) <span class="op">&gt;=</span> <span class="fl">8</span> <span class="op">||</span> <span class="cf">continue</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        src, dst, stops <span class="op">=</span> f[<span class="fl">3</span>], f[<span class="fl">5</span>], f[<span class="fl">8</span>]</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        stops <span class="op">==</span> <span class="st">"0"</span> <span class="op">||</span> <span class="cf">continue</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        <span class="fu">haskey</span>(airport_db, src) <span class="op">&amp;&amp;</span> <span class="fu">haskey</span>(airport_db, dst) <span class="op">||</span> <span class="cf">continue</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(route_set, src <span class="op">&lt;</span> dst ? (src, dst) <span class="op">:</span> (dst, src))</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rank airports by connectivity, pick top 40</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    counts <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{String,Int}</span>()</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (s, d) <span class="kw">in</span> route_set</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        counts[s] <span class="op">=</span> <span class="fu">get</span>(counts, s, <span class="fl">0</span>) <span class="op">+</span> <span class="fl">1</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        counts[d] <span class="op">=</span> <span class="fu">get</span>(counts, d, <span class="fl">0</span>) <span class="op">+</span> <span class="fl">1</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> <span class="fu">Set</span>(<span class="fu">first</span>.(<span class="fu">sort</span>(<span class="fu">collect</span>(counts), by <span class="op">=</span> last, rev <span class="op">=</span> <span class="cn">true</span>)[<span class="fl">1</span><span class="op">:</span><span class="fu">min</span>(<span class="fl">40</span>, <span class="fu">length</span>(counts))]))</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter to routes between top airports</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    sel_routes <span class="op">=</span> [(s, d) for (s, d) <span class="kw">in</span> route_set if s <span class="kw">in</span> top <span class="op">&amp;&amp;</span> d <span class="kw">in</span> top]</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    sel_routes <span class="op">=</span> sel_routes[<span class="fl">1</span><span class="op">:</span><span class="fu">min</span>(<span class="fl">250</span>, <span class="fu">length</span>(sel_routes))]</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    used <span class="op">=</span> <span class="fu">sort</span>(<span class="fu">collect</span>(<span class="fu">union</span>(<span class="fu">Set</span>(<span class="fu">first</span>.(sel_routes)), <span class="fu">Set</span>(<span class="fu">last</span>.(sel_routes)))))</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    airports <span class="op">=</span> (</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>        lng  <span class="op">=</span> [airport_db[a].lng for a <span class="kw">in</span> used],</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        lat  <span class="op">=</span> [airport_db[a].lat for a <span class="kw">in</span> used],</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>        name <span class="op">=</span> used,</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    routes <span class="op">=</span> (</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        src_lng <span class="op">=</span> [airport_db[r[<span class="fl">1</span>]].lng for r <span class="kw">in</span> sel_routes],</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        src_lat <span class="op">=</span> [airport_db[r[<span class="fl">1</span>]].lat for r <span class="kw">in</span> sel_routes],</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>        tgt_lng <span class="op">=</span> [airport_db[r[<span class="fl">2</span>]].lng for r <span class="kw">in</span> sel_routes],</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>        tgt_lat <span class="op">=</span> [airport_db[r[<span class="fl">2</span>]].lat for r <span class="kw">in</span> sel_routes],</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    arcs <span class="op">=</span> <span class="fu">ArcLayer</span>(</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> routes,</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>        get_source_position <span class="op">=</span> [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat],</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>        get_target_position <span class="op">=</span> [<span class="op">:</span>tgt_lng, <span class="op">:</span>tgt_lat],</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>        get_source_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">180</span>, <span class="fl">235</span>, <span class="fl">160</span>],</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>        get_target_color <span class="op">=</span> [<span class="fl">160</span>, <span class="fl">90</span>, <span class="fl">255</span>, <span class="fl">160</span>],</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>        get_width <span class="op">=</span> <span class="fl">1</span>,</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>        great_circle <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>    dots <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> airports,</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>        get_fill_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">210</span>, <span class="fl">235</span>, <span class="fl">220</span>],</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>        get_radius <span class="op">=</span> <span class="fl">50000</span>,</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>        radius_min_pixels <span class="op">=</span> <span class="fl">3</span>,</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> <span class="fu">TextLayer</span>(</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> airports,</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>        get_text <span class="op">=</span> <span class="op">:</span>name,</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>        get_size <span class="op">=</span> <span class="fl">11</span>,</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>        get_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">230</span>],</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>        get_pixel_offset <span class="op">=</span> [<span class="fl">0</span>, <span class="op">-</span><span class="fl">14</span>],</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>        background <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>        get_background_color <span class="op">=</span> [<span class="fl">30</span>, <span class="fl">30</span>, <span class="fl">30</span>, <span class="fl">180</span>],</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>        background_padding <span class="op">=</span> [<span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">2</span>],</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>        font_family <span class="op">=</span> <span class="st">"Helvetica, Arial, sans-serif"</span>,</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>        font_weight <span class="op">=</span> <span class="fl">700</span>,</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>        [arcs, dots, labels],</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="fl">20.0</span>, latitude <span class="op">=</span> <span class="fl">15.0</span>, zoom <span class="op">=</span> <span class="fl">1.5</span>, pitch <span class="op">=</span> <span class="fl">15.0</span>),</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/global-flight-routes.html"</span>)</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="tokyo-region-earthquakes" class="level2">
 <h2 class="anchored" data-anchor-id="tokyo-region-earthquakes">Tokyo Region Earthquakes</h2>
-<p>USGS seismic data (2020–2024, M1.5+) near Tokyo aggregated into extruded 3D hexagonal bins colored by density.</p>
-<p><strong>Layers:</strong> HexagonLayer | <a href="./examples/tokyo-earthquakes.html">View source</a></p>
-<iframe src="examples/tokyo-earthquakes.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>Seismic activity near Tokyo (2020–2024, M1.5+) from the USGS Earthquake Hazards Program.</p>
+<p><strong>Layers:</strong> HexagonLayer | <strong>Map:</strong> Dark Matter</p>
+<p><strong><a href="examples/tokyo-earthquakes.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="6" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="fu">string</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;starttime=2020-01-01&amp;endtime=2024-12-31"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;minlatitude=34.5&amp;maxlatitude=36.5"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;minlongitude=138.5&amp;maxlongitude=141.0"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;minmagnitude=1.5&amp;limit=5000"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> JSON3.<span class="fu">read</span>(<span class="fu">read</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url), <span class="dt">String</span>))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> response[<span class="op">:</span>features]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> (</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        lng <span class="op">=</span> <span class="dt">Float64</span>[f[<span class="op">:</span>geometry][<span class="op">:</span>coordinates][<span class="fl">1</span>] for f <span class="kw">in</span> features],</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        lat <span class="op">=</span> <span class="dt">Float64</span>[f[<span class="op">:</span>geometry][<span class="op">:</span>coordinates][<span class="fl">2</span>] for f <span class="kw">in</span> features],</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    hexagons <span class="op">=</span> <span class="fu">HexagonLayer</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> data,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        radius <span class="op">=</span> <span class="fl">3000</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        elevation_scale <span class="op">=</span> <span class="fl">50</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        extruded <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        coverage <span class="op">=</span> <span class="fl">0.88</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        color_range <span class="op">=</span> [</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">178</span>],</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">254</span>, <span class="fl">204</span>, <span class="fl">92</span>],</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">253</span>, <span class="fl">141</span>, <span class="fl">60</span>],</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">240</span>, <span class="fl">59</span>, <span class="fl">32</span>],</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">189</span>, <span class="fl">0</span>, <span class="fl">38</span>],</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">128</span>, <span class="fl">0</span>, <span class="fl">38</span>],</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.85</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        [hexagons],</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="fl">139.9</span>, latitude <span class="op">=</span> <span class="fl">35.4</span>, zoom <span class="op">=</span> <span class="fl">8.0</span>, pitch <span class="op">=</span> <span class="fl">50.0</span>, bearing <span class="op">=</span> <span class="op">-</span><span class="fl">20.0</span>),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/tokyo-earthquakes.html"</span>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="london-buildings-3d" class="level2">
 <h2 class="anchored" data-anchor-id="london-buildings-3d">London Buildings 3D</h2>
-<p>Real building footprints with heights from OpenStreetMap in the City of London financial district, extruded to actual height and colored by elevation.</p>
-<p><strong>Layers:</strong> PolygonLayer | <a href="./examples/london-buildings-3d.html">View source</a></p>
-<iframe src="examples/london-buildings-3d.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>Real building footprints with heights from OpenStreetMap in the City of London financial district.</p>
+<p><strong>Layers:</strong> PolygonLayer | <strong>Map:</strong> Positron</p>
+<p><strong><a href="examples/london-buildings-3d.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="8" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    query <span class="op">=</span> <span class="st">"[out:json];way[</span><span class="sc">\"</span><span class="st">building</span><span class="sc">\"</span><span class="st">][</span><span class="sc">\"</span><span class="st">height</span><span class="sc">\"</span><span class="st">](51.505,-0.095,51.52,-0.07);out%20geom;"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://overpass-api.de/api/interpreter?data=</span><span class="sc">$</span>(query)<span class="st">"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> JSON3.<span class="fu">read</span>(<span class="fu">read</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url), <span class="dt">String</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    elements <span class="op">=</span> response[<span class="op">:</span>elements]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    polygons <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{Vector{Vector{Float64}}}</span>()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    heights <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> <span class="dt">Vector</span>{<span class="dt">Int</span>}[]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> elem <span class="kw">in</span> elements</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        poly <span class="op">=</span> [[<span class="fu">Float64</span>(pt[<span class="op">:</span>lon]), <span class="fu">Float64</span>(pt[<span class="op">:</span>lat])] for pt <span class="kw">in</span> elem[<span class="op">:</span>geometry]]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(polygons, poly)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        h_str <span class="op">=</span> <span class="fu">get</span>(elem[<span class="op">:</span>tags], <span class="op">:</span>height, <span class="cn">nothing</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> h_str <span class="op">!==</span> <span class="cn">nothing</span> ? <span class="fu">tryparse</span>(<span class="dt">Float64</span>, <span class="fu">replace</span>(<span class="fu">string</span>(h_str), <span class="st">r"</span><span class="ch">[^</span><span class="st">0-9.</span><span class="ch">]</span><span class="st">"</span> <span class="op">=&gt;</span> <span class="st">""</span>)) <span class="op">:</span> <span class="cn">nothing</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="fu">something</span>(h, <span class="fl">15.0</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(heights, h)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> <span class="fu">clamp</span>((h <span class="op">-</span> <span class="fl">5</span>) <span class="op">/</span> <span class="fl">175</span>, <span class="fl">0.0</span>, <span class="fl">1.0</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(colors, [<span class="fu">round</span>(<span class="dt">Int</span>, <span class="fl">40</span> <span class="op">+</span> <span class="fl">215</span> <span class="op">*</span> t), <span class="fu">round</span>(<span class="dt">Int</span>, <span class="fl">140</span> <span class="op">+</span> <span class="fl">80</span> <span class="op">*</span> (<span class="fl">1</span> <span class="op">-</span> t)), <span class="fu">round</span>(<span class="dt">Int</span>, <span class="fl">200</span> <span class="op">*</span> (<span class="fl">1</span> <span class="op">-</span> t))])</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    buildings_data <span class="op">=</span> (polygon <span class="op">=</span> polygons, elevation <span class="op">=</span> heights, color <span class="op">=</span> colors)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    polys <span class="op">=</span> <span class="fu">PolygonLayer</span>(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> buildings_data,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        get_polygon <span class="op">=</span> <span class="op">:</span>polygon,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        get_fill_color <span class="op">=</span> <span class="op">:</span>color,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        get_elevation <span class="op">=</span> <span class="op">:</span>elevation,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        extruded <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        wireframe <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">80</span>],</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        elevation_scale <span class="op">=</span> <span class="fl">1</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.85</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        [polys],</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="op">-</span><span class="fl">0.083</span>, latitude <span class="op">=</span> <span class="fl">51.513</span>, zoom <span class="op">=</span> <span class="fl">15.0</span>, pitch <span class="op">=</span> <span class="fl">55.0</span>, bearing <span class="op">=</span> <span class="fl">30.0</span>),</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/london-buildings-3d.html"</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="paris-trees" class="level2">
 <h2 class="anchored" data-anchor-id="paris-trees">Paris Trees</h2>
-<p>5,000 trees managed by the City of Paris shown as a height-weighted heatmap overlaid with individual tree points.</p>
-<p><strong>Layers:</strong> HeatmapLayer, ScatterplotLayer | <a href="./examples/paris-trees.html">View source</a></p>
-<iframe src="examples/paris-trees.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>Heatmap of 5,000 trees managed by the City of Paris, weighted by tree height.</p>
+<p><strong>Layers:</strong> HeatmapLayer + ScatterplotLayer | <strong>Map:</strong> Voyager</p>
+<p><strong><a href="examples/paris-trees.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="10" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/les-arbres/exports/geojson?limit=5000"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> JSON3.<span class="fu">read</span>(<span class="fu">read</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url), <span class="dt">String</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> response[<span class="op">:</span>features]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    lngs <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    lats <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    heights <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> f <span class="kw">in</span> features</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        geo <span class="op">=</span> f[<span class="op">:</span>geometry]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        geo <span class="op">===</span> <span class="cn">nothing</span> <span class="op">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        coords <span class="op">=</span> geo[<span class="op">:</span>coordinates]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(lngs, <span class="fu">Float64</span>(coords[<span class="fl">1</span>]))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(lats, <span class="fu">Float64</span>(coords[<span class="fl">2</span>]))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="fu">get</span>(f[<span class="op">:</span>properties], <span class="op">:</span>hauteurenm, <span class="cn">nothing</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(heights, h <span class="op">!==</span> <span class="cn">nothing</span> <span class="op">&amp;&amp;</span> h isa <span class="dt">Number</span> ? <span class="fu">Float64</span>(h) <span class="op">:</span> <span class="fl">5.0</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> (lng <span class="op">=</span> lngs, lat <span class="op">=</span> lats, height <span class="op">=</span> heights)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    heat <span class="op">=</span> <span class="fu">HeatmapLayer</span>(</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> data,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        get_weight <span class="op">=</span> <span class="op">:</span>height,</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        radius_pixels <span class="op">=</span> <span class="fl">30</span>,</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        intensity <span class="op">=</span> <span class="fl">1.2</span>,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        threshold <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        color_range <span class="op">=</span> [</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">178</span>, <span class="fl">25</span>],</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">254</span>, <span class="fl">217</span>, <span class="fl">118</span>, <span class="fl">85</span>],</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">254</span>, <span class="fl">178</span>, <span class="fl">76</span>, <span class="fl">127</span>],</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">253</span>, <span class="fl">141</span>, <span class="fl">60</span>, <span class="fl">170</span>],</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">240</span>, <span class="fl">59</span>, <span class="fl">32</span>, <span class="fl">210</span>],</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">189</span>, <span class="fl">0</span>, <span class="fl">38</span>, <span class="fl">240</span>],</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.7</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    scatter <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> data,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        get_fill_color <span class="op">=</span> [<span class="fl">34</span>, <span class="fl">139</span>, <span class="fl">34</span>, <span class="fl">80</span>],</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        get_radius <span class="op">=</span> <span class="fl">5</span>,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>        radius_min_pixels <span class="op">=</span> <span class="fl">1</span>,</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        [heat, scatter],</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="fl">2.34</span>, latitude <span class="op">=</span> <span class="fl">48.86</span>, zoom <span class="op">=</span> <span class="fl">12.5</span>),</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"</span>,</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/paris-trees.html"</span>)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="uk-road-accidents" class="level2">
 <h2 class="anchored" data-anchor-id="uk-road-accidents">UK Road Accidents</h2>
-<p>~140,000 personal injury road accidents aggregated into an extruded 3D grid over central London.</p>
-<p><strong>Layers:</strong> GridLayer | <a href="./examples/uk-road-accidents.html">View source</a></p>
-<iframe src="examples/uk-road-accidents.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>~140,000 personal injury accidents aggregated into a 3D grid across Great Britain.</p>
+<p><strong>Layers:</strong> GridLayer | <strong>Map:</strong> Dark Matter</p>
+<p><strong><a href="examples/uk-road-accidents.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="12" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    lines <span class="op">=</span> <span class="fu">readlines</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    lngs <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    lats <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(lines)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        parts <span class="op">=</span> <span class="fu">split</span>(lines[i], <span class="ch">','</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">length</span>(parts) <span class="op">&gt;=</span> <span class="fl">2</span> <span class="op">||</span> <span class="cf">continue</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        lng <span class="op">=</span> <span class="fu">tryparse</span>(<span class="dt">Float64</span>, parts[<span class="fl">1</span>])</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        lat <span class="op">=</span> <span class="fu">tryparse</span>(<span class="dt">Float64</span>, parts[<span class="fl">2</span>])</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        (lng <span class="op">===</span> <span class="cn">nothing</span> <span class="op">||</span> lat <span class="op">===</span> <span class="cn">nothing</span>) <span class="op">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(lngs, lng)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(lats, lat)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> (lng <span class="op">=</span> lngs, lat <span class="op">=</span> lats)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> <span class="fu">GridLayer</span>(</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> data,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        cell_size <span class="op">=</span> <span class="fl">200</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        elevation_scale <span class="op">=</span> <span class="fl">8</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        extruded <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        coverage <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        color_range <span class="op">=</span> [</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">204</span>],</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">199</span>, <span class="fl">233</span>, <span class="fl">180</span>],</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">127</span>, <span class="fl">205</span>, <span class="fl">187</span>],</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">65</span>, <span class="fl">182</span>, <span class="fl">196</span>],</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">44</span>, <span class="fl">127</span>, <span class="fl">184</span>],</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">37</span>, <span class="fl">52</span>, <span class="fl">148</span>],</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        [grid],</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="op">-</span><span class="fl">0.12</span>, latitude <span class="op">=</span> <span class="fl">51.51</span>, zoom <span class="op">=</span> <span class="fl">11.5</span>, pitch <span class="op">=</span> <span class="fl">45.0</span>, bearing <span class="op">=</span> <span class="op">-</span><span class="fl">15.0</span>),</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/uk-road-accidents.html"</span>)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="australia-indo-pacific-earthquakes" class="level2">
 <h2 class="anchored" data-anchor-id="australia-indo-pacific-earthquakes">Australia / Indo-Pacific Earthquakes</h2>
-<p>2024 M4.5+ earthquakes across the Indo-Pacific with magnitude-colored scatter points, hexagonal density bins, and monitoring station arcs.</p>
-<p><strong>Layers:</strong> ScatterplotLayer, HexagonLayer, ArcLayer | <a href="./examples/australia-earthquakes.html">View source</a></p>
-<iframe src="examples/australia-earthquakes.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>Seismic activity across the Indo-Pacific region (2024, M4.5+) with per-event color by magnitude.</p>
+<p><strong>Layers:</strong> ScatterplotLayer + HexagonLayer + ArcLayer | <strong>Map:</strong> Positron</p>
+<p><strong><a href="examples/australia-earthquakes.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="14" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="fu">string</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;starttime=2024-01-01&amp;endtime=2024-12-31"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;minlatitude=-50&amp;maxlatitude=10"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;minlongitude=95&amp;maxlongitude=180"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&amp;minmagnitude=4.5&amp;limit=5000"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> JSON3.<span class="fu">read</span>(<span class="fu">read</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url), <span class="dt">String</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> response[<span class="op">:</span>features]</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    lngs <span class="op">=</span> <span class="dt">Float64</span>[f[<span class="op">:</span>geometry][<span class="op">:</span>coordinates][<span class="fl">1</span>] for f <span class="kw">in</span> features]</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    lats <span class="op">=</span> <span class="dt">Float64</span>[f[<span class="op">:</span>geometry][<span class="op">:</span>coordinates][<span class="fl">2</span>] for f <span class="kw">in</span> features]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    mags <span class="op">=</span> <span class="dt">Float64</span>[<span class="fu">something</span>(f[<span class="op">:</span>properties][<span class="op">:</span>mag], <span class="fl">4.5</span>) for f <span class="kw">in</span> features]</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> <span class="fu">map</span>(mags) <span class="cf">do</span> mag</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> <span class="fu">clamp</span>((mag <span class="op">-</span> <span class="fl">4.5</span>) <span class="op">/</span> <span class="fl">3.0</span>, <span class="fl">0.0</span>, <span class="fl">1.0</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        r <span class="op">=</span> t <span class="op">&lt;</span> <span class="fl">0.5</span> ? <span class="fu">round</span>(<span class="dt">Int</span>, <span class="fl">255</span> <span class="op">*</span> <span class="fl">2</span>t) <span class="op">:</span> <span class="fl">255</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        g <span class="op">=</span> t <span class="op">&lt;</span> <span class="fl">0.5</span> ? <span class="fl">220</span> <span class="op">:</span> <span class="fu">round</span>(<span class="dt">Int</span>, <span class="fl">220</span> <span class="op">*</span> (<span class="fl">1</span> <span class="op">-</span> <span class="fl">2</span>(t <span class="op">-</span> <span class="fl">0.5</span>)))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        [r, g, <span class="fl">30</span>, <span class="fu">round</span>(<span class="dt">Int</span>, <span class="fl">120</span> <span class="op">+</span> <span class="fl">135</span> <span class="op">*</span> t)]</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    quakes <span class="op">=</span> (lng <span class="op">=</span> lngs, lat <span class="op">=</span> lats, magnitude <span class="op">=</span> mags, color <span class="op">=</span> colors)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    stations <span class="op">=</span> (</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        src_lng <span class="op">=</span> [<span class="fl">151.21</span>, <span class="fl">151.21</span>, <span class="fl">174.78</span>, <span class="fl">174.78</span>, <span class="fl">106.85</span>],</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        src_lat <span class="op">=</span> [<span class="op">-</span><span class="fl">33.87</span>, <span class="op">-</span><span class="fl">33.87</span>, <span class="op">-</span><span class="fl">41.29</span>, <span class="op">-</span><span class="fl">41.29</span>,  <span class="op">-</span><span class="fl">6.21</span>],</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        tgt_lng <span class="op">=</span> [<span class="fl">147.0</span>,  <span class="fl">155.0</span>,  <span class="fl">178.0</span>,  <span class="fl">167.0</span>,  <span class="fl">125.0</span>],</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        tgt_lat <span class="op">=</span> [ <span class="op">-</span><span class="fl">6.0</span>,   <span class="op">-</span><span class="fl">7.0</span>,  <span class="op">-</span><span class="fl">18.0</span>,  <span class="op">-</span><span class="fl">15.0</span>,  <span class="op">-</span><span class="fl">10.0</span>],</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    scatter <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> quakes,</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        get_fill_color <span class="op">=</span> <span class="op">:</span>color,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        get_radius <span class="op">=</span> <span class="op">:</span>magnitude,</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        radius_scale <span class="op">=</span> <span class="fl">12000</span>,</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        radius_min_pixels <span class="op">=</span> <span class="fl">2</span>,</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>        radius_max_pixels <span class="op">=</span> <span class="fl">25</span>,</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    hexbins <span class="op">=</span> <span class="fu">HexagonLayer</span>(</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> quakes,</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        radius <span class="op">=</span> <span class="fl">50000</span>,</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        extruded <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        elevation_scale <span class="op">=</span> <span class="fl">500</span>,</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>        coverage <span class="op">=</span> <span class="fl">0.85</span>,</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    arcs <span class="op">=</span> <span class="fu">ArcLayer</span>(</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> stations,</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        get_source_position <span class="op">=</span> [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat],</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        get_target_position <span class="op">=</span> [<span class="op">:</span>tgt_lng, <span class="op">:</span>tgt_lat],</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        get_source_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">200</span>, <span class="fl">255</span>, <span class="fl">180</span>],</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        get_target_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">100</span>, <span class="fl">50</span>, <span class="fl">180</span>],</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        get_width <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>        great_circle <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>        [hexbins, scatter, arcs],</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="fl">145.0</span>, latitude <span class="op">=</span> <span class="op">-</span><span class="fl">20.0</span>, zoom <span class="op">=</span> <span class="fl">3.5</span>, pitch <span class="op">=</span> <span class="fl">30.0</span>, bearing <span class="op">=</span> <span class="fl">10.0</span>),</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"</span>,</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/australia-earthquakes.html"</span>)</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="us-fire-hotspots" class="level2">
 <h2 class="anchored" data-anchor-id="us-fire-hotspots">US Fire Hotspots</h2>
-<p>Near real-time satellite fire detections (NASA FIRMS, VIIRS NOAA-20, 7-day window) as a fire-radiative-power-weighted heatmap with city reference labels.</p>
-<p><strong>Layers:</strong> HeatmapLayer, ScatterplotLayer, TextLayer | <a href="./examples/us-fire-hotspots.html">View source</a></p>
-<iframe src="examples/us-fire-hotspots.html" width="100%" height="500" style="border: 1px solid #ddd; border-radius: 4px;">
-</iframe>
+<p>Near real-time satellite fire detections from NASA FIRMS (VIIRS NOAA-20, 7-day window).</p>
+<p><strong>Layers:</strong> HeatmapLayer + ScatterplotLayer + TextLayer | <strong>Map:</strong> Dark Matter</p>
+<p><strong><a href="examples/us-fire-hotspots.html" target="_blank">Open visualization ↗</a></strong></p>
+<div id="16" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://firms.modaps.eosdis.nasa.gov/data/active_fire/noaa-20-viirs-c2/csv/J1_VIIRS_C2_USA_contiguous_and_Hawaii_7d.csv"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    lines <span class="op">=</span> <span class="fu">readlines</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(url))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    lngs <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    lats <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    frps <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(lines)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        parts <span class="op">=</span> <span class="fu">split</span>(lines[i], <span class="ch">','</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">length</span>(parts) <span class="op">&gt;=</span> <span class="fl">12</span> <span class="op">||</span> <span class="cf">continue</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        lat <span class="op">=</span> <span class="fu">parse</span>(<span class="dt">Float64</span>, parts[<span class="fl">1</span>])</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        lon <span class="op">=</span> <span class="fu">parse</span>(<span class="dt">Float64</span>, parts[<span class="fl">2</span>])</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        frp <span class="op">=</span> <span class="fu">tryparse</span>(<span class="dt">Float64</span>, parts[<span class="fl">12</span>])</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(lats, lat)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(lngs, lon)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(frps, <span class="fu">something</span>(frp, <span class="fl">1.0</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> (lng <span class="op">=</span> lngs, lat <span class="op">=</span> lats, frp <span class="op">=</span> frps)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    cities <span class="op">=</span> (</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        lng  <span class="op">=</span> [<span class="op">-</span><span class="fl">118.24</span>, <span class="op">-</span><span class="fl">122.42</span>, <span class="op">-</span><span class="fl">104.99</span>, <span class="op">-</span><span class="fl">112.07</span>, <span class="op">-</span><span class="fl">97.74</span>,  <span class="op">-</span><span class="fl">84.39</span>, <span class="op">-</span><span class="fl">90.07</span>],</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        lat  <span class="op">=</span> [  <span class="fl">34.05</span>,   <span class="fl">37.77</span>,   <span class="fl">39.74</span>,   <span class="fl">33.45</span>,  <span class="fl">30.27</span>,   <span class="fl">33.75</span>,  <span class="fl">29.95</span>],</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        name <span class="op">=</span> [<span class="st">"Los Angeles"</span>, <span class="st">"San Francisco"</span>, <span class="st">"Denver"</span>, <span class="st">"Phoenix"</span>, <span class="st">"Houston"</span>, <span class="st">"Atlanta"</span>, <span class="st">"New Orleans"</span>],</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    heat <span class="op">=</span> <span class="fu">HeatmapLayer</span>(</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> data,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        get_weight <span class="op">=</span> <span class="op">:</span>frp,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        radius_pixels <span class="op">=</span> <span class="fl">20</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        intensity <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        threshold <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>        color_range <span class="op">=</span> [</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">200</span>, <span class="fl">30</span>],</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">255</span>, <span class="fl">220</span>, <span class="fl">80</span>, <span class="fl">100</span>],</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">255</span>, <span class="fl">160</span>, <span class="fl">20</span>, <span class="fl">160</span>],</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">240</span>, <span class="fl">80</span>, <span class="fl">0</span>, <span class="fl">200</span>],</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">200</span>, <span class="fl">20</span>, <span class="fl">0</span>, <span class="fl">230</span>],</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>            [<span class="fl">120</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">250</span>],</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    fire_scatter <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> data,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>        get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">80</span>, <span class="fl">0</span>, <span class="fl">80</span>],</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>        get_radius <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>        radius_min_pixels <span class="op">=</span> <span class="fl">1</span>,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>        opacity <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    city_labels <span class="op">=</span> <span class="fu">TextLayer</span>(</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> cities,</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>        get_text <span class="op">=</span> <span class="op">:</span>name,</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>        get_size <span class="op">=</span> <span class="fl">12</span>,</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>        get_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">255</span>, <span class="fl">230</span>],</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>        background <span class="op">=</span> <span class="cn">true</span>,</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>        get_background_color <span class="op">=</span> [<span class="fl">30</span>, <span class="fl">30</span>, <span class="fl">30</span>, <span class="fl">190</span>],</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>        background_padding <span class="op">=</span> [<span class="fl">5</span>, <span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">2</span>],</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>        font_family <span class="op">=</span> <span class="st">"Helvetica, Arial, sans-serif"</span>,</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>        font_weight <span class="op">=</span> <span class="fl">700</span>,</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>        [heat, fire_scatter, city_labels],</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>        initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="op">-</span><span class="fl">98.0</span>, latitude <span class="op">=</span> <span class="fl">39.0</span>, zoom <span class="op">=</span> <span class="fl">4.0</span>),</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>        map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save_html</span>(deck, <span class="st">"examples/us-fire-hotspots.html"</span>)</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 
 
 </section>
@@ -744,8 +1205,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./examples/global-flight-routes.html" class="pagination-link" aria-label="Global Flight Routes">
-        <span class="nav-page-text"><span class="chapter-title">Global Flight Routes</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./api.html" class="pagination-link" aria-label="API">
+        <span class="nav-page-text"><span class="chapter-title">API</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -756,7 +1217,7 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-02-28</p>
+<p>Built on 2026-03-11</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
