@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - on branch template-sync-2026-04-22 - src/layers/src/layers/grid.jl</title>
+  <link rel="stylesheet" type="text/css" href="../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../index.html">top level</a> - <a href="index.html">src/layers/src/layers</a> - grid.jl<span style="font-size: 80%;"> (source / <a href="grid.jl.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">on branch template-sync-2026-04-22</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-04-22 22:23:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : &quot;&quot;&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              :     GridLayer(; data, get_position, kwargs...)</span>
+<span id="L3"><span class="lineNum">       3</span>              : </span>
+<span id="L4"><span class="lineNum">       4</span>              : Aggregates data into rectangular grid cells and renders as 3D columns.</span>
+<span id="L5"><span class="lineNum">       5</span>              : </span>
+<span id="L6"><span class="lineNum">       6</span>              : # Required Arguments</span>
+<span id="L7"><span class="lineNum">       7</span>              : - `data`: Any Tables.jl-compatible data source</span>
+<span id="L8"><span class="lineNum">       8</span>              : - `get_position`: Column accessor for [longitude, latitude]</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : # Optional Arguments</span>
+<span id="L11"><span class="lineNum">      11</span>              : - `id::String`: Unique layer identifier</span>
+<span id="L12"><span class="lineNum">      12</span>              : - `cell_size::Real`: Grid cell size in meters. Default: `1000`</span>
+<span id="L13"><span class="lineNum">      13</span>              : - `elevation_scale::Real`: Elevation multiplier for 3D effect. Default: `1`</span>
+<span id="L14"><span class="lineNum">      14</span>              : - `elevation_range::Vector{&lt;:Real}`: Min/max elevation `[min, max]`. Default: `[0, 1000]`</span>
+<span id="L15"><span class="lineNum">      15</span>              : - `extruded::Bool`: Render as 3D columns. Default: `true`</span>
+<span id="L16"><span class="lineNum">      16</span>              : - `coverage::Real`: Cell coverage (0-1). Default: `1`</span>
+<span id="L17"><span class="lineNum">      17</span>              : - `get_color_weight::Union{Real,Symbol}`: Weight for color aggregation. Default: `1`</span>
+<span id="L18"><span class="lineNum">      18</span>              : - `get_elevation_weight::Union{Real,Symbol}`: Weight for elevation aggregation. Default: `1`</span>
+<span id="L19"><span class="lineNum">      19</span>              : - `color_aggregation::String`: Aggregation method (&quot;SUM&quot;, &quot;MEAN&quot;, &quot;MIN&quot;, &quot;MAX&quot;). Default: `&quot;SUM&quot;`</span>
+<span id="L20"><span class="lineNum">      20</span>              : - `elevation_aggregation::String`: Aggregation method. Default: `&quot;SUM&quot;`</span>
+<span id="L21"><span class="lineNum">      21</span>              : - `color_range::Vector`: Array of RGB colors for color scale. Default: 6-color yellow-red scale</span>
+<span id="L22"><span class="lineNum">      22</span>              : - `upper_percentile::Real`: Filter out cells above this percentile. Default: `100`</span>
+<span id="L23"><span class="lineNum">      23</span>              : - `lower_percentile::Real`: Filter out cells below this percentile. Default: `0`</span>
+<span id="L24"><span class="lineNum">      24</span>              : - `opacity::Real`: Layer opacity (0-1). Default: `1`</span>
+<span id="L25"><span class="lineNum">      25</span>              : - `pickable::Bool`: Enable interactions. Default: `false`</span>
+<span id="L26"><span class="lineNum">      26</span>              : - `visible::Bool`: Layer visibility. Default: `true`</span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span>              : # Example</span>
+<span id="L29"><span class="lineNum">      29</span>              : ```julia</span>
+<span id="L30"><span class="lineNum">      30</span>              : points = (</span>
+<span id="L31"><span class="lineNum">      31</span>              :     lng = rand(-122.5:-122.3, 5000),</span>
+<span id="L32"><span class="lineNum">      32</span>              :     lat = rand(37.7:37.9, 5000),</span>
+<span id="L33"><span class="lineNum">      33</span>              :     value = rand(5000)</span>
+<span id="L34"><span class="lineNum">      34</span>              : )</span>
+<span id="L35"><span class="lineNum">      35</span>              : </span>
+<span id="L36"><span class="lineNum">      36</span>              : layer = GridLayer(</span>
+<span id="L37"><span class="lineNum">      37</span>              :     data = points,</span>
+<span id="L38"><span class="lineNum">      38</span>              :     get_position = [:lng, :lat],</span>
+<span id="L39"><span class="lineNum">      39</span>              :     get_elevation_weight = :value,</span>
+<span id="L40"><span class="lineNum">      40</span>              :     cell_size = 200,</span>
+<span id="L41"><span class="lineNum">      41</span>              :     elevation_scale = 4,</span>
+<span id="L42"><span class="lineNum">      42</span>              :     extruded = true</span>
+<span id="L43"><span class="lineNum">      43</span>              : )</span>
+<span id="L44"><span class="lineNum">      44</span>              : ```</span>
+<span id="L45"><span class="lineNum">      45</span>              : &quot;&quot;&quot;</span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC tlaBgGNC">           2 : Base.@kwdef struct GridLayer &lt;: AbstractLayer</span></span>
+<span id="L47"><span class="lineNum">      47</span>              :     # Required</span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">           1 :     data::Any</span></span>
+<span id="L49"><span class="lineNum">      49</span>              :     get_position::Union{Symbol,Vector{Symbol}}</span>
+<span id="L50"><span class="lineNum">      50</span>              : </span>
+<span id="L51"><span class="lineNum">      51</span>              :     # Identity</span>
+<span id="L52"><span class="lineNum">      52</span>              :     id::String = &quot;grid-&quot; * string(uuid4())[1:8]</span>
+<span id="L53"><span class="lineNum">      53</span>              : </span>
+<span id="L54"><span class="lineNum">      54</span>              :     # Grid geometry</span>
+<span id="L55"><span class="lineNum">      55</span>              :     cell_size::Real = 1000</span>
+<span id="L56"><span class="lineNum">      56</span>              :     coverage::Real = 1</span>
+<span id="L57"><span class="lineNum">      57</span>              : </span>
+<span id="L58"><span class="lineNum">      58</span>              :     # 3D extrusion</span>
+<span id="L59"><span class="lineNum">      59</span>              :     extruded::Bool = true</span>
+<span id="L60"><span class="lineNum">      60</span>              :     elevation_scale::Real = 1</span>
+<span id="L61"><span class="lineNum">      61</span>              :     elevation_range::Vector{&lt;:Real} = [0, 1000]</span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span>              :     # Aggregation weights</span>
+<span id="L64"><span class="lineNum">      64</span>              :     get_color_weight::Union{Real,Symbol} = 1</span>
+<span id="L65"><span class="lineNum">      65</span>              :     get_elevation_weight::Union{Real,Symbol} = 1</span>
+<span id="L66"><span class="lineNum">      66</span>              : </span>
+<span id="L67"><span class="lineNum">      67</span>              :     # Aggregation methods</span>
+<span id="L68"><span class="lineNum">      68</span>              :     color_aggregation::String = &quot;SUM&quot;</span>
+<span id="L69"><span class="lineNum">      69</span>              :     elevation_aggregation::String = &quot;SUM&quot;</span>
+<span id="L70"><span class="lineNum">      70</span>              : </span>
+<span id="L71"><span class="lineNum">      71</span>              :     # Color scale (default: yellow to red)</span>
+<span id="L72"><span class="lineNum">      72</span>              :     color_range::Vector{&lt;:AbstractVector{&lt;:Integer}} = [</span>
+<span id="L73"><span class="lineNum">      73</span>              :         [255, 255, 178],</span>
+<span id="L74"><span class="lineNum">      74</span>              :         [254, 217, 118],</span>
+<span id="L75"><span class="lineNum">      75</span>              :         [254, 178, 76],</span>
+<span id="L76"><span class="lineNum">      76</span>              :         [253, 141, 60],</span>
+<span id="L77"><span class="lineNum">      77</span>              :         [240, 59, 32],</span>
+<span id="L78"><span class="lineNum">      78</span>              :         [189, 0, 38]</span>
+<span id="L79"><span class="lineNum">      79</span>              :     ]</span>
+<span id="L80"><span class="lineNum">      80</span>              : </span>
+<span id="L81"><span class="lineNum">      81</span>              :     # Filtering</span>
+<span id="L82"><span class="lineNum">      82</span>              :     upper_percentile::Real = 100</span>
+<span id="L83"><span class="lineNum">      83</span>              :     lower_percentile::Real = 0</span>
+<span id="L84"><span class="lineNum">      84</span>              : </span>
+<span id="L85"><span class="lineNum">      85</span>              :     # Render</span>
+<span id="L86"><span class="lineNum">      86</span>              :     opacity::Real = 1.0</span>
+<span id="L87"><span class="lineNum">      87</span>              :     pickable::Bool = false</span>
+<span id="L88"><span class="lineNum">      88</span>              :     visible::Bool = true</span>
+<span id="L89"><span class="lineNum">      89</span>              : end</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

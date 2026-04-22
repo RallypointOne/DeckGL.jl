@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Getting Started – DeckGL.jl</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-c35b4686a6fabbef78126217f9bf200b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3db6c18bb69885e7f25697a9383847b5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e9512225fbbb2050a673b742e2d1457e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-426f41d558ea4d560124c4548de7cb69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -104,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="assets/styles.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -215,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
+  <a href="./pages/api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
   </div>
 </li>
       </ul>
@@ -236,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./resources/coverage.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Coverage</span></a>
+  <a href="./pages/coverage.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Coverage</span></a>
   </div>
 </li>
       </ul>
@@ -441,7 +443,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
 <ul>
 <li><a href="./layers.html">Layers</a> - Explore all available layer types</li>
-<li><a href="./api.html">API Reference</a> - Complete function and type documentation</li>
+<li><a href="api.qmd">API Reference</a> - Complete function and type documentation</li>
 <li><a href="./examples.html">Examples</a> - More visualization examples</li>
 </ul>
 
@@ -868,7 +870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-03-12</p>
+<p>Built on 2026-04-22</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
@@ -877,22 +879,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </footer>
 <script>
 (function() {
-    // Detect repo name and current version from URL path
-    // Deployed: /{repoName}/{version}/...
-    // Local preview: /page.html (no repo/version segments)
-    var pathParts = window.location.pathname.split('/').filter(Boolean);
-    var isLocal = pathParts.length < 2 || !pathParts[0].includes('.');
-    var currentVersion, basePath;
-
-    if (pathParts.length >= 2 && pathParts[1].match(/^(dev|stable|v\d)/)) {
-        currentVersion = pathParts[1];
-        basePath = '/' + pathParts[0] + '/';
-    } else {
-        currentVersion = 'dev';
-        basePath = '/';
+    // Injected per-version by .github/workflows/Docs.yml at deploy time.
+    // Local preview: placeholders aren't substituted; fall back to sensible defaults.
+    var CURRENT_VERSION = "dev";
+    var BASE_PATH = "/DeckGL.jl/";
+    if (CURRENT_VERSION.indexOf("__") === 0) {
+        CURRENT_VERSION = "dev";
+        BASE_PATH = "/";
     }
 
-    // Build dropdown HTML
     function buildDropdown(versions) {
         var navbar = document.querySelector('.navbar-nav.navbar-nav-scroll.ms-auto');
         if (!navbar) return;
@@ -901,25 +896,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         li.className = 'nav-item dropdown';
         li.innerHTML =
             '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">' +
-                currentVersion +
+                CURRENT_VERSION +
             '</a>' +
             '<ul class="dropdown-menu dropdown-menu-end"></ul>';
 
         var menu = li.querySelector('.dropdown-menu');
 
-        // Always add dev and stable
-        var fixed = ['stable', 'dev'];
-        fixed.forEach(function(v) {
+        ['stable', 'dev'].forEach(function(v) {
             var a = document.createElement('a');
-            a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
-            a.href = basePath + v + '/';
+            a.className = 'dropdown-item' + (v === CURRENT_VERSION ? ' active' : '');
+            a.href = BASE_PATH + v + '/';
             a.textContent = v;
             var item = document.createElement('li');
             item.appendChild(a);
             menu.appendChild(item);
         });
 
-        // Add release versions from versions.json
         if (versions && versions.length > 0) {
             var divider = document.createElement('li');
             divider.innerHTML = '<hr class="dropdown-divider">';
@@ -927,8 +919,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
             versions.forEach(function(v) {
                 var a = document.createElement('a');
-                a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
-                a.href = basePath + v + '/';
+                a.className = 'dropdown-item' + (v === CURRENT_VERSION ? ' active' : '');
+                a.href = BASE_PATH + v + '/';
                 a.textContent = v;
                 var item = document.createElement('li');
                 item.appendChild(a);
@@ -938,45 +930,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
         navbar.prepend(li);
 
-        // Show outdated version banner
-        if (versions && versions.length > 0 && currentVersion !== 'stable' && currentVersion !== 'dev') {
-            var latest = versions[0]; // versions.json is sorted descending
-            if (currentVersion !== latest) {
+        if (versions && versions.length > 0 && CURRENT_VERSION !== 'stable' && CURRENT_VERSION !== 'dev') {
+            var latest = versions[0];
+            if (CURRENT_VERSION !== latest) {
                 var banner = document.createElement('div');
                 banner.className = 'alert alert-warning text-center mb-0 rounded-0';
                 banner.setAttribute('role', 'alert');
-                banner.innerHTML = 'You are viewing docs for <strong>' + currentVersion + '</strong>. ' +
-                    'The latest stable release is <a href="' + basePath + 'stable/" class="alert-link">' + latest + '</a>.';
+                banner.innerHTML = 'You are viewing docs for <strong>' + CURRENT_VERSION + '</strong>. ' +
+                    'The latest stable release is <a href="' + BASE_PATH + 'stable/" class="alert-link">' + latest + '</a>.';
                 document.body.prepend(banner);
             }
         }
     }
 
-    // Fetch versions.json, then build dropdown
-    fetch(basePath + 'versions.json')
+    fetch(BASE_PATH + 'versions.json')
         .then(function(res) { return res.ok ? res.json() : []; })
         .catch(function() { return []; })
         .then(buildDropdown);
 
-    // Fix navbar-brand title link to point to docs home (logo stays external)
     var titleLink = document.querySelector('a.navbar-brand:not(.navbar-brand-logo)');
     if (titleLink) {
-        titleLink.href = basePath + currentVersion + '/';
+        titleLink.href = BASE_PATH + CURRENT_VERSION + '/';
     }
 
-    // Fetch star count from GitHub API
     var starLink = document.querySelector('a.nav-link[href*="/stargazers"]');
     if (starLink) {
         var match = starLink.href.match(/github\.com\/([^/]+\/[^/]+)\/stargazers/);
         if (match) {
-            fetch('https://api.github.com/repos/' + match[1])
-                .then(function(res) { return res.ok ? res.json() : null; })
-                .then(function(data) {
-                    if (!data) return;
-                    var text = starLink.querySelector('.menu-text');
-                    if (text) text.textContent = data.stargazers_count;
-                })
-                .catch(function() {});
+            var img = document.createElement('img');
+            img.src = 'https://img.shields.io/github/stars/' + match[1] + '?style=social';
+            img.alt = 'GitHub stars';
+            img.style.verticalAlign = 'middle';
+            starLink.replaceChildren(img);
         }
     }
 })();
