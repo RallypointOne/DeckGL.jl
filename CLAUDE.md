@@ -1,50 +1,8 @@
-# Package Setup
-
-- Create `.claude/settings.local.json` with the following permissions:
-  ```json
-  {
-    "permissions": {
-      "allow": [
-        "Bash(julia:*)",
-        "Bash(quarto:*)",
-        "Bash(grep:*)",
-        "Bash(gh api:* --method GET:*)",
-        "Bash(gh run view:*)",
-        "Bash(gh pr view:*)",
-        "Bash(gh issue view:*)",
-        "WebSearch"
-      ]
-    }
-  }
-  ```
-
-- This package was generated from https://github.com/RallypointOne/JuliaPackageTemplate.jl
-- Replace all instances of `JuliaPackageTemplate` to the name set by the user
-- Use Julia to create a new UUID
-- Enable GitHub Pages deployment from the `gh-pages` branch:
-  ```
-  gh api repos/{owner}/{repo}/pages -X POST -f source.branch=gh-pages -f source.path=/
-  ```
-  If Pages is already enabled, update it:
-  ```
-  gh api repos/{owner}/{repo}/pages -X PUT -f source.branch=gh-pages -f source.path=/
-  ```
-- Set the repository website URL to the GitHub Pages site:
-  ```
-  gh repo edit {owner}/{repo} --homepage https://{owner}.github.io/{repo}/
-  ```
-- Remove "Deployments" and "Packages" from the repo homepage sidebar:
-  ```
-  gh api repos/{owner}/{repo}/environments/github-pages -X DELETE
-  gh api repos/{owner}/{repo} -X PATCH -F "has_deployments=false"
-  ```
-
 # Development
 
 - Run tests: `julia --project -e 'using Pkg; Pkg.test()'`
 - Build docs: `quarto render docs`
 - `docs/` has its own Project.toml for doc-specific dependencies.
-- Each .qmd file in the docs should have `engine: julia` in the YAML frontmatter
 - Quarto YAML reference: https://quarto.org/docs/reference/
 - Never edit Project.toml or Manifest.toml manually — use Pkg
 - For Claude's plan mode, always write a "plan_$task.md" in .claude
@@ -69,6 +27,7 @@
 
 - `api.qmd` must always be the last item before the "Reference" section in `_quarto.yml`
 - `api.qmd` lives in its own `part: "API"` to visually separate it from other doc pages
+- `index.qmd` must always begin with `## Overview` and `## Quickstart` sections
 
 # Style
 
