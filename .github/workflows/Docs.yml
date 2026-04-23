@@ -41,10 +41,6 @@ jobs:
       - uses: julia-actions/cache@v3
       - name: Install docs dependencies
         run: julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
-      - name: Precompile QuartoNotebookRunner
-        run: julia -e 'import Pkg; Pkg.activate(; temp=true); Pkg.add("QuartoNotebookRunner"); using QuartoNotebookRunner'
-      - name: Precompile docs project
-        run: julia --project=docs -e 'using Pkg; Pkg.precompile()'
       - name: Install lcov
         run: sudo apt-get install -y lcov
       - name: Fetch benchmark results
@@ -87,6 +83,13 @@ jobs:
           rm -rf "gh-pages-deploy/${VERSION}"
           cp -r docs/_site "gh-pages-deploy/${VERSION}"
 
+          # Inject version + base path into every rendered page so the version
+          # selector doesn't have to guess from the URL.
+          find "gh-pages-deploy/${VERSION}" -name '*.html' -exec sed -i \
+            -e "s|__CURRENT_VERSION__|${VERSION}|g" \
+            -e "s|__BASE_PATH__|/${REPO_NAME}/|g" \
+            {} +
+
           cd gh-pages-deploy
 
           # If release tag: update versions.json and stable redirect
@@ -123,8 +126,9 @@ jobs:
           STABLE_EOF
           fi
 
-          # Create stable placeholder if no releases yet
-          if [ ! -d stable ]; then
+          # (Re)write stable placeholder while no releases exist. Once versions.json
+          # is non-empty, the release branch above owns stable/ so we leave it alone.
+          if [ ! -f versions.json ] || [ "$(tr -d ' \n' < versions.json)" = "[]" ]; then
             mkdir -p stable
             cat > stable/index.html << PLACEHOLDER_EOF
           <!DOCTYPE html>
