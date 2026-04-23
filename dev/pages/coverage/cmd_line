@@ -1,1 +1,1 @@
-genhtml -t 'on branch template-sync-2026-04-22' -o /home/runner/work/DeckGL.jl/DeckGL.jl/docs/pages/coverage coverage/lcov.info
+genhtml -t 'on branch main' -o /home/runner/work/DeckGL.jl/DeckGL.jl/docs/pages/coverage coverage/lcov.info
