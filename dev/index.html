@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -103,12 +103,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 
-<body class="nav-sidebar floating nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -247,27 +250,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#deckgl.jl" id="toc-deckgl.jl" class="nav-link active" data-scroll-target="#deckgl.jl">DeckGL.jl</a></li>
-  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features">Features</a></li>
-  <li><a href="#quick-example" id="toc-quick-example" class="nav-link" data-scroll-target="#quick-example">Quick Example</a></li>
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#layer-types" id="toc-layer-types" class="nav-link" data-scroll-target="#layer-types">Layer Types</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Docs</a></li><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">DeckGL.jl</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">DeckGL.jl</h1>
-<p class="subtitle lead">GPU-accelerated geospatial visualization for Julia</p>
 </div>
 
 
@@ -284,109 +273,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="deckgl.jl" class="level1 hero">
-<h1>DeckGL.jl</h1>
-<p><span class="tagline">GPU-accelerated geospatial visualization for Julia</span></p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid figure-img"></a></p>
-<figcaption>CI</figcaption>
-</figure>
-</div>
+<section id="interactive-maps-in-julia." class="level1 hero-pitch">
+<h1>Interactive maps in Julia.</h1>
+<p><span class="tagline">GPU-accelerated geospatial visualization. Millions of points. Smooth pan, zoom, 3D. Built on <a href="https://deck.gl/">deck.gl</a>.</span></p>
 </section>
-<p>DeckGL.jl is a Julia package for creating interactive, GPU-accelerated visualizations using <a href="https://deck.gl/">deck.gl</a>. It provides a simple, Julian API for rendering large-scale geospatial data in web browsers and notebooks.</p>
-<section id="features" class="level2">
-<h2 class="anchored" data-anchor-id="features">Features</h2>
-<div class="feature-grid">
-<section id="high-performance" class="level3 feature-card">
-<h3 class="anchored" data-anchor-id="high-performance">High Performance</h3>
-<p>Leverages WebGL for GPU-accelerated rendering. Handle millions of data points with smooth pan, zoom, and rotate interactions.</p>
-</section>
-<section id="tables.jl-integration" class="level3 feature-card">
-<h3 class="anchored" data-anchor-id="tables.jl-integration">Tables.jl Integration</h3>
-<p>Works seamlessly with DataFrames, NamedTuples, and any Tables.jl-compatible data source. Reference columns by symbol.</p>
-</section>
-<section id="multiple-outputs" class="level3 feature-card">
-<h3 class="anchored" data-anchor-id="multiple-outputs">Multiple Outputs</h3>
-<p>Display in Jupyter notebooks, VS Code, Pluto.jl, or export as standalone HTML files that work in any browser.</p>
-</section>
-<section id="rich-layer-types" class="level3 feature-card">
-<h3 class="anchored" data-anchor-id="rich-layer-types">Rich Layer Types</h3>
-<p>10+ layer types including scatterplots, arcs, paths, polygons, hexagonal binning, heatmaps, and GeoJSON support.</p>
-</section>
-</div>
-</section>
-<section id="quick-example" class="level2">
-<h2 class="anchored" data-anchor-id="quick-example">Quick Example</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DeckGL</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Any Tables.jl-compatible data works</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    longitude <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>, <span class="op">-</span><span class="fl">122.3</span>, <span class="op">-</span><span class="fl">122.45</span>],</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    latitude <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>, <span class="fl">37.9</span>, <span class="fl">37.75</span>],</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">150</span>, <span class="fl">180</span>]</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a scatterplot layer</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>longitude, <span class="op">:</span>latitude],</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">200</span>]</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and display the visualization</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    layer,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude<span class="op">=-</span><span class="fl">122.4</span>, latitude<span class="op">=</span><span class="fl">37.8</span>, zoom<span class="op">=</span><span class="fl">11</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck)  <span class="co"># Opens in browser</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Or use convenience functions for even simpler code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>longitude, <span class="op">:</span>latitude, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>]) <span class="op">|&gt;</span> open_html</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/RallypointOne/DeckGL.jl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="layer-types" class="level2">
-<h2 class="anchored" data-anchor-id="layer-types">Layer Types</h2>
-<p>DeckGL.jl supports a variety of layer types for different visualization needs:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Layers</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Core</strong></td>
-<td><code>ScatterplotLayer</code>, <code>ArcLayer</code>, <code>LineLayer</code>, <code>PathLayer</code>, <code>PolygonLayer</code>, <code>TextLayer</code></td>
-</tr>
-<tr class="even">
-<td><strong>Aggregation</strong></td>
-<td><code>HexagonLayer</code>, <code>GridLayer</code>, <code>HeatmapLayer</code></td>
-</tr>
-<tr class="odd">
-<td><strong>Composite</strong></td>
-<td><code>GeoJsonLayer</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="next-steps" class="level2">
-<h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
+<iframe src="examples/global-flight-routes.html" class="viz-frame viz-hero" loading="lazy" title="Global flight routes demo">
+</iframe>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <ul>
-<li><a href="./getting-started.html">Getting Started</a> - Installation and first visualization</li>
-<li><a href="./layers.html">Layers</a> - Complete layer reference</li>
-<li><a href="api.qmd">API Reference</a> - Full API documentation</li>
-<li><a href="./examples.html">Examples</a> - Example gallery</li>
+<li><strong>Big data, smooth frames</strong> — WebGL rendering of millions of points.</li>
+<li><strong>Any Tables.jl source</strong> — DataFrames, NamedTuples, CSV.jl, Arrow.jl, …</li>
+<li><strong>10+ layer types</strong> — scatter, arc, line, path, polygon, text, hexbin, grid, heatmap, GeoJSON.</li>
+<li><strong>Any display target</strong> — Jupyter, Pluto, VS Code, standalone HTML.</li>
+<li><strong>Declarative API</strong> — layers, view state, widgets. That’s it.</li>
+</ul>
+<p>Install:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/RallypointOne/DeckGL.jl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="quickstart" class="level2">
+<h2 class="anchored" data-anchor-id="quickstart">Quickstart</h2>
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DeckGL</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> (</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    lng  <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">74.0</span>,   <span class="fl">2.35</span>, <span class="fl">139.7</span>, <span class="fl">151.2</span>, <span class="op">-</span><span class="fl">0.13</span>, <span class="fl">77.22</span>, <span class="fl">103.8</span>],</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    lat  <span class="op">=</span> [  <span class="fl">37.8</span>,  <span class="fl">40.7</span>,  <span class="fl">48.86</span>,  <span class="fl">35.7</span>, <span class="op">-</span><span class="fl">33.9</span>,  <span class="fl">51.5</span>, <span class="fl">28.61</span>,   <span class="fl">1.35</span>],</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    pop  <span class="op">=</span> [   <span class="fl">870</span>, <span class="fl">8400</span>,   <span class="fl">2100</span>, <span class="fl">13900</span>,  <span class="fl">5300</span>,  <span class="fl">9000</span>, <span class="fl">32000</span>,  <span class="fl">5700</span>],</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> cities,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        get_radius <span class="op">=</span> <span class="op">:</span>pop,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        radius_scale <span class="op">=</span> <span class="fl">80</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        radius_min_pixels <span class="op">=</span> <span class="fl">4</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">220</span>],</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude<span class="op">=</span><span class="fl">30</span>, latitude<span class="op">=</span><span class="fl">25</span>, zoom<span class="op">=</span><span class="fl">1.2</span>, pitch<span class="op">=</span><span class="fl">20</span>),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KICAgIDxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KICAgIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIj4KICAgIDx0aXRsZT5EZWNrR0wgVmlzdWFsaXphdGlvbjwvdGl0bGU+CiAgICA8bGluayBocmVmPSJodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEAzLjYuMi9kaXN0L21hcGxpYnJlLWdsLmNzcyIgcmVsPSJzdHlsZXNoZWV0IiAvPgogICAgPGxpbmsgaHJlZj0iaHR0cHM6Ly91bnBrZy5jb20vZGVjay5nbEA5LjAuMTYvZGlzdC9zdHlsZXNoZWV0LmNzcyIgcmVsPSJzdHlsZXNoZWV0IiAvPgogICAgPHN0eWxlPgogICAgICAgIGJvZHkgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgIG92ZXJmbG93OiBoaWRkZW47CiAgICAgICAgfQogICAgICAgICNkZWNrLWNvbnRhaW5lciB7CiAgICAgICAgICAgIHdpZHRoOiAxMDAlOwogICAgICAgICAgICBoZWlnaHQ6IDUwMHB4OwogICAgICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICAgICAgfQogICAgICAgICNtYXAgewogICAgICAgICAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICAgICAgICAgIHRvcDogMDsKICAgICAgICAgICAgbGVmdDogMDsKICAgICAgICAgICAgd2lkdGg6IDEwMCU7CiAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICB9CiAgICAgICAgI2RlY2stb3ZlcmxheSB7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICBsZWZ0OiAwOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OiAxMDAlOwogICAgICAgIH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CiAgICA8ZGl2IGlkPSJkZWNrLWNvbnRhaW5lciI+CiAgICAgICAgPGRpdiBpZD0ibWFwIj48L2Rpdj4KICAgICAgICA8Y2FudmFzIGlkPSJkZWNrLW92ZXJsYXkiPjwvY2FudmFzPgogICAgPC9kaXY+CiAgICA8c2NyaXB0PgogICAgICAgIGNvbnN0IHNwZWMgPSB7Im1hcFN0eWxlIjoiaHR0cHM6Ly9iYXNlbWFwcy5jYXJ0b2Nkbi5jb20vZ2wvZGFyay1tYXR0ZXItZ2wtc3R5bGUvc3R5bGUuanNvbiIsImNvbnRyb2xsZXIiOnRydWUsImluaXRpYWxWaWV3U3RhdGUiOnsibGF0aXR1ZGUiOjI1LjAsInBpdGNoIjoyMC4wLCJiZWFyaW5nIjowLjAsImxvbmdpdHVkZSI6MzAuMCwiem9vbSI6MS4yfSwibGF5ZXJzIjpbeyJAQHR5cGUiOiJTY2F0dGVycGxvdExheWVyIiwiZGF0YSI6W3sicG9wIjo4NzAsImxuZyI6LTEyMi40LCJsYXQiOjM3LjgsIl9wb3NpdGlvbiI6Wy0xMjIuNCwzNy44XX0seyJwb3AiOjg0MDAsImxuZyI6LTc0LjAsImxhdCI6NDAuNywiX3Bvc2l0aW9uIjpbLTc0LjAsNDAuN119LHsicG9wIjoyMTAwLCJsbmciOjIuMzUsImxhdCI6NDguODYsIl9wb3NpdGlvbiI6WzIuMzUsNDguODZdfSx7InBvcCI6MTM5MDAsImxuZyI6MTM5LjcsImxhdCI6MzUuNywiX3Bvc2l0aW9uIjpbMTM5LjcsMzUuN119LHsicG9wIjo1MzAwLCJsbmciOjE1MS4yLCJsYXQiOi0zMy45LCJfcG9zaXRpb24iOlsxNTEuMiwtMzMuOV19LHsicG9wIjo5MDAwLCJsbmciOi0wLjEzLCJsYXQiOjUxLjUsIl9wb3NpdGlvbiI6Wy0wLjEzLDUxLjVdfSx7InBvcCI6MzIwMDAsImxuZyI6NzcuMjIsImxhdCI6MjguNjEsIl9wb3NpdGlvbiI6Wzc3LjIyLDI4LjYxXX0seyJwb3AiOjU3MDAsImxuZyI6MTAzLjgsImxhdCI6MS4zNSwiX3Bvc2l0aW9uIjpbMTAzLjgsMS4zNV19XSwiYmlsbGJvYXJkIjpmYWxzZSwib3BhY2l0eSI6MS4wLCJzdHJva2VkIjpmYWxzZSwicmFkaXVzU2NhbGUiOjgwLCJmaWxsZWQiOnRydWUsImlkIjoic2NhdHRlcnBsb3QtOTNiYmQ3MWMiLCJyYWRpdXNNaW5QaXhlbHMiOjQsInZpc2libGUiOnRydWUsImdldFBvc2l0aW9uIjoiQEA9X3Bvc2l0aW9uIiwicGlja2FibGUiOmZhbHNlLCJsaW5lV2lkdGhVbml0cyI6InBpeGVscyIsImdldFJhZGl1cyI6IkBAPXBvcCIsImdldExpbmVDb2xvciI6WzAsMCwwLDI1NV0sImdldExpbmVXaWR0aCI6MSwibGluZVdpZHRoU2NhbGUiOjEsImxpbmVXaWR0aE1pblBpeGVscyI6MCwiZ2V0RmlsbENvbG9yIjpbMjU1LDE0MCwwLDIyMF19XX07CgogICAgICAgIC8vIExvYWQgYSBzY3JpcHQgd2l0aCByZXRyeSBvbiBmYWlsdXJlCiAgICAgICAgZnVuY3Rpb24gbG9hZFNjcmlwdChzcmMsIHJldHJpZXMpIHsKICAgICAgICAgICAgcmV0cmllcyA9IHJldHJpZXMgfHwgMjsKICAgICAgICAgICAgcmV0dXJuIG5ldyBQcm9taXNlKGZ1bmN0aW9uKHJlc29sdmUsIHJlamVjdCkgewogICAgICAgICAgICAgICAgdmFyIHNjcmlwdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpOwogICAgICAgICAgICAgICAgc2NyaXB0LnNyYyA9IHNyYzsKICAgICAgICAgICAgICAgIHNjcmlwdC5vbmxvYWQgPSByZXNvbHZlOwogICAgICAgICAgICAgICAgc2NyaXB0Lm9uZXJyb3IgPSBmdW5jdGlvbigpIHsKICAgICAgICAgICAgICAgICAgICBpZiAocmV0cmllcyA+IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgbG9hZFNjcmlwdChzcmMsIHJldHJpZXMgLSAxKS50aGVuKHJlc29sdmUsIHJlamVjdCk7CiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgICAgICAgICAgICAgcmVqZWN0KG5ldyBFcnJvcignRmFpbGVkIHRvIGxvYWQ6ICcgKyBzcmMpKTsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9OwogICAgICAgICAgICAgICAgZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZChzY3JpcHQpOwogICAgICAgICAgICB9KTsKICAgICAgICB9CgogICAgICAgIC8vIFByb2Nlc3MgYWNjZXNzb3Igc3RyaW5ncyB0aGF0IHN0YXJ0IHdpdGggIkBAPSIKICAgICAgICBmdW5jdGlvbiBwcm9jZXNzQWNjZXNzb3IodmFsdWUpIHsKICAgICAgICAgICAgaWYgKHR5cGVvZiB2YWx1ZSA9PT0gJ3N0cmluZycgJiYgdmFsdWUuc3RhcnRzV2l0aCgnQEA9JykpIHsKICAgICAgICAgICAgICAgIHZhciBmaWVsZCA9IHZhbHVlLnNsaWNlKDMpOwogICAgICAgICAgICAgICAgcmV0dXJuIGZ1bmN0aW9uKGQpIHsKICAgICAgICAgICAgICAgICAgICB2YXIgcGFydHMgPSBmaWVsZC5zcGxpdCgnLicpOwogICAgICAgICAgICAgICAgICAgIHZhciByZXN1bHQgPSBkOwogICAgICAgICAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgcGFydHMubGVuZ3RoOyBpKyspIHsKICAgICAgICAgICAgICAgICAgICAgICAgcmVzdWx0ID0gcmVzdWx0W3BhcnRzW2ldXTsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdDsKICAgICAgICAgICAgICAgIH07CiAgICAgICAgICAgIH0KICAgICAgICAgICAgcmV0dXJuIHZhbHVlOwogICAgICAgIH0KCiAgICAgICAgLy8gUHJvY2VzcyBsYXllciBzcGVjaWZpY2F0aW9uCiAgICAgICAgZnVuY3Rpb24gcHJvY2Vzc0xheWVyKGxheWVyU3BlYykgewogICAgICAgICAgICB2YXIgbGF5ZXJUeXBlID0gbGF5ZXJTcGVjWydAQHR5cGUnXTsKICAgICAgICAgICAgdmFyIExheWVyQ2xhc3MgPSBkZWNrW2xheWVyVHlwZV07CgogICAgICAgICAgICBpZiAoIUxheWVyQ2xhc3MpIHsKICAgICAgICAgICAgICAgIGNvbnNvbGUuZXJyb3IoJ1Vua25vd24gbGF5ZXIgdHlwZTonLCBsYXllclR5cGUpOwogICAgICAgICAgICAgICAgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHZhciBwcm9wcyA9IHt9OwogICAgICAgICAgICB2YXIga2V5cyA9IE9iamVjdC5rZXlzKGxheWVyU3BlYyk7CiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwga2V5cy5sZW5ndGg7IGkrKykgewogICAgICAgICAgICAgICAgaWYgKGtleXNbaV0gPT09ICdAQHR5cGUnKSBjb250aW51ZTsKICAgICAgICAgICAgICAgIHByb3BzW2tleXNbaV1dID0gcHJvY2Vzc0FjY2Vzc29yKGxheWVyU3BlY1trZXlzW2ldXSk7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJldHVybiBuZXcgTGF5ZXJDbGFzcyhwcm9wcyk7CiAgICAgICAgfQoKICAgICAgICAvLyBQcm9jZXNzIHdpZGdldCBzcGVjaWZpY2F0aW9uCiAgICAgICAgZnVuY3Rpb24gcHJvY2Vzc1dpZGdldCh3aWRnZXRTcGVjKSB7CiAgICAgICAgICAgIHZhciB3aWRnZXRUeXBlID0gd2lkZ2V0U3BlY1snQEB0eXBlJ107CiAgICAgICAgICAgIHZhciBXaWRnZXRDbGFzcyA9IGRlY2tbd2lkZ2V0VHlwZV07CgogICAgICAgICAgICBpZiAoIVdpZGdldENsYXNzKSB7CiAgICAgICAgICAgICAgICBjb25zb2xlLmVycm9yKCdVbmtub3duIHdpZGdldCB0eXBlOicsIHdpZGdldFR5cGUpOwogICAgICAgICAgICAgICAgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHZhciBwcm9wcyA9IHt9OwogICAgICAgICAgICB2YXIga2V5cyA9IE9iamVjdC5rZXlzKHdpZGdldFNwZWMpOwogICAgICAgICAgICBmb3IgKHZhciBpID0gMDsgaSA8IGtleXMubGVuZ3RoOyBpKyspIHsKICAgICAgICAgICAgICAgIGlmIChrZXlzW2ldID09PSAnQEB0eXBlJykgY29udGludWU7CiAgICAgICAgICAgICAgICBwcm9wc1trZXlzW2ldXSA9IHdpZGdldFNwZWNba2V5c1tpXV07CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJldHVybiBuZXcgV2lkZ2V0Q2xhc3MocHJvcHMpOwogICAgICAgIH0KCiAgICAgICAgLy8gRGV0ZXJtaW5lIHdoaWNoIHNjcmlwdHMgdG8gbG9hZAogICAgICAgIHZhciBzY3JpcHRzID0gWydodHRwczovL3VucGtnLmNvbS9kZWNrLmdsQDkuMC4xNi9kaXN0Lm1pbi5qcyddOwogICAgICAgIGlmIChzcGVjLm1hcFN0eWxlKSB7CiAgICAgICAgICAgIHNjcmlwdHMucHVzaCgnaHR0cHM6Ly91bnBrZy5jb20vbWFwbGlicmUtZ2xAMy42LjIvZGlzdC9tYXBsaWJyZS1nbC5qcycpOwogICAgICAgIH0KCiAgICAgICAgLy8gTG9hZCBzY3JpcHRzIHRoZW4gaW5pdGlhbGl6ZQogICAgICAgIFByb21pc2UuYWxsKHNjcmlwdHMubWFwKGZ1bmN0aW9uKHNyYykgeyByZXR1cm4gbG9hZFNjcmlwdChzcmMpOyB9KSkudGhlbihmdW5jdGlvbigpIHsKICAgICAgICAgICAgdmFyIGxheWVycyA9IHNwZWMubGF5ZXJzLm1hcChwcm9jZXNzTGF5ZXIpLmZpbHRlcihmdW5jdGlvbihsKSB7IHJldHVybiBsICE9PSBudWxsOyB9KTsKICAgICAgICAgICAgdmFyIHdpZGdldHMgPSAoc3BlYy53aWRnZXRzIHx8IFtdKS5tYXAocHJvY2Vzc1dpZGdldCkuZmlsdGVyKGZ1bmN0aW9uKHcpIHsgcmV0dXJuIHcgIT09IG51bGw7IH0pOwoKICAgICAgICAgICAgaWYgKHNwZWMubWFwU3R5bGUpIHsKICAgICAgICAgICAgICAgIHZhciBtYXAgPSBuZXcgbWFwbGlicmVnbC5NYXAoewogICAgICAgICAgICAgICAgICAgIGNvbnRhaW5lcjogJ21hcCcsCiAgICAgICAgICAgICAgICAgICAgc3R5bGU6IHNwZWMubWFwU3R5bGUsCiAgICAgICAgICAgICAgICAgICAgY2VudGVyOiBbc3BlYy5pbml0aWFsVmlld1N0YXRlLmxvbmdpdHVkZSwgc3BlYy5pbml0aWFsVmlld1N0YXRlLmxhdGl0dWRlXSwKICAgICAgICAgICAgICAgICAgICB6b29tOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUuem9vbSwKICAgICAgICAgICAgICAgICAgICBwaXRjaDogc3BlYy5pbml0aWFsVmlld1N0YXRlLnBpdGNoIHx8IDAsCiAgICAgICAgICAgICAgICAgICAgYmVhcmluZzogc3BlYy5pbml0aWFsVmlld1N0YXRlLmJlYXJpbmcgfHwgMCwKICAgICAgICAgICAgICAgICAgICBpbnRlcmFjdGl2ZTogZmFsc2UKICAgICAgICAgICAgICAgIH0pOwoKICAgICAgICAgICAgICAgIG5ldyBkZWNrLkRlY2tHTCh7CiAgICAgICAgICAgICAgICAgICAgY2FudmFzOiAnZGVjay1vdmVybGF5JywKICAgICAgICAgICAgICAgICAgICBpbml0aWFsVmlld1N0YXRlOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUsCiAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlcjogc3BlYy5jb250cm9sbGVyLAogICAgICAgICAgICAgICAgICAgIGxheWVyczogbGF5ZXJzLAogICAgICAgICAgICAgICAgICAgIHdpZGdldHM6IHdpZGdldHMsCiAgICAgICAgICAgICAgICAgICAgZ2V0VG9vbHRpcDogc3BlYy5waWNrYWJsZSA/IGZ1bmN0aW9uKGluZm8pIHsgcmV0dXJuIGluZm8ub2JqZWN0ICYmIEpTT04uc3RyaW5naWZ5KGluZm8ub2JqZWN0KTsgfSA6IG51bGwsCiAgICAgICAgICAgICAgICAgICAgb25WaWV3U3RhdGVDaGFuZ2U6IGZ1bmN0aW9uKGUpIHsKICAgICAgICAgICAgICAgICAgICAgICAgbWFwLmp1bXBUbyh7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6IFtlLnZpZXdTdGF0ZS5sb25naXR1ZGUsIGUudmlld1N0YXRlLmxhdGl0dWRlXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHpvb206IGUudmlld1N0YXRlLnpvb20sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaXRjaDogZS52aWV3U3RhdGUucGl0Y2gsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBiZWFyaW5nOiBlLnZpZXdTdGF0ZS5iZWFyaW5nCiAgICAgICAgICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgdmFyIGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdkZWNrLWNvbnRhaW5lcicpOwogICAgICAgICAgICAgICAgY29udGFpbmVyLmlubmVySFRNTCA9ICcnOwoKICAgICAgICAgICAgICAgIG5ldyBkZWNrLkRlY2tHTCh7CiAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyOiBjb250YWluZXIsCiAgICAgICAgICAgICAgICAgICAgaW5pdGlhbFZpZXdTdGF0ZTogc3BlYy5pbml0aWFsVmlld1N0YXRlLAogICAgICAgICAgICAgICAgICAgIGNvbnRyb2xsZXI6IHNwZWMuY29udHJvbGxlciwKICAgICAgICAgICAgICAgICAgICBsYXllcnM6IGxheWVycywKICAgICAgICAgICAgICAgICAgICB3aWRnZXRzOiB3aWRnZXRzLAogICAgICAgICAgICAgICAgICAgIGdldFRvb2x0aXA6IHNwZWMucGlja2FibGUgPyBmdW5jdGlvbihpbmZvKSB7IHJldHVybiBpbmZvLm9iamVjdCAmJiBKU09OLnN0cmluZ2lmeShpbmZvLm9iamVjdCk7IH0gOiBudWxsCiAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgfQogICAgICAgIH0pLmNhdGNoKGZ1bmN0aW9uKGVycikgewogICAgICAgICAgICBjb25zb2xlLmVycm9yKCdEZWNrR0wgaW5pdGlhbGl6YXRpb24gZmFpbGVkOicsIGVycik7CiAgICAgICAgICAgIHZhciBjb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZGVjay1jb250YWluZXInKTsKICAgICAgICAgICAgY29udGFpbmVyLmlubmVySFRNTCA9ICc8ZGl2IHN0eWxlPSJkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7aGVpZ2h0OjEwMCU7Y29sb3I6IzY2NjsiPkZhaWxlZCB0byBsb2FkIHZpc3VhbGl6YXRpb24uIFBsZWFzZSByZWZyZXNoIHRoZSBwYWdlLjwvZGl2Pic7CiAgICAgICAgfSk7CiAgICA8L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==" style="width:100%; height:520px; border:none;"></iframe>
+</div>
+</div>
+<p>A <code>Deck</code> has three pieces:</p>
+<ol type="1">
+<li><strong>Layers</strong> — what to draw.</li>
+<li><strong>ViewState</strong> — where the camera is (<code>longitude</code>, <code>latitude</code>, <code>zoom</code>, <code>pitch</code>, <code>bearing</code>).</li>
+<li><strong>Widgets</strong> (optional) — UI overlays.</li>
+</ol>
+<p>Columns are referenced by <code>Symbol</code>: <code>get_radius = :pop</code>, <code>get_position = [:lng, :lat]</code>. Static values work too: <code>get_fill_color = [255, 140, 0, 220]</code>.</p>
+</section>
+<section id="display" class="level2">
+<h2 class="anchored" data-anchor-id="display">Display</h2>
+<ul>
+<li><strong>Notebooks</strong> (Jupyter, Pluto, VS Code) — a <code>Deck</code> renders inline automatically.</li>
+<li><strong>Browser</strong> — <code>open_html(deck)</code> pops a tab.</li>
+<li><strong>File</strong> — <code>save_html(deck, "map.html")</code>.</li>
+<li><strong>String</strong> — <code>to_html(deck)</code> / <code>to_json(deck)</code>.</li>
+</ul>
+</section>
+<section id="where-to-go-next" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><strong><a href="./examples.html">Examples →</a></strong> — flight routes, earthquakes, 3D buildings, wildfires, trees, accidents.</li>
+<li><strong><a href="./layers.html">Layers →</a></strong> — every layer type with a live interactive example.</li>
+<li><strong><a href="./widgets.html">Widgets →</a></strong> — zoom, compass, fullscreen.</li>
+<li><strong><a href="api.qmd">API →</a></strong> — full reference.</li>
 </ul>
 
 

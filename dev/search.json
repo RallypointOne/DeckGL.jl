@@ -4,62 +4,51 @@
     "href": "index.html",
     "title": "DeckGL.jl",
     "section": "",
-    "text": "DeckGL.jl\nGPU-accelerated geospatial visualization for Julia\nDeckGL.jl is a Julia package for creating interactive, GPU-accelerated visualizations using deck.gl. It provides a simple, Julian API for rendering large-scale geospatial data in web browsers and notebooks.",
+    "text": "Interactive maps in Julia.\nGPU-accelerated geospatial visualization. Millions of points. Smooth pan, zoom, 3D. Built on deck.gl.",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
     ]
   },
   {
-    "objectID": "index.html#features",
-    "href": "index.html#features",
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
     "title": "DeckGL.jl",
-    "section": "Features",
-    "text": "Features\n\n\nHigh Performance\nLeverages WebGL for GPU-accelerated rendering. Handle millions of data points with smooth pan, zoom, and rotate interactions.\n\n\nTables.jl Integration\nWorks seamlessly with DataFrames, NamedTuples, and any Tables.jl-compatible data source. Reference columns by symbol.\n\n\nMultiple Outputs\nDisplay in Jupyter notebooks, VS Code, Pluto.jl, or export as standalone HTML files that work in any browser.\n\n\nRich Layer Types\n10+ layer types including scatterplots, arcs, paths, polygons, hexagonal binning, heatmaps, and GeoJSON support.",
+    "section": "Overview",
+    "text": "Overview\n\nBig data, smooth frames — WebGL rendering of millions of points.\nAny Tables.jl source — DataFrames, NamedTuples, CSV.jl, Arrow.jl, …\n10+ layer types — scatter, arc, line, path, polygon, text, hexbin, grid, heatmap, GeoJSON.\nAny display target — Jupyter, Pluto, VS Code, standalone HTML.\nDeclarative API — layers, view state, widgets. That’s it.\n\nInstall:\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/DeckGL.jl\")",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
     ]
   },
   {
-    "objectID": "index.html#quick-example",
-    "href": "index.html#quick-example",
+    "objectID": "index.html#quickstart",
+    "href": "index.html#quickstart",
     "title": "DeckGL.jl",
-    "section": "Quick Example",
-    "text": "Quick Example\nusing DeckGL\n\n# Any Tables.jl-compatible data works\ndata = (\n    longitude = [-122.4, -122.5, -122.3, -122.45],\n    latitude = [37.8, 37.7, 37.9, 37.75],\n    size = [100, 200, 150, 180]\n)\n\n# Create a scatterplot layer\nlayer = ScatterplotLayer(\n    data = data,\n    get_position = [:longitude, :latitude],\n    get_radius = :size,\n    get_fill_color = [255, 140, 0, 200]\n)\n\n# Create and display the visualization\ndeck = Deck(\n    layer,\n    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11)\n)\n\nopen_html(deck)  # Opens in browser\nOr use convenience functions for even simpler code:\nscatter(data, :longitude, :latitude, radius=:size, color=[255, 140, 0]) |&gt; open_html",
+    "section": "Quickstart",
+    "text": "Quickstart\n\nusing DeckGL\n\ncities = (\n    lng  = [-122.4, -74.0,   2.35, 139.7, 151.2, -0.13, 77.22, 103.8],\n    lat  = [  37.8,  40.7,  48.86,  35.7, -33.9,  51.5, 28.61,   1.35],\n    pop  = [   870, 8400,   2100, 13900,  5300,  9000, 32000,  5700],\n)\n\nDeck(\n    ScatterplotLayer(\n        data = cities,\n        get_position = [:lng, :lat],\n        get_radius = :pop,\n        radius_scale = 80,\n        radius_min_pixels = 4,\n        get_fill_color = [255, 140, 0, 220],\n    ),\n    initial_view_state = ViewState(longitude=30, latitude=25, zoom=1.2, pitch=20),\n    map_style = \"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json\",\n)\n\n\n\n\nA Deck has three pieces:\n\nLayers — what to draw.\nViewState — where the camera is (longitude, latitude, zoom, pitch, bearing).\nWidgets (optional) — UI overlays.\n\nColumns are referenced by Symbol: get_radius = :pop, get_position = [:lng, :lat]. Static values work too: get_fill_color = [255, 140, 0, 220].",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
     ]
   },
   {
-    "objectID": "index.html#installation",
-    "href": "index.html#installation",
+    "objectID": "index.html#display",
+    "href": "index.html#display",
     "title": "DeckGL.jl",
-    "section": "Installation",
-    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/DeckGL.jl\")",
+    "section": "Display",
+    "text": "Display\n\nNotebooks (Jupyter, Pluto, VS Code) — a Deck renders inline automatically.\nBrowser — open_html(deck) pops a tab.\nFile — save_html(deck, \"map.html\").\nString — to_html(deck) / to_json(deck).",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
     ]
   },
   {
-    "objectID": "index.html#layer-types",
-    "href": "index.html#layer-types",
+    "objectID": "index.html#where-to-go-next",
+    "href": "index.html#where-to-go-next",
     "title": "DeckGL.jl",
-    "section": "Layer Types",
-    "text": "Layer Types\nDeckGL.jl supports a variety of layer types for different visualization needs:\n\n\n\n\n\n\n\nCategory\nLayers\n\n\n\n\nCore\nScatterplotLayer, ArcLayer, LineLayer, PathLayer, PolygonLayer, TextLayer\n\n\nAggregation\nHexagonLayer, GridLayer, HeatmapLayer\n\n\nComposite\nGeoJsonLayer",
-    "crumbs": [
-      "Docs",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
-    ]
-  },
-  {
-    "objectID": "index.html#next-steps",
-    "href": "index.html#next-steps",
-    "title": "DeckGL.jl",
-    "section": "Next Steps",
-    "text": "Next Steps\n\nGetting Started - Installation and first visualization\nLayers - Complete layer reference\nAPI Reference - Full API documentation\nExamples - Example gallery",
+    "section": "Where to go next",
+    "text": "Where to go next\n\nExamples → — flight routes, earthquakes, 3D buildings, wildfires, trees, accidents.\nLayers → — every layer type with a live interactive example.\nWidgets → — zoom, compass, fullscreen.\nAPI → — full reference.",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>DeckGL.jl</span>"
