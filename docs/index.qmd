@@ -1,99 +1,77 @@
 ---
 title: "DeckGL.jl"
-subtitle: "GPU-accelerated geospatial visualization for Julia"
+engine: julia
+toc: false
+resources:
+  - examples/*.html
 ---
 
-::: {.hero}
-# DeckGL.jl
+::: {.hero-pitch}
+# Interactive maps in Julia.
 
-[GPU-accelerated geospatial visualization for Julia]{.tagline}
-
-[![CI](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/RallypointOne/DeckGL.jl/actions/workflows/CI.yml)
+[GPU-accelerated geospatial visualization. Millions of points. Smooth pan, zoom, 3D. Built on [deck.gl](https://deck.gl/).]{.tagline}
 :::
 
-DeckGL.jl is a Julia package for creating interactive, GPU-accelerated visualizations using [deck.gl](https://deck.gl/). It provides a simple, Julian API for rendering large-scale geospatial data in web browsers and notebooks.
+<iframe src="examples/global-flight-routes.html" class="viz-frame viz-hero" loading="lazy" title="Global flight routes demo"></iframe>
 
-## Features
+## Overview
 
-::: {.feature-grid}
+- **Big data, smooth frames** — WebGL rendering of millions of points.
+- **Any Tables.jl source** — DataFrames, NamedTuples, CSV.jl, Arrow.jl, …
+- **10+ layer types** — scatter, arc, line, path, polygon, text, hexbin, grid, heatmap, GeoJSON.
+- **Any display target** — Jupyter, Pluto, VS Code, standalone HTML.
+- **Declarative API** — layers, view state, widgets. That's it.
 
-::: {.feature-card}
-### High Performance
-Leverages WebGL for GPU-accelerated rendering. Handle millions of data points with smooth pan, zoom, and rotate interactions.
-:::
-
-::: {.feature-card}
-### Tables.jl Integration
-Works seamlessly with DataFrames, NamedTuples, and any Tables.jl-compatible data source. Reference columns by symbol.
-:::
-
-::: {.feature-card}
-### Multiple Outputs
-Display in Jupyter notebooks, VS Code, Pluto.jl, or export as standalone HTML files that work in any browser.
-:::
-
-::: {.feature-card}
-### Rich Layer Types
-10+ layer types including scatterplots, arcs, paths, polygons, hexagonal binning, heatmaps, and GeoJSON support.
-:::
-
-:::
-
-## Quick Example
-
-```julia
-using DeckGL
-
-# Any Tables.jl-compatible data works
-data = (
-    longitude = [-122.4, -122.5, -122.3, -122.45],
-    latitude = [37.8, 37.7, 37.9, 37.75],
-    size = [100, 200, 150, 180]
-)
-
-# Create a scatterplot layer
-layer = ScatterplotLayer(
-    data = data,
-    get_position = [:longitude, :latitude],
-    get_radius = :size,
-    get_fill_color = [255, 140, 0, 200]
-)
-
-# Create and display the visualization
-deck = Deck(
-    layer,
-    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11)
-)
-
-open_html(deck)  # Opens in browser
-```
-
-Or use convenience functions for even simpler code:
-
-```julia
-scatter(data, :longitude, :latitude, radius=:size, color=[255, 140, 0]) |> open_html
-```
-
-## Installation
+Install:
 
 ```julia
 using Pkg
 Pkg.add(url="https://github.com/RallypointOne/DeckGL.jl")
 ```
 
-## Layer Types
+## Quickstart
 
-DeckGL.jl supports a variety of layer types for different visualization needs:
+```{julia}
+using DeckGL
 
-| Category | Layers |
-|----------|--------|
-| **Core** | `ScatterplotLayer`, `ArcLayer`, `LineLayer`, `PathLayer`, `PolygonLayer`, `TextLayer` |
-| **Aggregation** | `HexagonLayer`, `GridLayer`, `HeatmapLayer` |
-| **Composite** | `GeoJsonLayer` |
+cities = (
+    lng  = [-122.4, -74.0,   2.35, 139.7, 151.2, -0.13, 77.22, 103.8],
+    lat  = [  37.8,  40.7,  48.86,  35.7, -33.9,  51.5, 28.61,   1.35],
+    pop  = [   870, 8400,   2100, 13900,  5300,  9000, 32000,  5700],
+)
 
-## Next Steps
+Deck(
+    ScatterplotLayer(
+        data = cities,
+        get_position = [:lng, :lat],
+        get_radius = :pop,
+        radius_scale = 80,
+        radius_min_pixels = 4,
+        get_fill_color = [255, 140, 0, 220],
+    ),
+    initial_view_state = ViewState(longitude=30, latitude=25, zoom=1.2, pitch=20),
+    map_style = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+)
+```
 
-- [Getting Started](getting-started.qmd) - Installation and first visualization
-- [Layers](layers.qmd) - Complete layer reference
-- [API Reference](api.qmd) - Full API documentation
-- [Examples](examples.qmd) - Example gallery
+A `Deck` has three pieces:
+
+1. **Layers** — what to draw.
+2. **ViewState** — where the camera is (`longitude`, `latitude`, `zoom`, `pitch`, `bearing`).
+3. **Widgets** (optional) — UI overlays.
+
+Columns are referenced by `Symbol`: `get_radius = :pop`, `get_position = [:lng, :lat]`. Static values work too: `get_fill_color = [255, 140, 0, 220]`.
+
+## Display
+
+- **Notebooks** (Jupyter, Pluto, VS Code) — a `Deck` renders inline automatically.
+- **Browser** — `open_html(deck)` pops a tab.
+- **File** — `save_html(deck, "map.html")`.
+- **String** — `to_html(deck)` / `to_json(deck)`.
+
+## Where to go next
+
+- **[Examples →](examples.qmd)** — flight routes, earthquakes, 3D buildings, wildfires, trees, accidents.
+- **[Layers →](layers.qmd)** — every layer type with a live interactive example.
+- **[Widgets →](widgets.qmd)** — zoom, compass, fullscreen.
+- **[API →](api.qmd)** — full reference.
