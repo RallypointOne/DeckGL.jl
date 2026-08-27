@@ -15,9 +15,6 @@ docs/site_libs
 docs/.quarto/
 docs/*_files/
 **/*.quarto_ipynb
-*.html
-!docs/assets/_version-selector.html
 benchmark/results.json
 benchmark/Manifest.toml
 .benchmark-worktree/
-*.jpg
