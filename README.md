@@ -36,15 +36,21 @@ layer = ScatterplotLayer(
     get_fill_color = [255, 140, 0, 200]
 )
 
-# Create the deck
+# Create the deck, on a basemap
 deck = Deck(
     layer,
-    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11)
+    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11),
+    map_style = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 )
 
 # Display in notebook or open in browser
 open_html(deck)
 ```
+
+`map_style` is the URL of a [MapLibre](https://maplibre.org/) style. Carto's are free and
+need no API key — swap `positron` for `dark-matter` or `voyager`. Leave `map_style` out
+and the layers are drawn on a blank background. A basemap is fetched at view time, so it
+needs network access.
 
 ## Features
 
@@ -60,41 +66,57 @@ open_html(deck)
 - `Deck(layers; initial_view_state, map_style, controller)` - Top-level visualization container
 - `ViewState(; longitude, latitude, zoom, pitch, bearing)` - Camera configuration
 
-### Core Layers
+### Layers
 
-- `ScatterplotLayer` - Render points/circles at coordinates
-- `ArcLayer` - Render arcs between source and target points
-- `LineLayer` - Render straight lines between points
-- `PathLayer` - Render paths/polylines from coordinate sequences
-- `PolygonLayer` - Render filled/stroked polygons
-- `TextLayer` - Render text labels at coordinates
+All 32 deck.gl layers are available, generated from deck.gl's own prop tables. See the
+[Layers page](https://rallypointone.github.io/DeckGL.jl/layers.html) for a live example
+of each.
 
-### Aggregation Layers
+**Core** — one shape per record:
+`ScatterplotLayer`, `ArcLayer`, `LineLayer`, `PathLayer`, `PolygonLayer`,
+`SolidPolygonLayer`, `TextLayer`, `IconLayer`, `BitmapLayer`, `ColumnLayer`,
+`GridCellLayer`, `PointCloudLayer`, `GeoJsonLayer`
 
-- `HexagonLayer` - Aggregate points into hexagonal bins (3D)
-- `GridLayer` - Aggregate points into rectangular grid cells (3D)
-- `HeatmapLayer` - Render density heatmaps
+**Aggregation** — bin records before drawing:
+`HexagonLayer`, `GridLayer`, `HeatmapLayer`, `ContourLayer`, `ScreenGridLayer`
 
-### Composite Layers
+**Geo** — spatial indexes and tiled sources:
+`GreatCircleLayer`, `TripsLayer`, `TileLayer`, `MVTLayer`, `TerrainLayer`,
+`Tile3DLayer`, `H3HexagonLayer`, `H3ClusterLayer`, `GeohashLayer`, `QuadkeyLayer`,
+`S2Layer`, `A5Layer`
 
-- `GeoJsonLayer` - Render GeoJSON data (points, lines, polygons)
+**Mesh** — 3D geometry per record:
+`SimpleMeshLayer`, `ScenegraphLayer`
+
+Props may be written `snake_case` or `camelCase`, and anything left unset keeps
+deck.gl's own default. `DeckGL.props(ScatterplotLayer)` lists what a layer accepts and
+`DeckGL.accessors(ScatterplotLayer)` lists the props that can name a data column.
+
+### Widgets
+
+All 15 deck.gl widgets are available. See the
+[Widgets page](https://rallypointone.github.io/DeckGL.jl/widgets.html) for a live example
+of each.
+
+**Camera** — `ZoomWidget`, `CompassWidget`, `GimbalWidget`, `ResetViewWidget`,
+`ScrollbarWidget`
+
+**Display** — `FullscreenWidget`, `ThemeWidget`, `ScreenshotWidget`, `LoadingWidget`
+
+**Information** — `InfoWidget`, `PopupWidget`, `ContextMenuWidget`
+
+**Custom controls** — `IconWidget`, `ToggleWidget`, `SelectorWidget`
+
+```julia
+Deck(layer, widgets = [ZoomWidget(), CompassWidget(placement = "bottom-left")])
+```
 
 ### Functions
 
-- `to_json(deck)` - Convert to deck.gl JSON specification
-- `to_html(deck)` - Generate standalone HTML string
+- `to_js(deck)` - The JavaScript that builds and mounts the visualization
+- `to_html(deck)` - Generate an HTML page (`bundle=:local` inlines deck.gl for offline use)
 - `save_html(deck, path)` - Save as HTML file
 - `open_html(deck)` - Open in default browser
-
-### GeoInterface.jl Integration
-
-Convert GeoInterface-compatible geometries to GeoJSON:
-
-```julia
-using Shapefile
-shp = Shapefile.Table("boundaries.shp")
-layer = geojson_layer(shp, get_fill_color=[255, 0, 0, 100])
-```
 
 ### Convenience Functions
 

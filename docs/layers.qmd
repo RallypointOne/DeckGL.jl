@@ -1,28 +1,85 @@
 ---
 title: "Layers"
 engine: julia
+toc-depth: 3
 ---
 
-DeckGL.jl provides a variety of layer types for different visualization needs. Each example below is self-contained and ready to copy-paste.
+Every deck.gl layer is available, generated from deck.gl's own prop tables. Each example
+below is self-contained and ready to copy-paste.
+
+Props may be written `snake_case` or `camelCase` — `get_fill_color` and `getFillColor`
+are the same prop — and anything left unset keeps deck.gl's own default. Any accessor
+takes a constant, a column name as a `Symbol` (or a `Vector{Symbol}` to combine several
+columns), or `JS(...)` for a JavaScript function.
 
 ```{julia}
 #| echo: false
 #| output: false
-using DeckGL
+using DeckGL, Random
+Random.seed!(20250830)
+
+# deck.gl prop names are camelCase; these pages use the snake_case spelling.
+snake(prop::Symbol) = lowercase(replace(String(prop), r"([a-z0-9])([A-Z])" => s"\1_\2"))
+
+# Every layer inherits `highlightColor` from deck.gl's base class. It is a constant,
+# not a data accessor, and listing it 32 times is noise.
+const INHERITED = [:highlightColor]
+
+# Prop tables are generated rather than transcribed. A hand-written table per layer is a
+# copy of deck.gl's documentation that goes stale the moment upstream changes a default.
+function layer_reference(T)
+    name = DeckGL.typename(T)
+    accessors = filter(!in(INHERITED), DeckGL.accessors(T))
+    others = length(DeckGL.props(T)) - length(accessors)
+    io = IOBuffer()
+    println(io, "::: {.callout-note collapse=\"true\"}")
+    println(io, "## `$name` accessors\n")
+    println(io, "| Accessor | Value |")
+    println(io, "|----------|-------|")
+    for a in accessors
+        kind = DeckGL.is_color_prop(name, a) ? "`[R,G,B]`/`[R,G,B,A]`, a hex string, or a column" :
+                                              "a value, a column, or `JS(...)`"
+        println(io, "| `", snake(a), "` | ", kind, " |")
+    end
+    println(io, "\n`", name, "` accepts ", others, " further props. List them with ",
+                "`DeckGL.props(", name, ")`, or read the descriptions in the ",
+                "[deck.gl reference](", DeckGL.LAYER_DOCS[name], ").")
+    println(io, ":::")
+    return String(take!(io))
+end
+
+# Shared sample data.
+sf_points = let n = 300
+    (lng = -122.42 .+ 0.06 .* randn(n),
+     lat = 37.77 .+ 0.05 .* randn(n),
+     weight = 1.0 .+ 4.0 .* rand(n))
+end
+
+sf_view(; zoom = 11, kw...) = ViewState(; longitude = -122.42, latitude = 37.77, zoom, kw...)
 ```
+
+Every example draws on a basemap. `map_style` takes any
+[MapLibre](https://maplibre.org/) style URL; Carto's are free and need no API key.
+
+```{julia}
+BASEMAP = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+```
+
+Omit `map_style` for a blank background — see [Getting Started](getting-started.qmd) for
+the other styles and what a basemap costs.
 
 ## Core Layers {#core-layers}
 
-Core layers render individual data points directly without aggregation.
+Core layers draw one shape per record, with no aggregation.
 
 ### ScatterplotLayer
 
-Renders circles at given coordinates.
+Circles at given coordinates.
 
 ```{julia}
 data = (
-    lng = [-122.45, -122.42, -122.38, -122.50, -122.47, -122.41],
-    lat = [37.78, 37.76, 37.79, 37.77, 37.80, 37.75],
+    lng  = [-122.45, -122.42, -122.38, -122.50, -122.47, -122.41],
+    lat  = [37.78, 37.76, 37.79, 37.77, 37.80, 37.75],
     size = [80, 200, 120, 300, 150, 250]
 )
 
@@ -32,32 +89,23 @@ Deck(
         get_position = [:lng, :lat],
         get_radius = :size,
         get_fill_color = [255, 140, 0, 200],
-        radius_min_pixels = 3
+        radius_min_pixels = 3,
+        tooltip = [:size]
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_position` | Symbol/Vector{Symbol} | required | Position accessor `[:lng, :lat]` |
-| `get_radius` | Real/Symbol | `1` | Circle radius in meters |
-| `get_fill_color` | Vector/Symbol | `[0,0,0,255]` | Fill color RGBA |
-| `get_line_color` | Vector/Symbol | `[0,0,0,255]` | Outline color RGBA |
-| `get_line_width` | Real/Symbol | `1` | Outline width |
-| `radius_scale` | Real | `1` | Radius multiplier |
-| `radius_min_pixels` | Real | `0` | Minimum radius in pixels |
-| `radius_max_pixels` | Real | `Inf` | Maximum radius in pixels |
-| `stroked` | Bool | `false` | Draw outline |
-| `filled` | Bool | `true` | Draw fill |
-| `billboard` | Bool | `false` | Always face camera |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
-| `pickable` | Bool | `false` | Enable interactions |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(ScatterplotLayer))
+```
 
 ### ArcLayer
 
-Renders arcs between source and target coordinates.
+Arcs curving between a source and a target.
 
 ```{julia}
 trips = (
@@ -76,27 +124,20 @@ Deck(
         get_target_color = [255, 0, 128],
         get_width = 3
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_source_position` | Symbol/Vector{Symbol} | required | Source position |
-| `get_target_position` | Symbol/Vector{Symbol} | required | Target position |
-| `get_source_color` | Vector/Symbol | `[0,0,0,255]` | Source end color |
-| `get_target_color` | Vector/Symbol | `[0,0,0,255]` | Target end color |
-| `get_width` | Real/Symbol | `1` | Arc width in pixels |
-| `get_height` | Real/Symbol | `1` | Arc height multiplier (0-1) |
-| `get_tilt` | Real/Symbol | `0` | Arc tilt in degrees |
-| `great_circle` | Bool | `false` | Use great circle arcs |
-| `width_scale` | Real | `1` | Width multiplier |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(ArcLayer))
+```
 
 ### LineLayer
 
-Renders straight lines between source and target coordinates.
+Straight lines between a source and a target.
 
 ```{julia}
 connections = (
@@ -111,26 +152,23 @@ Deck(
         data = connections,
         get_source_position = [:from_lng, :from_lat],
         get_target_position = [:to_lng, :to_lat],
-        get_color = [255, 0, 0],
-        get_width = 2
+        get_color = [0, 100, 200],
+        get_width = 4
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_source_position` | Symbol/Vector{Symbol} | required | Source position |
-| `get_target_position` | Symbol/Vector{Symbol} | required | Target position |
-| `get_color` | Vector/Symbol | `[0,0,0,255]` | Line color |
-| `get_width` | Real/Symbol | `1` | Line width |
-| `width_units` | String | `"pixels"` | Width units |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(LineLayer))
+```
 
 ### PathLayer
 
-Renders paths/polylines from coordinate sequences.
+Polylines from sequences of coordinates.
 
 ```{julia}
 routes = (
@@ -150,25 +188,21 @@ Deck(
         cap_rounded = true,
         joint_rounded = true
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.78, zoom=12)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.78, zoom=12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_path` | Symbol | required | Path coordinates column |
-| `get_color` | Vector/Symbol | `[0,0,0,255]` | Path color |
-| `get_width` | Real/Symbol | `1` | Path width |
-| `cap_rounded` | Bool | `false` | Round line caps |
-| `joint_rounded` | Bool | `false` | Round line joints |
-| `billboard` | Bool | `false` | Always face camera |
-| `miter_limit` | Real | `4` | Miter limit for sharp corners |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(PathLayer))
+```
 
 ### PolygonLayer
 
-Renders filled and/or stroked polygons.
+Filled and stroked polygons, optionally extruded. A composite layer: it delegates fills
+to `SolidPolygonLayer` and outlines to `PathLayer`.
 
 ```{julia}
 regions = (
@@ -188,31 +222,48 @@ Deck(
         get_line_color = [255, 140, 0, 255],
         get_line_width = 2,
         extruded = true,
-        get_elevation = :value,
-        elevation_scale = 1
+        get_elevation = :value
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, pitch=45)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, pitch=45),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_polygon` | Symbol | required | Polygon coordinates column |
-| `get_fill_color` | Vector/Symbol | `[0,0,0,255]` | Fill color |
-| `get_line_color` | Vector/Symbol | `[0,0,0,255]` | Outline color |
-| `get_line_width` | Real/Symbol | `1` | Outline width |
-| `filled` | Bool | `true` | Draw fill |
-| `stroked` | Bool | `true` | Draw outline |
-| `extruded` | Bool | `false` | Extrude as 3D |
-| `wireframe` | Bool | `false` | Draw 3D wireframe |
-| `get_elevation` | Real/Symbol | `1000` | Polygon height for 3D |
-| `elevation_scale` | Real | `1` | Elevation multiplier |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(PolygonLayer))
+```
+
+### SolidPolygonLayer
+
+Polygon fills only, without the outline sub-layer. Cheaper than `PolygonLayer` when you
+do not need strokes.
+
+```{julia}
+Deck(
+    SolidPolygonLayer(
+        data = regions,
+        get_polygon = :polygon,
+        get_fill_color = "#0aa46b",
+        extruded = true,
+        get_elevation = :value,
+        opacity = 0.8
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, pitch=45),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(SolidPolygonLayer))
+```
 
 ### TextLayer
 
-Renders text labels at coordinates.
+Text labels at coordinates.
 
 ```{julia}
 cities = (
@@ -232,203 +283,172 @@ Deck(
         background = true,
         get_background_color = [255, 255, 255, 200]
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
-| `get_text` | Symbol | required | Text content column |
-| `get_size` | Real/Symbol | `32` | Text size in pixels |
-| `get_color` | Vector/Symbol | `[0,0,0,255]` | Text color |
-| `get_angle` | Real/Symbol | `0` | Rotation in degrees |
-| `get_text_anchor` | String | `"middle"` | Horizontal anchor |
-| `get_alignment_baseline` | String | `"center"` | Vertical anchor |
-| `font_family` | String | `"Monaco, monospace"` | Font family |
-| `billboard` | Bool | `true` | Always face camera |
-| `background` | Bool | `false` | Draw background |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
-
-## Aggregation Layers {#aggregation-layers}
-
-Aggregation layers bin data points and render aggregated values.
-
-### HexagonLayer
-
-Aggregates data into hexagonal bins and renders as 3D hexagons.
+`get_text` reads a column of strings, which cannot be packed into a GPU buffer. The
+column is sent as an array and read by index instead — see
+[Getting Started](getting-started.qmd) for how data reaches the browser.
 
 ```{julia}
-# Generate random earthquake-like data around San Francisco
-earthquakes = let
-    n = 200
-    (
-        lng = -122.4 .+ 0.2 * randn(n),
-        lat = 37.8 .+ 0.15 * randn(n),
-        magnitude = 1.0 .+ 3.0 * rand(n)
-    )
-end
+#| echo: false
+#| output: asis
+println(layer_reference(TextLayer))
+```
 
+### ColumnLayer
+
+Extruded regular polygons — a cylinder or prism per point.
+
+```{julia}
 Deck(
-    HexagonLayer(
-        data = earthquakes,
+    ColumnLayer(
+        data = sf_points,
         get_position = [:lng, :lat],
-        get_elevation_weight = :magnitude,
-        radius = 500,
-        elevation_scale = 50,
+        get_elevation = :weight,
+        elevation_scale = 400,
+        radius = 200,
+        disk_resolution = 12,
         extruded = true,
-        coverage = 0.9
+        get_fill_color = [255, 140, 0, 220]
     ),
-    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45)
+    initial_view_state = sf_view(zoom = 12, pitch = 50),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
-| `radius` | Real | `1000` | Hexagon radius in meters |
-| `coverage` | Real | `1` | Hexagon coverage (0-1) |
-| `extruded` | Bool | `true` | Render as 3D |
-| `elevation_scale` | Real | `1` | Elevation multiplier |
-| `elevation_range` | Vector | `[0, 1000]` | Min/max elevation |
-| `get_color_weight` | Real/Symbol | `1` | Color aggregation weight |
-| `get_elevation_weight` | Real/Symbol | `1` | Elevation aggregation weight |
-| `color_aggregation` | String | `"SUM"` | Aggregation method |
-| `elevation_aggregation` | String | `"SUM"` | Aggregation method |
-| `color_range` | Vector | yellow-red scale | Color gradient |
-| `upper_percentile` | Real | `100` | Upper filter percentile |
-| `lower_percentile` | Real | `0` | Lower filter percentile |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(ColumnLayer))
+```
 
-### GridLayer
+### GridCellLayer
 
-Aggregates data into rectangular grid cells.
+Square columns on a regular grid. Unlike `GridLayer` it does no aggregation — you supply
+the cell positions.
 
 ```{julia}
-# Generate random points around San Francisco
-points = let
-    n = 300
-    (
-        lng = -122.4 .+ 0.15 * randn(n),
-        lat = 37.8 .+ 0.1 * randn(n),
-    )
-end
-
 Deck(
-    GridLayer(
-        data = points,
+    GridCellLayer(
+        data = sf_points,
         get_position = [:lng, :lat],
-        cell_size = 400,
-        elevation_scale = 10,
+        cell_size = 300,
+        get_elevation = :weight,
+        elevation_scale = 400,
         extruded = true,
-        coverage = 0.8
+        get_fill_color = [0, 128, 255, 200]
     ),
-    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45)
+    initial_view_state = sf_view(zoom = 12, pitch = 50),
+    map_style = BASEMAP
 )
 ```
-
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
-| `cell_size` | Real | `1000` | Grid cell size in meters |
-| `coverage` | Real | `1` | Cell coverage (0-1) |
-| `extruded` | Bool | `true` | Render as 3D |
-| `elevation_scale` | Real | `1` | Elevation multiplier |
-| `get_color_weight` | Real/Symbol | `1` | Color aggregation weight |
-| `get_elevation_weight` | Real/Symbol | `1` | Elevation aggregation weight |
-| `color_aggregation` | String | `"SUM"` | Aggregation method |
-| `elevation_aggregation` | String | `"SUM"` | Aggregation method |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
-
-### HeatmapLayer
-
-Renders a heatmap based on point density and weights.
 
 ```{julia}
-# Generate clustered incident data
-incidents = let
-    n = 500
-    # Two clusters
-    lng1 = -122.45 .+ 0.03 * randn(n ÷ 2)
-    lat1 = 37.78 .+ 0.02 * randn(n ÷ 2)
-    lng2 = -122.40 .+ 0.02 * randn(n ÷ 2)
-    lat2 = 37.76 .+ 0.015 * randn(n ÷ 2)
-    (
-        lng = vcat(lng1, lng2),
-        lat = vcat(lat1, lat2),
-        severity = 1.0 .+ 4.0 * rand(n)
-    )
-end
+#| echo: false
+#| output: asis
+println(layer_reference(GridCellLayer))
+```
 
+### PointCloudLayer
+
+Unlit or lit points in 3D, sized in pixels or metres. Positions may carry a third
+coordinate.
+
+```{julia}
 Deck(
-    HeatmapLayer(
-        data = incidents,
+    PointCloudLayer(
+        data = sf_points,
         get_position = [:lng, :lat],
-        get_weight = :severity,
-        radius_pixels = 50,
-        intensity = 1,
-        threshold = 0.03
+        get_color = [80, 80, 255],
+        point_size = 4
     ),
-    initial_view_state = ViewState(longitude=-122.43, latitude=37.77, zoom=12)
+    initial_view_state = sf_view(zoom = 12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Any | required | Tables.jl-compatible data source |
-| `get_position` | Symbol/Vector{Symbol} | required | Position accessor |
-| `radius_pixels` | Real | `30` | Radius of influence in pixels |
-| `intensity` | Real | `1` | Intensity multiplier |
-| `threshold` | Real | `0.05` | Minimum density threshold |
-| `get_weight` | Real/Symbol | `1` | Point weight |
-| `color_range` | Vector | blue-green-yellow-red | Color gradient |
-| `aggregation` | String | `"SUM"` | Aggregation method |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(PointCloudLayer))
+```
 
-## Composite Layers {#composite-layers}
+### IconLayer
 
-Composite layers render complex data types using multiple sub-layers.
+Sprites from an icon atlas. `icon_mapping` names the regions of the atlas image, and
+`get_icon` picks one per record.
+
+```{julia}
+Deck(
+    IconLayer(
+        data = sf_points,
+        get_position = [:lng, :lat],
+        icon_atlas = "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",
+        icon_mapping = Dict("marker" => Dict(
+            "x" => 0, "y" => 0, "width" => 128, "height" => 128, "anchorY" => 128, "mask" => true)),
+        get_icon = JS("() => \"marker\""),
+        get_size = 3,
+        size_scale = 10,
+        get_color = [200, 0, 80]
+    ),
+    initial_view_state = sf_view(zoom = 12),
+    map_style = BASEMAP
+)
+```
+
+`get_icon` is a JavaScript function here because the icon name is a constant; a column of
+names (`get_icon = :kind`) works the same way.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(IconLayer))
+```
+
+### BitmapLayer
+
+An image georeferenced onto a bounding box.
+
+```{julia}
+Deck(
+    BitmapLayer(
+        image = "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-districts.png",
+        bounds = [-122.52, 37.70, -122.35, 37.83]
+    ),
+    initial_view_state = sf_view(),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(BitmapLayer))
+```
 
 ### GeoJsonLayer
 
-Renders GeoJSON data as points, lines, and polygons.
+GeoJSON of any geometry type, fanned out into point, line, and polygon sub-layers.
 
 ```{julia}
 geojson_data = Dict(
     "type" => "FeatureCollection",
     "features" => [
-        Dict(
-            "type" => "Feature",
-            "geometry" => Dict(
-                "type" => "Polygon",
-                "coordinates" => [[
-                    [-122.46, 37.78], [-122.44, 37.78], [-122.44, 37.80],
-                    [-122.46, 37.80], [-122.46, 37.78]
-                ]]
-            ),
-            "properties" => Dict("name" => "Area A")
-        ),
-        Dict(
-            "type" => "Feature",
-            "geometry" => Dict(
-                "type" => "Point",
-                "coordinates" => [-122.42, 37.77]
-            ),
-            "properties" => Dict("name" => "Point B")
-        ),
-        Dict(
-            "type" => "Feature",
-            "geometry" => Dict(
-                "type" => "LineString",
-                "coordinates" => [
-                    [-122.48, 37.76], [-122.45, 37.75], [-122.42, 37.76]
-                ]
-            ),
-            "properties" => Dict("name" => "Route C")
-        )
+        Dict("type" => "Feature",
+             "geometry" => Dict("type" => "Polygon", "coordinates" => [[
+                 [-122.46, 37.78], [-122.44, 37.78], [-122.44, 37.80],
+                 [-122.46, 37.80], [-122.46, 37.78]]]),
+             "properties" => Dict("name" => "Area A")),
+        Dict("type" => "Feature",
+             "geometry" => Dict("type" => "Point", "coordinates" => [-122.42, 37.77]),
+             "properties" => Dict("name" => "Point B")),
+        Dict("type" => "Feature",
+             "geometry" => Dict("type" => "LineString",
+                                "coordinates" => [[-122.48, 37.76], [-122.45, 37.75], [-122.42, 37.76]]),
+             "properties" => Dict("name" => "Route C")),
     ]
 )
 
@@ -441,47 +461,591 @@ Deck(
         get_point_radius = 200,
         line_width_min_pixels = 2
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12)
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
+    map_style = BASEMAP
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `data` | Dict/String | required | GeoJSON Dict or URL |
-| `filled` | Bool | `true` | Fill polygons |
-| `stroked` | Bool | `true` | Draw outlines |
-| `extruded` | Bool | `false` | Extrude polygons |
-| `get_fill_color` | Vector/Symbol | `[0,0,0,255]` | Fill color |
-| `get_line_color` | Vector/Symbol | `[0,0,0,255]` | Line color |
-| `get_line_width` | Real/Symbol | `1` | Line width |
-| `get_point_radius` | Real/Symbol | `1` | Point radius |
-| `get_elevation` | Real/Symbol | `1000` | Polygon elevation |
-| `point_type` | String | `"circle"` | Point rendering type |
-| `opacity` | Real | `1` | Layer opacity (0-1) |
+`data` may also be a URL string, which deck.gl fetches itself.
 
-## GeoInterface.jl Integration
-
-Convert GeoInterface-compatible geometries to GeoJSON:
-
-```julia
-using Shapefile
-using DeckGL
-
-# Load shapefile
-shp = Shapefile.Table("boundaries.shp")
-
-# Convert to GeoJSON and create layer
-layer = geojson_layer(shp, get_fill_color=[255, 0, 0, 100])
-
-# Or manually convert
-geojson_dict = to_geojson(shp)
-layer = GeoJsonLayer(data=geojson_dict)
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(GeoJsonLayer))
 ```
 
-Supported geometry types:
+## Aggregation Layers {#aggregation-layers}
 
-- Point, MultiPoint
-- LineString, MultiLineString
-- Polygon, MultiPolygon
-- GeometryCollection
-- Feature, FeatureCollection
+Aggregation layers bin records before drawing, so what you see is one shape per bin
+rather than per record. They read every record through its accessor, which is why they
+receive data differently from the layers above — see
+[Getting Started](getting-started.qmd).
+
+Picking one selects a bin, so a `tooltip` shows the bin's own aggregated values.
+
+### HexagonLayer
+
+Hexagonal bins, optionally extruded by an aggregate.
+
+```{julia}
+earthquakes = let n = 200
+    (lng = -122.4 .+ 0.2 * randn(n),
+     lat = 37.8 .+ 0.15 * randn(n),
+     magnitude = 1.0 .+ 3.0 * rand(n))
+end
+
+Deck(
+    HexagonLayer(
+        data = earthquakes,
+        get_position = [:lng, :lat],
+        get_elevation_weight = :magnitude,
+        radius = 500,
+        elevation_scale = 50,
+        extruded = true,
+        coverage = 0.9,
+        tooltip = true
+    ),
+    initial_view_state = ViewState(longitude=-122.4, latitude=37.8, zoom=11, pitch=45),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(HexagonLayer))
+```
+
+### GridLayer
+
+Square bins, the rectangular counterpart to `HexagonLayer`.
+
+```{julia}
+Deck(
+    GridLayer(
+        data = sf_points,
+        get_position = [:lng, :lat],
+        cell_size = 400,
+        elevation_scale = 10,
+        extruded = true,
+        coverage = 0.8
+    ),
+    initial_view_state = sf_view(zoom = 11, pitch = 45),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(GridLayer))
+```
+
+### HeatmapLayer
+
+A density surface, computed on the GPU. It renders through a framebuffer rather than
+geometry, so it has nothing pickable.
+
+```{julia}
+incidents = let n = 500
+    lng1 = -122.45 .+ 0.03 * randn(n ÷ 2); lat1 = 37.78 .+ 0.02 * randn(n ÷ 2)
+    lng2 = -122.40 .+ 0.02 * randn(n ÷ 2); lat2 = 37.76 .+ 0.015 * randn(n ÷ 2)
+    (lng = vcat(lng1, lng2), lat = vcat(lat1, lat2), severity = 1.0 .+ 4.0 * rand(n))
+end
+
+Deck(
+    HeatmapLayer(
+        data = incidents,
+        get_position = [:lng, :lat],
+        get_weight = :severity,
+        radius_pixels = 50,
+        intensity = 1,
+        threshold = 0.03
+    ),
+    initial_view_state = ViewState(longitude=-122.43, latitude=37.77, zoom=12),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(HeatmapLayer))
+```
+
+### ContourLayer
+
+Iso-lines and iso-bands over a binned density. Each entry in `contours` is a threshold
+with a colour; a two-element threshold makes a filled band instead of a line.
+
+```{julia}
+Deck(
+    ContourLayer(
+        data = incidents,
+        get_position = [:lng, :lat],
+        get_weight = :severity,
+        cell_size = 300,
+        contours = [
+            Dict("threshold" => 5,  "color" => [255, 200, 0],  "strokeWidth" => 2),
+            Dict("threshold" => 15, "color" => [255, 100, 0],  "strokeWidth" => 3),
+            Dict("threshold" => 30, "color" => [200, 0, 0],    "strokeWidth" => 4),
+        ]
+    ),
+    initial_view_state = ViewState(longitude=-122.43, latitude=37.77, zoom=12),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(ContourLayer))
+```
+
+### ScreenGridLayer
+
+Bins in *screen* space, so the cells stay a fixed pixel size as you zoom.
+
+```{julia}
+Deck(
+    ScreenGridLayer(
+        data = sf_points,
+        get_position = [:lng, :lat],
+        get_weight = :weight,
+        cell_size_pixels = 40,
+        opacity = 0.8
+    ),
+    initial_view_state = sf_view(),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(ScreenGridLayer))
+```
+
+## Geo Layers {#geo-layers}
+
+Geo layers understand geospatial indexing schemes and tiled data sources.
+
+### GreatCircleLayer
+
+`ArcLayer` following the shortest path over the globe. Most visible at continental
+distances.
+
+```{julia}
+flights = (
+    from_lng = [-122.4, -74.0, -0.1],
+    from_lat = [37.8, 40.7, 51.5],
+    to_lng   = [139.7, 2.35, 151.2],
+    to_lat   = [35.7, 48.86, -33.9]
+)
+
+Deck(
+    GreatCircleLayer(
+        data = flights,
+        get_source_position = [:from_lng, :from_lat],
+        get_target_position = [:to_lng, :to_lat],
+        get_source_color = [0, 200, 255],
+        get_target_color = [255, 0, 128],
+        get_width = 3
+    ),
+    initial_view_state = ViewState(longitude=20, latitude=30, zoom=1),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(GreatCircleLayer))
+```
+
+### TripsLayer
+
+Paths animated over time. `get_timestamps` gives one time per vertex, and `current_time`
+sweeps a fading trail along the path.
+
+```{julia}
+Deck(
+    TripsLayer(
+        data = routes,
+        get_path = :path,
+        get_timestamps = JS("() => [0, 40, 80, 120]"),
+        get_color = [255, 80, 0],
+        current_time = 100,
+        trail_length = 90,
+        width_min_pixels = 5
+    ),
+    initial_view_state = ViewState(longitude=-122.44, latitude=37.78, zoom=12),
+    map_style = BASEMAP
+)
+```
+
+Animating means re-rendering with a new `current_time`; a static page shows one frame.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(TripsLayer))
+```
+
+### TileLayer
+
+Loads a tiled data source for the current viewport. `render_sub_layers` decides how each
+tile is drawn — here as a `BitmapLayer`, which makes this a raster basemap.
+
+```{julia}
+Deck(
+    TileLayer(
+        data = "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        min_zoom = 0,
+        max_zoom = 19,
+        tile_size = 256,
+        render_sub_layers = JS("""props => new deck.BitmapLayer(props, {
+            data: null,
+            image: props.data,
+            bounds: [props.tile.boundingBox[0][0], props.tile.boundingBox[0][1],
+                     props.tile.boundingBox[1][0], props.tile.boundingBox[1][1]]
+        })""")
+    ),
+    initial_view_state = sf_view(zoom = 12)
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(TileLayer))
+```
+
+### MVTLayer
+
+Mapbox Vector Tiles, styled with the same props as `GeoJsonLayer`.
+
+```{julia}
+#| eval: false
+Deck(
+    MVTLayer(
+        data = "https://tiles.basemaps.cartocdn.com/vector/carto.streets/v1/{z}/{x}/{y}.mvt",
+        get_fill_color = [200, 200, 200, 120],
+        get_line_color = [80, 80, 80],
+        line_width_min_pixels = 1
+    ),
+    initial_view_state = sf_view()
+)
+```
+
+Not rendered here: vector tiles are fetched with `fetch`, which most tile servers refuse
+from a page with an opaque origin — a `file://` page or a sandboxed iframe like the ones
+on this site. Served over `http(s)` from a host the tile server allows, it works.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(MVTLayer))
+```
+
+### TerrainLayer
+
+A mesh reconstructed from terrain-RGB elevation tiles, draped with a texture.
+`elevation_decoder` says how the elevation is encoded in the tile's colour channels.
+
+```{julia}
+Deck(
+    TerrainLayer(
+        elevation_data = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+        elevation_decoder = Dict("rScaler" => 256, "gScaler" => 1, "bScaler" => 1/256,
+                                 "offset" => -32768),
+        texture = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    ),
+    initial_view_state = ViewState(longitude=-119.55, latitude=37.74, zoom=11, pitch=60)
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(TerrainLayer))
+```
+
+### Tile3DLayer
+
+OGC 3D Tiles and Cesium ion tilesets.
+
+```{julia}
+#| eval: false
+Deck(
+    Tile3DLayer(
+        data = "https://example.com/tileset.json",
+        loaders = JS("[loaders.Tiles3DLoader]")
+    ),
+    initial_view_state = ViewState(longitude=144.98, latitude=-37.80, zoom=16),
+    map_style = BASEMAP
+)
+```
+
+Not rendered here: `Tile3DLayer` needs the `@loaders.gl/3d-tiles` loader, which the
+deck.gl bundle does not include. Load it yourself and pass it through:
+
+```julia
+save_html(deck, "tiles.html";
+    scripts = ["https://unpkg.com/@loaders.gl/3d-tiles@4.3.3/dist/dist.min.js"])
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(Tile3DLayer))
+```
+
+### H3HexagonLayer
+
+Cells of Uber's [H3](https://h3geo.org) grid, addressed by index string.
+
+```{julia}
+h3_cells = (
+    hex = ["8828308281fffff", "88283082b3fffff", "88283082b9fffff",
+           "8828308287fffff", "8828308285fffff", "88283082bbfffff"],
+    value = [10.0, 25.0, 8.0, 32.0, 17.0, 21.0]
+)
+
+Deck(
+    H3HexagonLayer(
+        data = h3_cells,
+        get_hexagon = :hex,
+        get_fill_color = [0, 128, 255, 180],
+        get_line_color = [255, 255, 255],
+        extruded = false,
+        stroked = true,
+        tooltip = [:value]
+    ),
+    initial_view_state = sf_view(zoom = 12),
+    map_style = BASEMAP
+)
+```
+
+The H3 layers need the `h3-js` library, which deck.gl declares as a peer dependency and
+leaves out of its bundle. Pages containing one load it automatically, from the network.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(H3HexagonLayer))
+```
+
+### H3ClusterLayer
+
+A set of H3 cells merged into one outlined region per record.
+
+```{julia}
+Deck(
+    H3ClusterLayer(
+        data = (hexes = [h3_cells.hex], name = ["cluster"]),
+        get_hexagons = :hexes,
+        get_fill_color = [255, 0, 0, 140],
+        get_line_color = [255, 0, 0],
+        line_width_min_pixels = 2,
+        stroked = true
+    ),
+    initial_view_state = sf_view(zoom = 12),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(H3ClusterLayer))
+```
+
+### GeohashLayer
+
+Cells of the [geohash](https://en.wikipedia.org/wiki/Geohash) grid. Longer strings are
+smaller cells.
+
+```{julia}
+Deck(
+    GeohashLayer(
+        data = (g = ["9q8yy", "9q8yz", "9q8yv", "9q8yu"], v = [1.0, 2.0, 3.0, 4.0]),
+        get_geohash = :g,
+        get_fill_color = [0, 180, 120, 160],
+        get_line_color = [0, 90, 60],
+        stroked = true,
+        tooltip = [:g, :v]
+    ),
+    initial_view_state = sf_view(),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(GeohashLayer))
+```
+
+### QuadkeyLayer
+
+Bing Maps quadkey tiles. Each digit descends one zoom level, so the string length is the
+zoom.
+
+```{julia}
+# Tile (x, y) at zoom z as a quadkey string.
+quadkey(x, y, z) = join((((x >> (i-1)) & 1) + 2 * ((y >> (i-1)) & 1) for i in z:-1:1))
+
+tiles = (q = [quadkey(654 + i, 1582 + j, 12) for i in 0:2 for j in 0:2],
+         v = collect(1.0:9.0))
+
+Deck(
+    QuadkeyLayer(
+        data = tiles,
+        get_quadkey = :q,
+        get_fill_color = [200, 0, 200, 140],
+        get_line_color = [120, 0, 120],
+        stroked = true,
+        tooltip = [:q]
+    ),
+    initial_view_state = sf_view(),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(QuadkeyLayer))
+```
+
+### S2Layer
+
+Cells of Google's [S2](https://s2geometry.io) grid, addressed by token.
+
+```{julia}
+Deck(
+    S2Layer(
+        data = (t = ["80858004", "80858014"], v = [1.0, 2.0]),
+        get_s2_token = :t,
+        get_fill_color = [255, 140, 0, 160],
+        get_line_color = [180, 90, 0],
+        stroked = true
+    ),
+    initial_view_state = sf_view(zoom = 9),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(S2Layer))
+```
+
+### A5Layer
+
+Cells of the [A5](https://a5geo.org) pentagonal grid. Like the H3 layers it needs a peer
+library, `a5-js`, which is loaded automatically.
+
+```{julia}
+# A5 cell ids are 64-bit and exceed what a JSON number can represent, so they travel as
+# strings and become BigInts in the browser.
+a5_ids = ["1937280114513412096", "1936189398978658304", "1937275716466900992"]
+
+Deck(
+    A5Layer(
+        data = (cell = a5_ids,),
+        get_pentagon = JS("((ids) => (_, info) => BigInt(ids[info.index]))($(DeckGL.js(a5_ids)))"),
+        get_fill_color = [255, 140, 0, 180],
+        get_line_color = [180, 90, 0],
+        stroked = true
+    ),
+    initial_view_state = sf_view(zoom = 9),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(A5Layer))
+```
+
+## Mesh Layers {#mesh-layers}
+
+Mesh layers place 3D geometry at each record's position.
+
+### SimpleMeshLayer
+
+One mesh, instanced at every position. The mesh is a JavaScript object of vertex
+attributes, so it is supplied with `JS`.
+
+```{julia}
+cube = JS("""{attributes: {POSITION: {value: new Float32Array([
+    -1,-1,-1,  1,-1,-1,  1, 1,-1,   -1,-1,-1,  1, 1,-1, -1, 1,-1,
+    -1,-1, 1,  1, 1, 1,  1,-1, 1,   -1,-1, 1, -1, 1, 1,  1, 1, 1,
+    -1,-1,-1, -1, 1, 1, -1,-1, 1,   -1,-1,-1, -1, 1,-1, -1, 1, 1,
+     1,-1,-1,  1,-1, 1,  1, 1, 1,    1,-1,-1,  1, 1, 1,  1, 1,-1,
+    -1, 1,-1,  1, 1,-1,  1, 1, 1,   -1, 1,-1,  1, 1, 1, -1, 1, 1,
+    -1,-1,-1,  1,-1, 1,  1,-1,-1,   -1,-1,-1, -1,-1, 1,  1,-1, 1]), size: 3}}}""")
+
+Deck(
+    SimpleMeshLayer(
+        data = sf_points,
+        get_position = [:lng, :lat],
+        mesh = cube,
+        size_scale = 200,
+        get_color = [255, 140, 0]
+    ),
+    initial_view_state = sf_view(zoom = 12, pitch = 45),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(SimpleMeshLayer))
+```
+
+### ScenegraphLayer
+
+A glTF/GLB scene instanced at every position, with its materials and animations.
+
+```{julia}
+Deck(
+    ScenegraphLayer(
+        data = sf_points,
+        get_position = [:lng, :lat],
+        scenegraph = "https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/scenegraph-layer/airplane.glb",
+        size_scale = 300,
+        get_orientation = JS("() => [0, 45, 90]"),
+        _lighting = "pbr"
+    ),
+    initial_view_state = sf_view(zoom = 12),
+    map_style = BASEMAP
+)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(layer_reference(ScenegraphLayer))
+```
+
+## Every Layer
+
+```{julia}
+#| echo: false
+#| output: asis
+using DeckGL: LAYER_NAMES, LAYER_DOCS, AGGREGATION_LAYERS, COMPOSITE_LAYERS
+println("The full set generated from deck.gl v", DeckGL.DECKGL_VERSION, ":\n")
+println("| Layer | Kind | Reference |")
+println("|-------|------|-----------|")
+for name in LAYER_NAMES
+    kind = name in AGGREGATION_LAYERS ? "aggregation" :
+           name in COMPOSITE_LAYERS ? "composite" : "primitive"
+    println("| `", name, "` | ", kind, " | [deck.gl](", LAYER_DOCS[name], ") |")
+end
+```

@@ -10,7 +10,7 @@ Multi-layer, map-backed visualizations using real public datasets. Each example 
 ```{julia}
 #| echo: false
 #| output: false
-using DeckGL, Downloads, JSON3
+using DeckGL, Downloads, JSON
 mkpath("examples")
 ```
 
@@ -160,7 +160,7 @@ let
         "&minlongitude=138.5&maxlongitude=141.0",
         "&minmagnitude=1.5&limit=5000",
     )
-    response = JSON3.read(read(Downloads.download(url), String))
+    response = JSON.parse(read(Downloads.download(url), String))
     features = response[:features]
 
     data = (
@@ -209,7 +209,7 @@ Real building footprints with heights from OpenStreetMap in the City of London f
 let
     query = "[out:json];way[\"building\"][\"height\"](51.505,-0.095,51.52,-0.07);out%20geom;"
     url = "https://overpass-api.de/api/interpreter?data=$(query)"
-    response = JSON3.read(read(Downloads.download(url), String))
+    response = JSON.parse(read(Downloads.download(url), String))
     elements = response[:elements]
 
     polygons = Vector{Vector{Vector{Float64}}}()
@@ -265,7 +265,7 @@ Heatmap of 5,000 trees managed by the City of Paris, weighted by tree height.
 #| output: false
 let
     url = "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/les-arbres/exports/geojson?limit=5000"
-    response = JSON3.read(read(Downloads.download(url), String))
+    response = JSON.parse(read(Downloads.download(url), String))
     features = response[:features]
 
     lngs = Float64[]
@@ -393,7 +393,7 @@ let
         "&minlongitude=95&maxlongitude=180",
         "&minmagnitude=4.5&limit=5000",
     )
-    response = JSON3.read(read(Downloads.download(url), String))
+    response = JSON.parse(read(Downloads.download(url), String))
     features = response[:features]
 
     lngs = Float64[f[:geometry][:coordinates][1] for f in features]

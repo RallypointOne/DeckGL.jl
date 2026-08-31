@@ -1,4 +1,4 @@
 [deps]
-JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 DeckGL = "e919b4c8-0b7d-439a-8eed-456649c68ff7"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 LocalCoverage = "5f6e1e16-694c-5876-87ef-16b5274f298e"

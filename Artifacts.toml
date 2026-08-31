@@ -1,0 +1,7 @@
+[deckgl]
+git-tree-sha1 = "34c0fefa4246f516e7637b72d77a089ba004ab4b"
+lazy = true
+
+    [[deckgl.download]]
+    sha256 = "18fc93f125c3f24a20ab3e1fd2a9a2efab023e92840e0276d75d864a580277a2"
+    url = "https://registry.npmjs.org/deck.gl/-/deck.gl-9.3.11.tgz"

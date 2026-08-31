@@ -1,24 +1,50 @@
 #-----------------------------------------------------------------------------# Convenience Functions
 # High-level API for quick visualizations
 
+# Mean of a set of longitudes/latitudes, falling back to (0, 0) for empty data
+mean_lnglat(lngs, lats) =
+    isempty(lngs) ? (0.0, 0.0) : (sum(lngs) / length(lngs), sum(lats) / length(lats))
+
+# Center of the view, from two coordinate columns
+function center_lnglat(data, lng::Symbol, lat::Symbol)
+    cols = Tables.columns(data)
+    mean_lnglat(Tables.getcolumn(cols, lng), Tables.getcolumn(cols, lat))
+end
+
+# Position accessors that name two columns can be centred directly; anything else
+# (a single column of coordinate pairs, a GeoJSON blob) has no cheap centre.
+center_lnglat(data, cols::AbstractVector{Symbol}) = center_lnglat(data, cols[1], cols[2])
+center_lnglat(::Any, ::Any) = (0.0, 0.0)
+
+# Every one of these functions ends the same way: one layer, centred on its own data.
+centered(layer, center, zoom; kw...) =
+    Deck(layer; initial_view_state = ViewState(; longitude = center[1], latitude = center[2], zoom, kw...))
+
+# Center of the view, from one representative vertex per geometry.
+# `vertex` returns `nothing` for geometries that have no usable vertex.
+function center_lnglat(data, geom_col::Symbol, vertex)
+    pts = [v for v in (vertex(g) for g in Tables.getcolumn(Tables.columns(data), geom_col)) if v !== nothing]
+    mean_lnglat([p[1] for p in pts], [p[2] for p in pts])
+end
+
 """
     scatter(data, lng, lat; radius=1, color=[255, 140, 0], opacity=1, zoom=10, kwargs...)
 
 Create a scatterplot visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `lng`: Column name for longitude (Symbol)
 - `lat`: Column name for latitude (Symbol)
 
-# Keyword Arguments
+### Keyword Arguments
 - `radius`: Point radius (number or column Symbol). Default: `1`
 - `color`: Point color as `[R,G,B]` or `[R,G,B,A]`. Default: `[255, 140, 0]`
 - `opacity`: Layer opacity (0-1). Default: `1`
 - `zoom`: Initial zoom level. Default: `10`
 - `kwargs...`: Additional keyword arguments passed to `ScatterplotLayer`
 
-# Example
+### Example
 ```julia
 data = (lng = [-122.4, -122.5], lat = [37.8, 37.7], size = [100, 200])
 scatter(data, :lng, :lat, radius=:size, color=[0, 128, 255])
@@ -31,10 +57,7 @@ function scatter(data, lng::Symbol, lat::Symbol;
     zoom = 10,
     kwargs...
 )
-    # Compute center from data
-    rows = Tables.rowtable(data)
-    center_lng = sum(r -> r[lng], rows) / length(rows)
-    center_lat = sum(r -> r[lat], rows) / length(rows)
+    center = center_lnglat(data, lng, lat)
 
     layer = ScatterplotLayer(;
         data = data,
@@ -45,11 +68,7 @@ function scatter(data, lng::Symbol, lat::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -57,12 +76,12 @@ end
 
 Create an arc diagram visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `source`: Source position as `[lng_col, lat_col]` or single column Symbol
 - `target`: Target position as `[lng_col, lat_col]` or single column Symbol
 
-# Keyword Arguments
+### Keyword Arguments
 - `width`: Arc width (number or column Symbol). Default: `1`
 - `source_color`: Source end color. Default: `[0, 128, 255]`
 - `target_color`: Target end color. Default: `[255, 0, 128]`
@@ -70,7 +89,7 @@ Create an arc diagram visualization.
 - `zoom`: Initial zoom level. Default: `3`
 - `kwargs...`: Additional keyword arguments passed to `ArcLayer`
 
-# Example
+### Example
 ```julia
 trips = (src_lng=[-122.4], src_lat=[37.8], dst_lng=[-73.9], dst_lat=[40.7])
 arcs(trips, [:src_lng, :src_lat], [:dst_lng, :dst_lat])
@@ -84,15 +103,7 @@ function arcs(data, source, target;
     zoom = 3,
     kwargs...
 )
-    # Compute center from source positions
-    rows = Tables.rowtable(data)
-    if source isa Vector{Symbol}
-        lng_col, lat_col = source
-        center_lng = sum(r -> r[lng_col], rows) / length(rows)
-        center_lat = sum(r -> r[lat_col], rows) / length(rows)
-    else
-        center_lng, center_lat = 0.0, 0.0
-    end
+    center = center_lnglat(data, source)
 
     layer = ArcLayer(;
         data = data,
@@ -105,11 +116,7 @@ function arcs(data, source, target;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -117,12 +124,12 @@ end
 
 Create a line visualization connecting points.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `source`: Source position as `[lng_col, lat_col]`
 - `target`: Target position as `[lng_col, lat_col]`
 
-# Keyword Arguments
+### Keyword Arguments
 - `width`: Line width. Default: `1`
 - `color`: Line color. Default: `[0, 0, 0]`
 - `opacity`: Layer opacity (0-1). Default: `1`
@@ -136,14 +143,7 @@ function lines(data, source, target;
     zoom = 10,
     kwargs...
 )
-    rows = Tables.rowtable(data)
-    if source isa Vector{Symbol}
-        lng_col, lat_col = source
-        center_lng = sum(r -> r[lng_col], rows) / length(rows)
-        center_lat = sum(r -> r[lat_col], rows) / length(rows)
-    else
-        center_lng, center_lat = 0.0, 0.0
-    end
+    center = center_lnglat(data, source)
 
     layer = LineLayer(;
         data = data,
@@ -155,11 +155,7 @@ function lines(data, source, target;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -167,11 +163,11 @@ end
 
 Create a path visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `path_col`: Column containing path coordinates (arrays of [lng, lat] pairs)
 
-# Keyword Arguments
+### Keyword Arguments
 - `width`: Path width. Default: `1`
 - `color`: Path color. Default: `[0, 0, 0]`
 - `opacity`: Layer opacity (0-1). Default: `1`
@@ -187,19 +183,8 @@ function paths(data, path_col::Symbol;
     rounded = false,
     kwargs...
 )
-    # Compute center from first point of each path
-    rows = Tables.rowtable(data)
-    lngs = Float64[]
-    lats = Float64[]
-    for row in rows
-        path = row[path_col]
-        if !isempty(path)
-            push!(lngs, first(path)[1])
-            push!(lats, first(path)[2])
-        end
-    end
-    center_lng = isempty(lngs) ? 0.0 : sum(lngs) / length(lngs)
-    center_lat = isempty(lats) ? 0.0 : sum(lats) / length(lats)
+    # Center on the first point of each path
+    center = center_lnglat(data, path_col, p -> isempty(p) ? nothing : first(p))
 
     layer = PathLayer(;
         data = data,
@@ -212,11 +197,7 @@ function paths(data, path_col::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -224,11 +205,11 @@ end
 
 Create a polygon visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `polygon_col`: Column containing polygon coordinates
 
-# Keyword Arguments
+### Keyword Arguments
 - `fill_color`: Fill color. Default: `[0, 0, 0, 100]`
 - `line_color`: Outline color. Default: `[0, 0, 0]`
 - `line_width`: Outline width. Default: `1`
@@ -244,22 +225,9 @@ function polygons(data, polygon_col::Symbol;
     zoom = 10,
     kwargs...
 )
-    # Compute center from first vertex of each polygon's outer ring
-    rows = Tables.rowtable(data)
-    lngs = Float64[]
-    lats = Float64[]
-    for row in rows
-        poly = row[polygon_col]
-        if !isempty(poly)
-            ring = first(poly)
-            if !isempty(ring)
-                push!(lngs, first(ring)[1])
-                push!(lats, first(ring)[2])
-            end
-        end
-    end
-    center_lng = isempty(lngs) ? 0.0 : sum(lngs) / length(lngs)
-    center_lat = isempty(lats) ? 0.0 : sum(lats) / length(lats)
+    # Center on the first vertex of each polygon's outer ring
+    center = center_lnglat(data, polygon_col,
+        p -> isempty(p) || isempty(first(p)) ? nothing : first(first(p)))
 
     layer = PolygonLayer(;
         data = data,
@@ -271,11 +239,7 @@ function polygons(data, polygon_col::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -283,13 +247,13 @@ end
 
 Create a text label visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `lng`: Column name for longitude
 - `lat`: Column name for latitude
 - `text_col`: Column containing text labels
 
-# Keyword Arguments
+### Keyword Arguments
 - `size`: Text size. Default: `16`
 - `color`: Text color. Default: `[0, 0, 0]`
 - `opacity`: Layer opacity (0-1). Default: `1`
@@ -303,9 +267,7 @@ function text(data, lng::Symbol, lat::Symbol, text_col::Symbol;
     zoom = 10,
     kwargs...
 )
-    rows = Tables.rowtable(data)
-    center_lng = sum(r -> r[lng], rows) / length(rows)
-    center_lat = sum(r -> r[lat], rows) / length(rows)
+    center = center_lnglat(data, lng, lat)
 
     layer = TextLayer(;
         data = data,
@@ -317,11 +279,7 @@ function text(data, lng::Symbol, lat::Symbol, text_col::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -329,12 +287,12 @@ end
 
 Create a hexagonal binning visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `lng`: Column name for longitude
 - `lat`: Column name for latitude
 
-# Keyword Arguments
+### Keyword Arguments
 - `radius`: Hexagon radius in meters. Default: `1000`
 - `elevation_weight`: Column for elevation weighting or constant. Default: `1`
 - `color_weight`: Column for color weighting or constant. Default: `1`
@@ -354,9 +312,7 @@ function hexbin(data, lng::Symbol, lat::Symbol;
     zoom = 10,
     kwargs...
 )
-    rows = Tables.rowtable(data)
-    center_lng = sum(r -> r[lng], rows) / length(rows)
-    center_lat = sum(r -> r[lat], rows) / length(rows)
+    center = center_lnglat(data, lng, lat)
 
     layer = HexagonLayer(;
         data = data,
@@ -370,12 +326,7 @@ function hexbin(data, lng::Symbol, lat::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom,
-        pitch = extruded ? 45 : 0
-    ))
+    centered(layer, center, zoom; pitch = extruded ? 45 : 0)
 end
 
 """
@@ -383,12 +334,12 @@ end
 
 Create a heatmap visualization.
 
-# Arguments
+### Arguments
 - `data`: Tables.jl-compatible data source
 - `lng`: Column name for longitude
 - `lat`: Column name for latitude
 
-# Keyword Arguments
+### Keyword Arguments
 - `radius`: Radius of influence in pixels. Default: `30`
 - `intensity`: Intensity multiplier. Default: `1`
 - `weight`: Column for point weighting or constant. Default: `1`
@@ -406,9 +357,7 @@ function heatmap(data, lng::Symbol, lat::Symbol;
     zoom = 10,
     kwargs...
 )
-    rows = Tables.rowtable(data)
-    center_lng = sum(r -> r[lng], rows) / length(rows)
-    center_lat = sum(r -> r[lat], rows) / length(rows)
+    center = center_lnglat(data, lng, lat)
 
     layer = HeatmapLayer(;
         data = data,
@@ -421,11 +370,7 @@ function heatmap(data, lng::Symbol, lat::Symbol;
         kwargs...
     )
 
-    Deck(layer, initial_view_state = ViewState(
-        longitude = center_lng,
-        latitude = center_lat,
-        zoom = zoom
-    ))
+    centered(layer, center, zoom)
 end
 
 """
@@ -433,10 +378,10 @@ end
 
 Create a GeoJSON visualization.
 
-# Arguments
+### Arguments
 - `data`: GeoJSON data as Dict, JSON string, or URL
 
-# Keyword Arguments
+### Keyword Arguments
 - `fill_color`: Fill color for polygons. Default: `[0, 0, 0, 100]`
 - `line_color`: Line/stroke color. Default: `[0, 0, 0]`
 - `line_width`: Line width. Default: `1`

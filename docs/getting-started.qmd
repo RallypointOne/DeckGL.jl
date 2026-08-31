@@ -19,13 +19,13 @@ DeckGL.jl has three main components:
 
 1. **Layers** - Define what data to visualize and how
 2. **ViewState** - Configure the camera (position, zoom, angle)
-3. **Deck** - Container that combines layers and view state
+3. **Deck** - Container that combines layers, view state, and the basemap
 
 ## Your First Visualization
 
-Let's create a simple scatterplot:
+Let's create a simple scatterplot over a basemap:
 
-```julia
+```{julia}
 using DeckGL
 
 # Sample data - any Tables.jl-compatible source works
@@ -38,9 +38,10 @@ data = (
 # Create a layer
 layer = ScatterplotLayer(
     data = data,
-    get_position = [:lng, :lat],  # Reference columns by symbol
-    get_radius = :size,            # Data-driven radius
-    get_fill_color = [255, 140, 0, 200]  # RGBA color
+    get_position = [:lng, :lat],         # Reference columns by symbol
+    get_radius = :size,                  # Data-driven radius
+    get_fill_color = [255, 140, 0, 200], # RGBA color
+    radius_min_pixels = 4
 )
 
 # Create the deck
@@ -50,12 +51,45 @@ deck = Deck(
         longitude = -122.4,
         latitude = 37.8,
         zoom = 11
-    )
+    ),
+    map_style = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 )
-
-# Open in browser
-open_html(deck)
 ```
+
+In a notebook or on this page a `Deck` displays itself. Elsewhere, `open_html(deck)`
+opens it in a browser and `save_html(deck, "map.html")` writes it to a file.
+
+## Basemaps
+
+`map_style` is the URL of a [MapLibre](https://maplibre.org/) style, drawn underneath the
+layers. Carto publishes several that are free and need no API key:
+
+| Style | URL |
+|-------|-----|
+| Positron (light) | `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json` |
+| Dark Matter | `https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json` |
+| Voyager | `https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json` |
+
+Appending `-nolabels` to the style name (`positron-nolabels`) drops the place labels,
+which is often what you want when the layer carries its own text.
+
+```{julia}
+Deck(
+    layer,
+    initial_view_state = ViewState(longitude = -122.4, latitude = 37.8, zoom = 11),
+    map_style = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+)
+```
+
+Leaving `map_style` out draws the layers on a blank background, which is what you want for
+non-geographic data — see `OrthographicView` on the [Layers page](layers.qmd).
+
+Two things follow from a basemap being a separate map library underneath deck.gl:
+
+- **It always needs network access**, for MapLibre itself and for the map tiles. This is
+  true even with `bundle=:local`, which only inlines deck.gl.
+- **deck.gl owns the camera.** The basemap follows it, so `initial_view_state` and the
+  controller settings apply to both.
 
 ## Data Input
 
@@ -86,9 +120,41 @@ layer = ScatterplotLayer(
 )
 ```
 
+### How Data Reaches the Browser
+
+You do not have to think about this, but it explains why some layers behave differently.
+
+Most layers upload their accessors straight to the GPU, so a table is packed
+column-by-column into typed arrays and sent as deck.gl's binary form. Nothing is
+allocated per row on either side, and for a million points the page is several times
+smaller and builds an order of magnitude faster than one row of JSON per record.
+
+Two things follow from that:
+
+- **Columns that cannot be packed** — strings, or variable-length paths — are sent as a
+  plain array and read by index instead. `get_text = :name` works exactly as you would
+  expect; it just takes a different route.
+- **Picking reports an index, not a row object**, because there are no row objects. The
+  `tooltip` prop handles this for you by shipping the columns it needs separately:
+
+  ```julia
+  ScatterplotLayer(data = df, get_position = [:lng, :lat], tooltip = [:name, :magnitude])
+  ```
+
+  Setting `tooltip` turns on `pickable` unless you say otherwise. Pass `true` for every
+  column.
+
+Aggregation layers (`HexagonLayer`, `GridLayer`, `HeatmapLayer`, `ContourLayer`,
+`ScreenGridLayer`) bin their records before drawing and read each one through its
+accessor, so they cannot take binary attributes at all — deck.gl silently produces a
+single bin if you give them any. They are sent an index array instead, over the same
+packed columns. Picking one selects a bin, so `tooltip = true` shows the bin's own
+aggregated values rather than a source row.
+
 ## Color Specification
 
-Colors are specified as RGB or RGBA arrays with values 0-255:
+Colors are specified as RGB or RGBA arrays with values 0-255, a hex string, or any
+Colors.jl colorant once that package is loaded:
 
 ```julia
 # RGB (alpha defaults to 255)
@@ -96,6 +162,14 @@ color = [255, 0, 0]      # Red
 
 # RGBA (with transparency)
 color = [255, 0, 0, 128] # Semi-transparent red
+
+# Hex string
+color = "#ff0000"
+color = "#ff000080"      # with alpha
+
+# Colors.jl, via a package extension
+using Colors
+color = colorant"tomato"
 ```
 
 For data-driven colors, reference a column:
@@ -148,26 +222,36 @@ deck  # Displays inline in notebook
 
 ## Convenience Functions
 
-For quick visualizations, use the convenience functions:
+For quick visualizations, use the convenience functions. These are **not exported** —
+names like `scatter`, `lines`, `text`, `hexbin` and `heatmap` would collide with
+Plots.jl and Makie.jl — so call them qualified:
 
 ```julia
 # Scatterplot
-scatter(data, :lng, :lat, radius=:size, color=[255, 140, 0])
+DeckGL.scatter(data, :lng, :lat, radius=:size, color=[255, 140, 0])
 
 # Arcs
-arcs(data, [:src_lng, :src_lat], [:dst_lng, :dst_lat])
+DeckGL.arcs(data, [:src_lng, :src_lat], [:dst_lng, :dst_lat])
 
 # Hexagonal binning
-hexbin(data, :lng, :lat, radius=1000)
+DeckGL.hexbin(data, :lng, :lat, radius=1000)
 
 # Heatmap
-heatmap(data, :lng, :lat, weight=:value)
+DeckGL.heatmap(data, :lng, :lat, weight=:value)
 ```
 
-These return a `Deck` that you can display:
+The full set is `scatter`, `arcs`, `lines`, `paths`, `polygons`, `text`, `hexbin`,
+`heatmap` and `geojson`. Each returns a `Deck` you can display:
 
 ```julia
-scatter(data, :lng, :lat) |> open_html
+DeckGL.scatter(data, :lng, :lat) |> open_html
+```
+
+If you would rather use them unqualified, import them explicitly:
+
+```julia
+using DeckGL
+using DeckGL: scatter, heatmap
 ```
 
 ## Multiple Layers
@@ -187,5 +271,5 @@ deck = Deck(layers, initial_view_state=ViewState(zoom=10))
 ## Next Steps
 
 - [Layers](layers.qmd) - Explore all available layer types
-- [API Reference](api.qmd) - Complete function and type documentation
+- [API Reference](pages/api.qmd) - Complete function and type documentation
 - [Examples](examples.qmd) - More visualization examples
