@@ -1,136 +1,418 @@
 ---
 title: "Widgets"
 engine: julia
+toc-depth: 3
 ---
 
-Widgets are UI controls that overlay your deck.gl visualization. DeckGL.jl supports three built-in widgets from deck.gl v9.0:
+Widgets are HTML controls deck.gl overlays on the canvas — zoom buttons, a compass, a
+screenshot button, a popup. All 15 are available, generated from deck.gl's own prop
+tables.
 
-- **ZoomWidget** -- +/- zoom buttons
-- **CompassWidget** -- Compass rose showing bearing (click to reset)
-- **FullscreenWidget** -- Toggle fullscreen mode
+Pass them to `Deck` with the `widgets` keyword:
 
-Pass widgets to the `Deck` constructor via the `widgets` keyword argument.
+```julia
+Deck(layer, widgets = [ZoomWidget(), CompassWidget()])
+```
+
+Widgets are styled by a deck.gl stylesheet that pages include only when they actually
+contain a widget. Every example below sits on a Carto basemap, passed as `map_style` —
+see [Getting Started](getting-started.qmd).
+
+### Common Props
+
+Every widget accepts these:
+
+| Prop | Default | Description |
+|------|---------|-------------|
+| `id` | per widget | Identifier, unique within a deck |
+| `placement` | per widget | `"top-left"`, `"top-right"`, `"bottom-left"`, `"bottom-right"` |
+| `style` | `Dict()` | Inline CSS, including the `--button-*` custom properties |
+| `class_name` | `""` | Extra CSS class |
+| `view_id` | `nothing` | Bind the widget to one view in a multi-view deck |
+
+The tables below list what each widget adds on top of those.
 
 ```{julia}
 #| echo: false
 #| output: false
 using DeckGL
-```
 
-## ZoomWidget
+snake(prop::Symbol) = lowercase(replace(String(prop), r"([a-z0-9])([A-Z])" => s"\1_\2"))
 
-Adds zoom in/out buttons.
+# Shared by every widget and documented once, above.
+const COMMON = [:_container, :className, :id, :placement, :style, :viewId]
 
-```{julia}
-data = (
-    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
-    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
-    size = [80, 200, 120, 300, 150]
+# Generated rather than transcribed, so a deck.gl upgrade cannot leave these stale.
+function widget_reference(T)
+    name = DeckGL.typename(T)
+    specific = filter(!in(COMMON), DeckGL.props(T))
+    io = IOBuffer()
+    println(io, "::: {.callout-note collapse=\"true\"}")
+    println(io, "## `$name` props\n")
+    if isempty(specific)
+        println(io, "Only the common props above.")
+    else
+        println(io, "In addition to the common props:\n")
+        println(io, "| Prop |")
+        println(io, "|------|")
+        for p in specific
+            println(io, "| `", snake(p), "` |")
+        end
+    end
+    println(io, "\nDescriptions and accepted values are in the ",
+                "[deck.gl widget reference](https://deck.gl/docs/api-reference/widgets/",
+                replace(snake(name), "_" => "-"), ").")
+    println(io, ":::")
+    return String(take!(io))
+end
+
+points = (
+    lng  = [-122.45, -122.42, -122.38, -122.50, -122.47],
+    lat  = [37.78, 37.76, 37.79, 37.77, 37.80],
+    size = [80, 200, 120, 300, 150],
+    name = ["Alpha", "Bravo", "Charlie", "Delta", "Echo"],
 )
 
-Deck(
+# One deck per example, differing only in its widgets.
+demo(widgets...; kw...) = Deck(
     ScatterplotLayer(
-        data = data,
+        data = points,
         get_position = [:lng, :lat],
         get_radius = :size,
         get_fill_color = [255, 140, 0, 200],
-        radius_min_pixels = 3
+        radius_min_pixels = 4,
+        pickable = true,
     ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
-    widgets = [ZoomWidget()]
+    initial_view_state = ViewState(; longitude = -122.44, latitude = 37.77, zoom = 12, kw...),
+    map_style = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+    widgets = collect(widgets),
 )
+
+# `icon` props take an image URL. These SVGs are inlined so the page needs nothing.
+star_icon = "data:image/svg+xml;charset=utf-8," *
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" *
+    "<path fill='black' d='M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z'/></svg>"
+dot_icon = "data:image/svg+xml;charset=utf-8," *
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" *
+    "<circle cx='12' cy='12' r='8' fill='black'/></svg>"
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `id` | String | `"zoom"` | Widget identifier |
-| `placement` | String | `"top-right"` | Position on the map |
-| `orientation` | String | `"vertical"` | Button layout (`"vertical"` or `"horizontal"`) |
-| `transition_duration` | Int | `200` | Zoom animation duration (ms) |
+## Camera {#camera}
 
-## CompassWidget
+### ZoomWidget
 
-Shows a compass rose indicating the current bearing. Click to reset bearing to north.
+Zoom in and out buttons.
 
 ```{julia}
-data = (
-    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
-    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
-    size = [80, 200, 120, 300, 150]
-)
-
-Deck(
-    ScatterplotLayer(
-        data = data,
-        get_position = [:lng, :lat],
-        get_radius = :size,
-        get_fill_color = [0, 128, 255, 200],
-        radius_min_pixels = 3
-    ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, bearing=45),
-    widgets = [CompassWidget()]
-)
+demo(ZoomWidget())
 ```
-
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `id` | String | `"compass"` | Widget identifier |
-| `placement` | String | `"top-right"` | Position on the map |
-| `transition_duration` | Int | `200` | Reset animation duration (ms) |
-
-## FullscreenWidget
-
-Adds a button to toggle the visualization into fullscreen mode.
 
 ```{julia}
-data = (
-    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
-    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
-    size = [80, 200, 120, 300, 150]
-)
+#| echo: false
+#| output: asis
+println(widget_reference(ZoomWidget))
+```
 
-Deck(
-    ScatterplotLayer(
-        data = data,
-        get_position = [:lng, :lat],
-        get_radius = :size,
-        get_fill_color = [0, 200, 100, 200],
-        radius_min_pixels = 3
-    ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12),
-    widgets = [FullscreenWidget()]
+Lay the buttons out horizontally and move them:
+
+```{julia}
+demo(ZoomWidget(placement = "bottom-left", orientation = "horizontal",
+                transition_duration = 400))
+```
+
+### CompassWidget
+
+A compass rose showing the current bearing. Click it to reset to north, then to flatten
+the pitch.
+
+```{julia}
+demo(CompassWidget(); pitch = 45, bearing = -30)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(CompassWidget))
+```
+
+### GimbalWidget
+
+Pitch and bearing together, drawn as a gimbal. Click to reset both.
+
+```{julia}
+demo(GimbalWidget(); pitch = 50, bearing = 20)
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(GimbalWidget))
+```
+
+### ResetViewWidget
+
+Returns the camera to where it started. Give it an explicit `initial_view_state` to reset
+somewhere other than the deck's own.
+
+```{julia}
+demo(ResetViewWidget(), ZoomWidget())
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(ResetViewWidget))
+```
+
+### ScrollbarWidget
+
+A scrollbar that pans the view within `content_bounds`, given as two corners,
+`[[min_lng, min_lat], [max_lng, max_lat]]`.
+
+```{julia}
+demo(
+    ScrollbarWidget(content_bounds = [[-122.6, 37.6], [-122.3, 37.9]],
+                    orientation = "vertical", placement = "top-right"),
+    ScrollbarWidget(id = "scroll-x", content_bounds = [[-122.6, 37.6], [-122.3, 37.9]],
+                    orientation = "horizontal", placement = "bottom-left"),
 )
 ```
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `id` | String | `"fullscreen"` | Widget identifier |
-| `placement` | String | `"top-right"` | Position on the map |
+Two widgets of the same type need distinct `id`s, as above.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(ScrollbarWidget))
+```
+
+## Display {#display}
+
+### FullscreenWidget
+
+Expands the deck's container to fill the screen.
+
+```{julia}
+demo(FullscreenWidget())
+```
+
+In a notebook or on this page the deck lives in an iframe, so fullscreen applies to that
+frame.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(FullscreenWidget))
+```
+
+### ThemeWidget
+
+Switches the widgets between light and dark. `initial_theme_mode` may be `"auto"`,
+`"light"`, or `"dark"`; `light_mode_theme` and `dark_mode_theme` hold the CSS custom
+properties each mode applies.
+
+```{julia}
+demo(ThemeWidget(initial_theme_mode = "auto"), ZoomWidget(), CompassWidget())
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(ThemeWidget))
+```
+
+### ScreenshotWidget
+
+Downloads the canvas as an image.
+
+```{julia}
+demo(ScreenshotWidget(filename = "map.png", image_format = "image/png"))
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(ScreenshotWidget))
+```
+
+### LoadingWidget
+
+A spinner shown while any layer is still fetching data. It stays hidden otherwise, so it
+is invisible on a deck whose data is already embedded.
+
+```{julia}
+demo(LoadingWidget(label = "Loading…"))
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(LoadingWidget))
+```
+
+## Information {#information}
+
+### InfoWidget
+
+A tooltip anchored to the picked object. `get_tooltip` is a JavaScript function of the
+[picking info](https://deck.gl/docs/developer-guide/interactivity), and `mode` is
+`"hover"` or `"click"`.
+
+```{julia}
+demo(InfoWidget(
+    mode = "click",
+    get_tooltip = JS("info => info.index >= 0 ? {html: `<b>index</b> \${info.index}`} : null"),
+))
+```
+
+For the common case of showing a few columns, the layer's `tooltip` prop is simpler — it
+ships the columns for you and needs no JavaScript:
+
+```julia
+ScatterplotLayer(data = points, get_position = [:lng, :lat], tooltip = [:name, :size])
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(InfoWidget))
+```
+
+### PopupWidget
+
+A popup pinned to a coordinate. `content` is HTML.
+
+```{julia}
+demo(PopupWidget(
+    position = [-122.44, 37.77],
+    content = "<b>Downtown</b><br>Pinned to a coordinate.",
+    default_is_open = true,
+    close_button = true,
+))
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(PopupWidget))
+```
+
+### ContextMenuWidget
+
+A right-click menu. Each entry is a `label` and a `key`, and `on_menu_item_selected`
+receives the key.
+
+```{julia}
+demo(ContextMenuWidget(
+    menu_items = [
+        Dict("label" => "Zoom in",   "key" => "zoom-in"),
+        Dict("label" => "Copy point", "key" => "copy"),
+    ],
+    on_menu_item_selected = JS("key => console.log('selected', key)"),
+))
+```
+
+Right-click the map to open it.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(ContextMenuWidget))
+```
+
+## Custom Controls {#custom-controls}
+
+These three are building blocks: they render a control and hand the event back to
+JavaScript, so what they do is up to you.
+
+### IconWidget
+
+A button with your own icon. `icon` is an image URL — a file, or an inlined SVG as here.
+
+```{julia}
+demo(IconWidget(
+    icon = star_icon,
+    label = "Say hello",
+    on_click = JS("() => console.log('icon widget clicked')"),
+))
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(IconWidget))
+```
+
+### ToggleWidget
+
+A two-state button, with a separate icon and label for the on state.
+
+```{julia}
+demo(ToggleWidget(
+    icon = dot_icon,    label = "Markers off",
+    on_icon = star_icon, on_label = "Markers on",
+    initial_checked = false,
+    on_change = JS("checked => console.log('checked:', checked)"),
+))
+```
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(ToggleWidget))
+```
+
+### SelectorWidget
+
+A dropdown. `options` is a list of `label`/`value` pairs.
+
+```{julia}
+demo(SelectorWidget(
+    options = [
+        Dict("label" => "Orange", "value" => "orange"),
+        Dict("label" => "Blue",   "value" => "blue"),
+    ],
+    initial_value = "orange",
+    on_change = JS("value => console.log('picked', value)"),
+))
+```
+
+Reacting to a selection means changing layer props from JavaScript. For anything driven
+from Julia, rebuild the `Deck` and re-render instead.
+
+```{julia}
+#| echo: false
+#| output: asis
+println(widget_reference(SelectorWidget))
+```
 
 ## Combining Widgets
 
-You can use multiple widgets together. Use the `placement` option to avoid overlap.
+Widgets stack in the order given, grouped by `placement`.
 
 ```{julia}
-data = (
-    lng = [-122.45, -122.42, -122.38, -122.50, -122.47],
-    lat = [37.78, 37.76, 37.79, 37.77, 37.80],
-    size = [80, 200, 120, 300, 150]
+demo(
+    ZoomWidget(placement = "top-left"),
+    CompassWidget(placement = "top-left"),
+    ResetViewWidget(placement = "top-left"),
+    FullscreenWidget(placement = "top-right"),
+    ScreenshotWidget(placement = "top-right"),
+    ThemeWidget(placement = "bottom-right");
+    pitch = 40, bearing = -25,
 )
+```
 
-Deck(
-    ScatterplotLayer(
-        data = data,
-        get_position = [:lng, :lat],
-        get_radius = :size,
-        get_fill_color = [255, 100, 50, 200],
-        radius_min_pixels = 3
-    ),
-    initial_view_state = ViewState(longitude=-122.44, latitude=37.77, zoom=12, pitch=30, bearing=15),
-    widgets = [
-        ZoomWidget(placement="top-left"),
-        CompassWidget(placement="top-right"),
-        FullscreenWidget(placement="bottom-right")
-    ]
-)
+## Every Widget
+
+```{julia}
+#| echo: false
+#| output: asis
+using DeckGL: WIDGET_NAMES
+println("Generated from deck.gl v", DeckGL.DECKGL_VERSION, ":\n")
+println("| Widget | Extra props |")
+println("|--------|-------------|")
+for name in WIDGET_NAMES
+    extra = filter(!in(COMMON), DeckGL.props(getfield(DeckGL, name)))
+    println("| `", name, "` | ", isempty(extra) ? "—" : join(("`" * snake(p) * "`" for p in extra), ", "), " |")
+end
 ```

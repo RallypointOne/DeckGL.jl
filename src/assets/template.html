@@ -1,176 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeckGL Visualization</title>
-    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="https://unpkg.com/deck.gl@9.0.16/dist/stylesheet.css" rel="stylesheet" />
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        #deck-container {
-            width: {{WIDTH}};
-            height: {{HEIGHT}};
-            position: relative;
-        }
-        #map {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        #deck-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+{{ASSETS}}
+<style>
+html, body { margin: 0; padding: 0; }
+#deck-container { position: relative; overflow: hidden; width: {{WIDTH}}; height: {{HEIGHT}}; }
+#map, #deck-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+</style>
 </head>
 <body>
-    <div id="deck-container">
-        <div id="map"></div>
-        <canvas id="deck-overlay"></canvas>
-    </div>
-    <script>
-        const spec = {{SPEC_JSON}};
-
-        // Load a script with retry on failure
-        function loadScript(src, retries) {
-            retries = retries || 2;
-            return new Promise(function(resolve, reject) {
-                var script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = function() {
-                    if (retries > 0) {
-                        loadScript(src, retries - 1).then(resolve, reject);
-                    } else {
-                        reject(new Error('Failed to load: ' + src));
-                    }
-                };
-                document.head.appendChild(script);
-            });
-        }
-
-        // Process accessor strings that start with "@@="
-        function processAccessor(value) {
-            if (typeof value === 'string' && value.startsWith('@@=')) {
-                var field = value.slice(3);
-                return function(d) {
-                    var parts = field.split('.');
-                    var result = d;
-                    for (var i = 0; i < parts.length; i++) {
-                        result = result[parts[i]];
-                    }
-                    return result;
-                };
-            }
-            return value;
-        }
-
-        // Process layer specification
-        function processLayer(layerSpec) {
-            var layerType = layerSpec['@@type'];
-            var LayerClass = deck[layerType];
-
-            if (!LayerClass) {
-                console.error('Unknown layer type:', layerType);
-                return null;
-            }
-
-            var props = {};
-            var keys = Object.keys(layerSpec);
-            for (var i = 0; i < keys.length; i++) {
-                if (keys[i] === '@@type') continue;
-                props[keys[i]] = processAccessor(layerSpec[keys[i]]);
-            }
-
-            return new LayerClass(props);
-        }
-
-        // Process widget specification
-        function processWidget(widgetSpec) {
-            var widgetType = widgetSpec['@@type'];
-            var WidgetClass = deck[widgetType];
-
-            if (!WidgetClass) {
-                console.error('Unknown widget type:', widgetType);
-                return null;
-            }
-
-            var props = {};
-            var keys = Object.keys(widgetSpec);
-            for (var i = 0; i < keys.length; i++) {
-                if (keys[i] === '@@type') continue;
-                props[keys[i]] = widgetSpec[keys[i]];
-            }
-
-            return new WidgetClass(props);
-        }
-
-        // Determine which scripts to load
-        var scripts = ['https://unpkg.com/deck.gl@9.0.16/dist.min.js'];
-        if (spec.mapStyle) {
-            scripts.push('https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js');
-        }
-
-        // Load scripts then initialize
-        Promise.all(scripts.map(function(src) { return loadScript(src); })).then(function() {
-            var layers = spec.layers.map(processLayer).filter(function(l) { return l !== null; });
-            var widgets = (spec.widgets || []).map(processWidget).filter(function(w) { return w !== null; });
-
-            if (spec.mapStyle) {
-                var map = new maplibregl.Map({
-                    container: 'map',
-                    style: spec.mapStyle,
-                    center: [spec.initialViewState.longitude, spec.initialViewState.latitude],
-                    zoom: spec.initialViewState.zoom,
-                    pitch: spec.initialViewState.pitch || 0,
-                    bearing: spec.initialViewState.bearing || 0,
-                    interactive: false
-                });
-
-                new deck.DeckGL({
-                    canvas: 'deck-overlay',
-                    initialViewState: spec.initialViewState,
-                    controller: spec.controller,
-                    layers: layers,
-                    widgets: widgets,
-                    getTooltip: spec.pickable ? function(info) { return info.object && JSON.stringify(info.object); } : null,
-                    onViewStateChange: function(e) {
-                        map.jumpTo({
-                            center: [e.viewState.longitude, e.viewState.latitude],
-                            zoom: e.viewState.zoom,
-                            pitch: e.viewState.pitch,
-                            bearing: e.viewState.bearing
-                        });
-                    }
-                });
-            } else {
-                var container = document.getElementById('deck-container');
-                container.innerHTML = '';
-
-                new deck.DeckGL({
-                    container: container,
-                    initialViewState: spec.initialViewState,
-                    controller: spec.controller,
-                    layers: layers,
-                    widgets: widgets,
-                    getTooltip: spec.pickable ? function(info) { return info.object && JSON.stringify(info.object); } : null
-                });
-            }
-        }).catch(function(err) {
-            console.error('DeckGL initialization failed:', err);
-            var container = document.getElementById('deck-container');
-            container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;">Failed to load visualization. Please refresh the page.</div>';
-        });
-    </script>
+<div id="deck-container"><div id="map"></div><canvas id="deck-canvas"></canvas></div>
+<script>
+{{SCRIPT}}
+</script>
 </body>
 </html>

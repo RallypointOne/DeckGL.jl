@@ -6,19 +6,20 @@ resources:
   - examples/*.html
 ---
 
-::: {.hero-pitch}
+::: {.hero}
 # Interactive maps in Julia.
 
 [GPU-accelerated geospatial visualization. Millions of points. Smooth pan, zoom, 3D. Built on [deck.gl](https://deck.gl/).]{.tagline}
 :::
 
-<iframe src="examples/global-flight-routes.html" class="viz-frame viz-hero" loading="lazy" title="Global flight routes demo"></iframe>
+<iframe src="examples/global-flight-routes.html" class="viz-frame" loading="lazy" title="Global flight routes demo"></iframe>
 
 ## Overview
 
 - **Big data, smooth frames** — WebGL rendering of millions of points.
 - **Any Tables.jl source** — DataFrames, NamedTuples, CSV.jl, Arrow.jl, …
-- **10+ layer types** — scatter, arc, line, path, polygon, text, hexbin, grid, heatmap, GeoJSON.
+- **All 32 deck.gl layers** — scatter, arc, path, polygon, text, hexbin, heatmap, contour, GeoJSON,
+  vector and raster tiles, terrain, H3/S2/geohash/quadkey cells, 3D meshes.
 - **Any display target** — Jupyter, Pluto, VS Code, standalone HTML.
 - **Declarative API** — layers, view state, widgets. That's it.
 
@@ -54,11 +55,17 @@ Deck(
 )
 ```
 
-A `Deck` has three pieces:
+A `Deck` has four pieces:
 
 1. **Layers** — what to draw.
 2. **ViewState** — where the camera is (`longitude`, `latitude`, `zoom`, `pitch`, `bearing`).
-3. **Widgets** (optional) — UI overlays.
+3. **map_style** — the basemap drawn underneath, as a MapLibre style URL. Carto's are
+   free and need no API key: swap `dark-matter` above for `positron` or `voyager`. Omit
+   it for a blank background.
+4. **Widgets** (optional) — UI overlays.
+
+Layer props may be written `snake_case` or `camelCase`, and anything left unset keeps
+deck.gl's own default.
 
 Columns are referenced by `Symbol`: `get_radius = :pop`, `get_position = [:lng, :lat]`. Static values work too: `get_fill_color = [255, 140, 0, 220]`.
 
@@ -67,11 +74,11 @@ Columns are referenced by `Symbol`: `get_radius = :pop`, `get_position = [:lng, 
 - **Notebooks** (Jupyter, Pluto, VS Code) — a `Deck` renders inline automatically.
 - **Browser** — `open_html(deck)` pops a tab.
 - **File** — `save_html(deck, "map.html")`.
-- **String** — `to_html(deck)` / `to_json(deck)`.
+- **String** — `to_html(deck)`, or `to_js(deck)` for just the JavaScript.
 
 ## Where to go next
 
 - **[Examples →](examples.qmd)** — flight routes, earthquakes, 3D buildings, wildfires, trees, accidents.
-- **[Layers →](layers.qmd)** — every layer type with a live interactive example.
-- **[Widgets →](widgets.qmd)** — zoom, compass, fullscreen.
-- **[API →](api.qmd)** — full reference.
+- **[Layers →](layers.qmd)** — all 32 layer types with a live interactive example.
+- **[Widgets →](widgets.qmd)** — all 15 UI overlays: zoom, compass, popups, screenshots, themes.
+- **[API →](pages/api.qmd)** — full reference.

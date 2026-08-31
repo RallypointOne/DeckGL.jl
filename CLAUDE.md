@@ -42,6 +42,18 @@
 # Development
 
 - Run tests: `julia --project -e 'using Pkg; Pkg.test()'`
+- Browser tests render every layer type in headless Chrome and are opt-in, because
+  asserting on emitted JavaScript cannot tell whether deck.gl actually draws:
+  ```
+  npm install puppeteer            # anywhere; not a repo dependency
+  NODE_PATH=<path>/node_modules DECKGL_BROWSER_TESTS=1 julia --project -e 'using Pkg; Pkg.test()'
+  ```
+- `src/metadata.jl` is generated from deck.gl's own `defaultProps` — never edit it by
+  hand. To move to a new deck.gl release (requires node):
+  ```
+  julia --project=gen gen/generate.jl 9.3.11
+  ```
+  This also rebinds the `deckgl` artifact in `Artifacts.toml`. See `gen/README.md`.
 - Build docs: `quarto render docs`
 - `docs/` has its own Project.toml for doc-specific dependencies.
 - Each .qmd file in the docs should have `engine: julia` in the YAML frontmatter

@@ -4,6 +4,10 @@ toc: true
 toc-depth: 4
 ---
 
+Convenience functions (`scatter`, `arcs`, `lines`, `paths`, `polygons`, `text`,
+`hexbin`, `heatmap`, `geojson`) are public but **not exported**, because their names
+collide with Plots.jl and Makie.jl. Call them qualified, e.g. `DeckGL.scatter(...)`.
+
 ```{julia}
 #| echo: false
 #| output: false
@@ -13,9 +17,24 @@ using DeckGL
 ```{julia}
 #| echo: false
 #| output: asis
-export_names = filter(!=(:DeckGL), names(DeckGL))
+# Convenience functions are public but unexported, so list them alongside the exports
+const UNEXPORTED = [:scatter, :arcs, :lines, :paths, :polygons, :text, :hexbin, :heatmap, :geojson]
+export_names = sort(unique([filter(!=(:DeckGL), names(DeckGL)); UNEXPORTED]))
 
 classify(b) = b isa Type ? :type : b isa Function ? :function : :constant
+
+# Docstring section headings ("# Arguments") would render as page-level <h1>.
+# Bold them instead, leaving code fences alone.
+function flatten_headings(doc)
+    fenced = false
+    io = IOBuffer()
+    for line in eachline(IOBuffer(doc))
+        startswith(line, "```") && (fenced = !fenced)
+        m = fenced ? nothing : match(r"^#+ +(.*)$", line)
+        println(io, isnothing(m) ? line : "**$(m[1])**")
+    end
+    return String(take!(io))
+end
 
 for (kind, label) in [(:type, "Types"), (:function, "Functions"), (:constant, "Constants")]
     items = filter(n -> classify(getfield(DeckGL, n)) == kind, export_names)
@@ -23,12 +42,11 @@ for (kind, label) in [(:type, "Types"), (:function, "Functions"), (:constant, "C
     println("## $label\n")
     for name in items
         binding = getfield(DeckGL, name)
-        doc = string(Docs.doc(binding))
+        doc = flatten_headings(string(Docs.doc(binding)))
         println("""
+        ### `$name` {#$(lowercase(string(name))) .api-item}
+
         ::: {.card .mb-3}
-        ::: {.card-header .api-item-header}
-        #### `$name` {#$(lowercase(string(name)))}
-        :::
         ::: {.card-body}
         $doc
         :::
