@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -61,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -76,10 +79,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3db6c18bb69885e7f25697a9383847b5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-095245003bb80bd2beb305de39928752.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-426f41d558ea4d560124c4548de7cb69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-1fea2c51d21c7813f291f492b4a412d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -104,6 +107,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="assets/styles.css">
@@ -256,9 +262,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#basic-concepts" id="toc-basic-concepts" class="nav-link" data-scroll-target="#basic-concepts">Basic Concepts</a></li>
   <li><a href="#your-first-visualization" id="toc-your-first-visualization" class="nav-link" data-scroll-target="#your-first-visualization">Your First Visualization</a></li>
+  <li><a href="#basemaps" id="toc-basemaps" class="nav-link" data-scroll-target="#basemaps">Basemaps</a></li>
   <li><a href="#data-input" id="toc-data-input" class="nav-link" data-scroll-target="#data-input">Data Input</a>
   <ul class="collapse">
   <li><a href="#column-references" id="toc-column-references" class="nav-link" data-scroll-target="#column-references">Column References</a></li>
+  <li><a href="#how-data-reaches-the-browser" id="toc-how-data-reaches-the-browser" class="nav-link" data-scroll-target="#how-data-reaches-the-browser">How Data Reaches the Browser</a></li>
   </ul></li>
   <li><a href="#color-specification" id="toc-color-specification" class="nav-link" data-scroll-target="#color-specification">Color Specification</a></li>
   <li><a href="#viewstate" id="toc-viewstate" class="nav-link" data-scroll-target="#viewstate">ViewState</a></li>
@@ -310,13 +318,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li><strong>Layers</strong> - Define what data to visualize and how</li>
 <li><strong>ViewState</strong> - Configure the camera (position, zoom, angle)</li>
-<li><strong>Deck</strong> - Container that combines layers and view state</li>
+<li><strong>Deck</strong> - Container that combines layers, view state, and the basemap</li>
 </ol>
 </section>
 <section id="your-first-visualization" class="level2">
 <h2 class="anchored" data-anchor-id="your-first-visualization">Your First Visualization</h2>
-<p>Let’s create a simple scatterplot:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DeckGL</span></span>
+<p>Let’s create a simple scatterplot over a basemap:</p>
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DeckGL</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample data - any Tables.jl-compatible source works</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (</span>
@@ -328,122 +337,197 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a layer</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],  <span class="co"># Reference columns by symbol</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,            <span class="co"># Data-driven radius</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">200</span>]  <span class="co"># RGBA color</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the deck</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    layer,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.4</span>,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        latitude <span class="op">=</span> <span class="fl">37.8</span>,</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        zoom <span class="op">=</span> <span class="fl">11</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Open in browser</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],         <span class="co"># Reference columns by symbol</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,                  <span class="co"># Data-driven radius</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">200</span>], <span class="co"># RGBA color</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    radius_min_pixels <span class="op">=</span> <span class="fl">4</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the deck</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    layer,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.4</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        latitude <span class="op">=</span> <span class="fl">37.8</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        zoom <span class="op">=</span> <span class="fl">11</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+Cjx0aXRsZT5EZWNrR0w8L3RpdGxlPgo8c2NyaXB0IHNyYz0iaHR0cHM6Ly91bnBrZy5jb20vZGVjay5nbEA5LjMuMTEvZGlzdC5taW4uanMiPjwvc2NyaXB0Pgo8bGluayBocmVmPSJodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEA0LjcuMS9kaXN0L21hcGxpYnJlLWdsLmNzcyIgcmVsPSJzdHlsZXNoZWV0Ij4KPHNjcmlwdCBzcmM9Imh0dHBzOi8vdW5wa2cuY29tL21hcGxpYnJlLWdsQDQuNy4xL2Rpc3QvbWFwbGlicmUtZ2wuanMiPjwvc2NyaXB0Pgo8c3R5bGU+Cmh0bWwsIGJvZHkgeyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7IH0KI2RlY2stY29udGFpbmVyIHsgcG9zaXRpb246IHJlbGF0aXZlOyBvdmVyZmxvdzogaGlkZGVuOyB3aWR0aDogMTAwJTsgaGVpZ2h0OiA1MDBweDsgfQojbWFwLCAjZGVjay1jYW52YXMgeyBwb3NpdGlvbjogYWJzb2x1dGU7IHRvcDogMDsgbGVmdDogMDsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgfQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGlkPSJkZWNrLWNvbnRhaW5lciI+PGRpdiBpZD0ibWFwIj48L2Rpdj48Y2FudmFzIGlkPSJkZWNrLWNhbnZhcyI+PC9jYW52YXM+PC9kaXY+CjxzY3JpcHQ+Ci8vIFJ1bnRpbWUgaGVscGVycyBmb3IgcGFnZXMgZ2VuZXJhdGVkIGJ5IERlY2tHTC5qbC4KLy8KLy8gVGhlIEp1bGlhIHNpZGUgZW1pdHMgcGxhaW4gSmF2YVNjcmlwdCAtLSBgbmV3IGRlY2suU2NhdHRlcnBsb3RMYXllcih7Li4ufSlgIC0tIHNvCi8vIHRoZXJlIGlzIG5vIHNwZWMgbGFuZ3VhZ2UgdG8gaW50ZXJwcmV0IGhlcmUuIFdoYXQgaXMgbGVmdCBpcyBkZWNvZGluZyB0aGUgYmluYXJ5Ci8vIGJ1ZmZlcnMsIGZvcm1hdHRpbmcgdG9vbHRpcHMsIGFuZCB3aXJpbmcgZGVjay5nbCB0byBhbiBvcHRpb25hbCBiYXNlbWFwLgpjb25zdCBERyA9IHsKICAgIC8vIExheWVyIGF0dHJpYnV0ZXMgYXJyaXZlIGJhc2U2NC1lbmNvZGVkIGFuZCBhcmUgYWRvcHRlZCBhcyB0eXBlZCBhcnJheXMgd2l0aG91dAogICAgLy8gYSBjb3B5LCB3aGljaCBpcyB0aGUgd2hvbGUgcG9pbnQgb2Ygc2VuZGluZyB0aGVtIHRoaXMgd2F5LgogICAgdTgocykgewogICAgICAgIGlmIChVaW50OEFycmF5LmZyb21CYXNlNjQpIHJldHVybiBVaW50OEFycmF5LmZyb21CYXNlNjQocyk7CiAgICAgICAgY29uc3QgYmluID0gYXRvYihzKTsKICAgICAgICBjb25zdCBvdXQgPSBuZXcgVWludDhBcnJheShiaW4ubGVuZ3RoKTsKICAgICAgICBmb3IgKGxldCBpID0gMDsgaSA8IGJpbi5sZW5ndGg7IGkrKykgb3V0W2ldID0gYmluLmNoYXJDb2RlQXQoaSk7CiAgICAgICAgcmV0dXJuIG91dDsKICAgIH0sCiAgICBmMzIocykgeyByZXR1cm4gbmV3IEZsb2F0MzJBcnJheShERy51OChzKS5idWZmZXIpOyB9LAoKICAgIC8vIEFnZ3JlZ2F0aW9uIGxheWVycyBuZWVkIGl0ZXJhYmxlIGRhdGEuIEluZGljZXMgc3RhbmQgaW4gZm9yIHJlY29yZHMsIGFuZCB0aGUKICAgIC8vIGFjY2Vzc29ycyBiZWxvdyByZWFkIHRoZSBwYWNrZWQgYnVmZmVycyBhdCB0aGF0IGluZGV4LgogICAgcmFuZ2UobikgeyByZXR1cm4gQXJyYXkuZnJvbSh7bGVuZ3RoOiBufSwgKF8sIGkpID0+IGkpOyB9LAogICAgYXQoYnVmLCBzaXplKSB7CiAgICAgICAgcmV0dXJuIHNpemUgPT09IDEgPyBpID0+IGJ1ZltpXSA6IGkgPT4gYnVmLnN1YmFycmF5KGkgKiBzaXplLCBpICogc2l6ZSArIHNpemUpOwogICAgfSwKCiAgICBlc2NhcGUodikgewogICAgICAgIHJldHVybiBTdHJpbmcodikucmVwbGFjZSgvWyY8PiJdL2csIGMgPT4gKHsiJiI6ICImYW1wOyIsICI8IjogIiZsdDsiLCAiPiI6ICImZ3Q7IiwgJyInOiAiJnF1b3Q7In1bY10pKTsKICAgIH0sCgogICAgLy8gQmluYXJ5IGRhdGEgaGFzIG5vIHJvdyBvYmplY3RzLCBzbyBwaWNraW5nIHJlcG9ydHMgYW4gaW5kZXggYW5kIHRoZSB0b29sdGlwCiAgICAvLyBjb2x1bW5zIGFyZSBsb29rZWQgdXAgYnkgaXQuCiAgICB0b29sdGlwKHRhYmxlcykgewogICAgICAgIHJldHVybiBpbmZvID0+IHsKICAgICAgICAgICAgY29uc3QgdGFibGUgPSBpbmZvLmxheWVyICYmIHRhYmxlc1tpbmZvLmxheWVyLmlkXTsKICAgICAgICAgICAgaWYgKCF0YWJsZSB8fCBpbmZvLmluZGV4IDwgMCkgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIC8vIEFnZ3JlZ2F0ZWQgYmlucyBkZXNjcmliZSB0aGVtc2VsdmVzOyBldmVyeXRoaW5nIGVsc2UgaXMgbG9va2VkIHVwIGJ5IGluZGV4LgogICAgICAgICAgICBjb25zdCBlbnRyaWVzID0gdGFibGUub2JqZWN0CiAgICAgICAgICAgICAgICA/IE9iamVjdC5lbnRyaWVzKGluZm8ub2JqZWN0IHx8IHt9KS5maWx0ZXIoKFssIHZdKSA9PiB2ID09PSBudWxsIHx8IHR5cGVvZiB2ICE9PSAib2JqZWN0IikKICAgICAgICAgICAgICAgIDogdGFibGUua2V5cy5tYXAoKGtleSwgaSkgPT4gW2tleSwgdGFibGUuY29sc1tpXVtpbmZvLmluZGV4XV0pOwogICAgICAgICAgICBpZiAoIWVudHJpZXMubGVuZ3RoKSByZXR1cm4gbnVsbDsKICAgICAgICAgICAgcmV0dXJuIHtodG1sOiBlbnRyaWVzLm1hcCgoW2ssIHZdKSA9PiBgPGI+JHtERy5lc2NhcGUoayl9PC9iPjogJHtERy5lc2NhcGUodil9YCkuam9pbigiPGJyPiIpfTsKICAgICAgICB9OwogICAgfSwKCiAgICBtb3VudChzcGVjKSB7CiAgICAgICAgY29uc3QgcHJvcHMgPSBPYmplY3QuYXNzaWduKHtjYW52YXM6ICJkZWNrLWNhbnZhcyJ9LCBzcGVjLmRlY2spOwoKICAgICAgICBpZiAoc3BlYy5tYXBTdHlsZSkgewogICAgICAgICAgICBjb25zdCB2aWV3ID0gcHJvcHMuaW5pdGlhbFZpZXdTdGF0ZSB8fCB7fTsKICAgICAgICAgICAgY29uc3QgbWFwID0gbmV3IG1hcGxpYnJlZ2wuTWFwKHsKICAgICAgICAgICAgICAgIGNvbnRhaW5lcjogIm1hcCIsCiAgICAgICAgICAgICAgICBzdHlsZTogc3BlYy5tYXBTdHlsZSwKICAgICAgICAgICAgICAgIGNlbnRlcjogW3ZpZXcubG9uZ2l0dWRlIHx8IDAsIHZpZXcubGF0aXR1ZGUgfHwgMF0sCiAgICAgICAgICAgICAgICB6b29tOiB2aWV3Lnpvb20gfHwgMSwKICAgICAgICAgICAgICAgIHBpdGNoOiB2aWV3LnBpdGNoIHx8IDAsCiAgICAgICAgICAgICAgICBiZWFyaW5nOiB2aWV3LmJlYXJpbmcgfHwgMCwKICAgICAgICAgICAgICAgIGludGVyYWN0aXZlOiBmYWxzZSwKICAgICAgICAgICAgfSk7CgogICAgICAgICAgICAvLyBkZWNrLmdsIG93bnMgdGhlIGNhbWVyYTsgdGhlIGJhc2VtYXAgZm9sbG93cyBpdC4gQ2hhaW4gcmF0aGVyIHRoYW4KICAgICAgICAgICAgLy8gcmVwbGFjZSwgc28gYSB1c2VyLXN1cHBsaWVkIG9uVmlld1N0YXRlQ2hhbmdlIHN0aWxsIHJ1bnMuCiAgICAgICAgICAgIGNvbnN0IGNoYWluZWQgPSBwcm9wcy5vblZpZXdTdGF0ZUNoYW5nZTsKICAgICAgICAgICAgcHJvcHMub25WaWV3U3RhdGVDaGFuZ2UgPSBldmVudCA9PiB7CiAgICAgICAgICAgICAgICBjb25zdCB2ID0gZXZlbnQudmlld1N0YXRlOwogICAgICAgICAgICAgICAgbWFwLmp1bXBUbyh7CiAgICAgICAgICAgICAgICAgICAgY2VudGVyOiBbdi5sb25naXR1ZGUsIHYubGF0aXR1ZGVdLAogICAgICAgICAgICAgICAgICAgIHpvb206IHYuem9vbSwKICAgICAgICAgICAgICAgICAgICBwaXRjaDogdi5waXRjaCB8fCAwLAogICAgICAgICAgICAgICAgICAgIGJlYXJpbmc6IHYuYmVhcmluZyB8fCAwLAogICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgICAgICByZXR1cm4gY2hhaW5lZCA/IGNoYWluZWQoZXZlbnQpIDogdW5kZWZpbmVkOwogICAgICAgICAgICB9OwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJtYXAiKS5yZW1vdmUoKTsKICAgICAgICB9CgogICAgICAgIHJldHVybiAoREcuaW5zdGFuY2UgPSBuZXcgZGVjay5EZWNrR0wocHJvcHMpKTsKICAgIH0sCn07CgpERy5tb3VudCh7bWFwU3R5bGU6Imh0dHBzOi8vYmFzZW1hcHMuY2FydG9jZG4uY29tL2dsL3Bvc2l0cm9uLWdsLXN0eWxlL3N0eWxlLmpzb24iLGRlY2s6e2luaXRpYWxWaWV3U3RhdGU6eyJsYXRpdHVkZSI6MzcuOCwibG9uZ2l0dWRlIjotMTIyLjQsInpvb20iOjExfSwKICBsYXllcnM6W25ldyBkZWNrLlNjYXR0ZXJwbG90TGF5ZXIoe2lkOiJTY2F0dGVycGxvdExheWVyLTEiLGRhdGE6e2xlbmd0aDo1LGF0dHJpYnV0ZXM6e2dldFBvc2l0aW9uOnt2YWx1ZTpERy5mMzIoInpjejB3ak16RjBJQUFQWEN6Y3dXUXBxWjlNS2FtUmRDWnViMHdnQUFGMEl6cy9UQ1ptWVhRZz09Iiksc2l6ZToyfSxnZXRSYWRpdXM6e3ZhbHVlOkRHLmYzMigiQUFESVFnQUFTRU1BQUJaREFBQTBRd0FBOEVJPSIpLHNpemU6MX19fSxnZXRGaWxsQ29sb3I6WzI1NSwxNDAsMCwyMDBdLHJhZGl1c01pblBpeGVsczo0fSldLAogIGNvbnRyb2xsZXI6dHJ1ZX19KTsKCjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K" style="width:100%;height:520px;border:none;" sandbox="allow-scripts"></iframe>
+</div>
+</div>
+<p>In a notebook or on this page a <code>Deck</code> displays itself. Elsewhere, <code>open_html(deck)</code> opens it in a browser and <code>save_html(deck, "map.html")</code> writes it to a file.</p>
+</section>
+<section id="basemaps" class="level2">
+<h2 class="anchored" data-anchor-id="basemaps">Basemaps</h2>
+<p><code>map_style</code> is the URL of a <a href="https://maplibre.org/">MapLibre</a> style, drawn underneath the layers. Carto publishes several that are free and need no API key:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 58%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Style</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Positron (light)</td>
+<td><code>https://basemaps.cartocdn.com/gl/positron-gl-style/style.json</code></td>
+</tr>
+<tr class="even">
+<td>Dark Matter</td>
+<td><code>https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json</code></td>
+</tr>
+<tr class="odd">
+<td>Voyager</td>
+<td><code>https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>Appending <code>-nolabels</code> to the style name (<code>positron-nolabels</code>) drops the place labels, which is often what you want when the layer carries its own text.</p>
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    layer,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.4</span>, latitude <span class="op">=</span> <span class="fl">37.8</span>, zoom <span class="op">=</span> <span class="fl">11</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+Cjx0aXRsZT5EZWNrR0w8L3RpdGxlPgo8c2NyaXB0IHNyYz0iaHR0cHM6Ly91bnBrZy5jb20vZGVjay5nbEA5LjMuMTEvZGlzdC5taW4uanMiPjwvc2NyaXB0Pgo8bGluayBocmVmPSJodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEA0LjcuMS9kaXN0L21hcGxpYnJlLWdsLmNzcyIgcmVsPSJzdHlsZXNoZWV0Ij4KPHNjcmlwdCBzcmM9Imh0dHBzOi8vdW5wa2cuY29tL21hcGxpYnJlLWdsQDQuNy4xL2Rpc3QvbWFwbGlicmUtZ2wuanMiPjwvc2NyaXB0Pgo8c3R5bGU+Cmh0bWwsIGJvZHkgeyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7IH0KI2RlY2stY29udGFpbmVyIHsgcG9zaXRpb246IHJlbGF0aXZlOyBvdmVyZmxvdzogaGlkZGVuOyB3aWR0aDogMTAwJTsgaGVpZ2h0OiA1MDBweDsgfQojbWFwLCAjZGVjay1jYW52YXMgeyBwb3NpdGlvbjogYWJzb2x1dGU7IHRvcDogMDsgbGVmdDogMDsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgfQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGlkPSJkZWNrLWNvbnRhaW5lciI+PGRpdiBpZD0ibWFwIj48L2Rpdj48Y2FudmFzIGlkPSJkZWNrLWNhbnZhcyI+PC9jYW52YXM+PC9kaXY+CjxzY3JpcHQ+Ci8vIFJ1bnRpbWUgaGVscGVycyBmb3IgcGFnZXMgZ2VuZXJhdGVkIGJ5IERlY2tHTC5qbC4KLy8KLy8gVGhlIEp1bGlhIHNpZGUgZW1pdHMgcGxhaW4gSmF2YVNjcmlwdCAtLSBgbmV3IGRlY2suU2NhdHRlcnBsb3RMYXllcih7Li4ufSlgIC0tIHNvCi8vIHRoZXJlIGlzIG5vIHNwZWMgbGFuZ3VhZ2UgdG8gaW50ZXJwcmV0IGhlcmUuIFdoYXQgaXMgbGVmdCBpcyBkZWNvZGluZyB0aGUgYmluYXJ5Ci8vIGJ1ZmZlcnMsIGZvcm1hdHRpbmcgdG9vbHRpcHMsIGFuZCB3aXJpbmcgZGVjay5nbCB0byBhbiBvcHRpb25hbCBiYXNlbWFwLgpjb25zdCBERyA9IHsKICAgIC8vIExheWVyIGF0dHJpYnV0ZXMgYXJyaXZlIGJhc2U2NC1lbmNvZGVkIGFuZCBhcmUgYWRvcHRlZCBhcyB0eXBlZCBhcnJheXMgd2l0aG91dAogICAgLy8gYSBjb3B5LCB3aGljaCBpcyB0aGUgd2hvbGUgcG9pbnQgb2Ygc2VuZGluZyB0aGVtIHRoaXMgd2F5LgogICAgdTgocykgewogICAgICAgIGlmIChVaW50OEFycmF5LmZyb21CYXNlNjQpIHJldHVybiBVaW50OEFycmF5LmZyb21CYXNlNjQocyk7CiAgICAgICAgY29uc3QgYmluID0gYXRvYihzKTsKICAgICAgICBjb25zdCBvdXQgPSBuZXcgVWludDhBcnJheShiaW4ubGVuZ3RoKTsKICAgICAgICBmb3IgKGxldCBpID0gMDsgaSA8IGJpbi5sZW5ndGg7IGkrKykgb3V0W2ldID0gYmluLmNoYXJDb2RlQXQoaSk7CiAgICAgICAgcmV0dXJuIG91dDsKICAgIH0sCiAgICBmMzIocykgeyByZXR1cm4gbmV3IEZsb2F0MzJBcnJheShERy51OChzKS5idWZmZXIpOyB9LAoKICAgIC8vIEFnZ3JlZ2F0aW9uIGxheWVycyBuZWVkIGl0ZXJhYmxlIGRhdGEuIEluZGljZXMgc3RhbmQgaW4gZm9yIHJlY29yZHMsIGFuZCB0aGUKICAgIC8vIGFjY2Vzc29ycyBiZWxvdyByZWFkIHRoZSBwYWNrZWQgYnVmZmVycyBhdCB0aGF0IGluZGV4LgogICAgcmFuZ2UobikgeyByZXR1cm4gQXJyYXkuZnJvbSh7bGVuZ3RoOiBufSwgKF8sIGkpID0+IGkpOyB9LAogICAgYXQoYnVmLCBzaXplKSB7CiAgICAgICAgcmV0dXJuIHNpemUgPT09IDEgPyBpID0+IGJ1ZltpXSA6IGkgPT4gYnVmLnN1YmFycmF5KGkgKiBzaXplLCBpICogc2l6ZSArIHNpemUpOwogICAgfSwKCiAgICBlc2NhcGUodikgewogICAgICAgIHJldHVybiBTdHJpbmcodikucmVwbGFjZSgvWyY8PiJdL2csIGMgPT4gKHsiJiI6ICImYW1wOyIsICI8IjogIiZsdDsiLCAiPiI6ICImZ3Q7IiwgJyInOiAiJnF1b3Q7In1bY10pKTsKICAgIH0sCgogICAgLy8gQmluYXJ5IGRhdGEgaGFzIG5vIHJvdyBvYmplY3RzLCBzbyBwaWNraW5nIHJlcG9ydHMgYW4gaW5kZXggYW5kIHRoZSB0b29sdGlwCiAgICAvLyBjb2x1bW5zIGFyZSBsb29rZWQgdXAgYnkgaXQuCiAgICB0b29sdGlwKHRhYmxlcykgewogICAgICAgIHJldHVybiBpbmZvID0+IHsKICAgICAgICAgICAgY29uc3QgdGFibGUgPSBpbmZvLmxheWVyICYmIHRhYmxlc1tpbmZvLmxheWVyLmlkXTsKICAgICAgICAgICAgaWYgKCF0YWJsZSB8fCBpbmZvLmluZGV4IDwgMCkgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIC8vIEFnZ3JlZ2F0ZWQgYmlucyBkZXNjcmliZSB0aGVtc2VsdmVzOyBldmVyeXRoaW5nIGVsc2UgaXMgbG9va2VkIHVwIGJ5IGluZGV4LgogICAgICAgICAgICBjb25zdCBlbnRyaWVzID0gdGFibGUub2JqZWN0CiAgICAgICAgICAgICAgICA/IE9iamVjdC5lbnRyaWVzKGluZm8ub2JqZWN0IHx8IHt9KS5maWx0ZXIoKFssIHZdKSA9PiB2ID09PSBudWxsIHx8IHR5cGVvZiB2ICE9PSAib2JqZWN0IikKICAgICAgICAgICAgICAgIDogdGFibGUua2V5cy5tYXAoKGtleSwgaSkgPT4gW2tleSwgdGFibGUuY29sc1tpXVtpbmZvLmluZGV4XV0pOwogICAgICAgICAgICBpZiAoIWVudHJpZXMubGVuZ3RoKSByZXR1cm4gbnVsbDsKICAgICAgICAgICAgcmV0dXJuIHtodG1sOiBlbnRyaWVzLm1hcCgoW2ssIHZdKSA9PiBgPGI+JHtERy5lc2NhcGUoayl9PC9iPjogJHtERy5lc2NhcGUodil9YCkuam9pbigiPGJyPiIpfTsKICAgICAgICB9OwogICAgfSwKCiAgICBtb3VudChzcGVjKSB7CiAgICAgICAgY29uc3QgcHJvcHMgPSBPYmplY3QuYXNzaWduKHtjYW52YXM6ICJkZWNrLWNhbnZhcyJ9LCBzcGVjLmRlY2spOwoKICAgICAgICBpZiAoc3BlYy5tYXBTdHlsZSkgewogICAgICAgICAgICBjb25zdCB2aWV3ID0gcHJvcHMuaW5pdGlhbFZpZXdTdGF0ZSB8fCB7fTsKICAgICAgICAgICAgY29uc3QgbWFwID0gbmV3IG1hcGxpYnJlZ2wuTWFwKHsKICAgICAgICAgICAgICAgIGNvbnRhaW5lcjogIm1hcCIsCiAgICAgICAgICAgICAgICBzdHlsZTogc3BlYy5tYXBTdHlsZSwKICAgICAgICAgICAgICAgIGNlbnRlcjogW3ZpZXcubG9uZ2l0dWRlIHx8IDAsIHZpZXcubGF0aXR1ZGUgfHwgMF0sCiAgICAgICAgICAgICAgICB6b29tOiB2aWV3Lnpvb20gfHwgMSwKICAgICAgICAgICAgICAgIHBpdGNoOiB2aWV3LnBpdGNoIHx8IDAsCiAgICAgICAgICAgICAgICBiZWFyaW5nOiB2aWV3LmJlYXJpbmcgfHwgMCwKICAgICAgICAgICAgICAgIGludGVyYWN0aXZlOiBmYWxzZSwKICAgICAgICAgICAgfSk7CgogICAgICAgICAgICAvLyBkZWNrLmdsIG93bnMgdGhlIGNhbWVyYTsgdGhlIGJhc2VtYXAgZm9sbG93cyBpdC4gQ2hhaW4gcmF0aGVyIHRoYW4KICAgICAgICAgICAgLy8gcmVwbGFjZSwgc28gYSB1c2VyLXN1cHBsaWVkIG9uVmlld1N0YXRlQ2hhbmdlIHN0aWxsIHJ1bnMuCiAgICAgICAgICAgIGNvbnN0IGNoYWluZWQgPSBwcm9wcy5vblZpZXdTdGF0ZUNoYW5nZTsKICAgICAgICAgICAgcHJvcHMub25WaWV3U3RhdGVDaGFuZ2UgPSBldmVudCA9PiB7CiAgICAgICAgICAgICAgICBjb25zdCB2ID0gZXZlbnQudmlld1N0YXRlOwogICAgICAgICAgICAgICAgbWFwLmp1bXBUbyh7CiAgICAgICAgICAgICAgICAgICAgY2VudGVyOiBbdi5sb25naXR1ZGUsIHYubGF0aXR1ZGVdLAogICAgICAgICAgICAgICAgICAgIHpvb206IHYuem9vbSwKICAgICAgICAgICAgICAgICAgICBwaXRjaDogdi5waXRjaCB8fCAwLAogICAgICAgICAgICAgICAgICAgIGJlYXJpbmc6IHYuYmVhcmluZyB8fCAwLAogICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgICAgICByZXR1cm4gY2hhaW5lZCA/IGNoYWluZWQoZXZlbnQpIDogdW5kZWZpbmVkOwogICAgICAgICAgICB9OwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJtYXAiKS5yZW1vdmUoKTsKICAgICAgICB9CgogICAgICAgIHJldHVybiAoREcuaW5zdGFuY2UgPSBuZXcgZGVjay5EZWNrR0wocHJvcHMpKTsKICAgIH0sCn07CgpERy5tb3VudCh7bWFwU3R5bGU6Imh0dHBzOi8vYmFzZW1hcHMuY2FydG9jZG4uY29tL2dsL2RhcmstbWF0dGVyLWdsLXN0eWxlL3N0eWxlLmpzb24iLGRlY2s6e2luaXRpYWxWaWV3U3RhdGU6eyJsYXRpdHVkZSI6MzcuOCwibG9uZ2l0dWRlIjotMTIyLjQsInpvb20iOjExfSwKICBsYXllcnM6W25ldyBkZWNrLlNjYXR0ZXJwbG90TGF5ZXIoe2lkOiJTY2F0dGVycGxvdExheWVyLTEiLGRhdGE6e2xlbmd0aDo1LGF0dHJpYnV0ZXM6e2dldFBvc2l0aW9uOnt2YWx1ZTpERy5mMzIoInpjejB3ak16RjBJQUFQWEN6Y3dXUXBxWjlNS2FtUmRDWnViMHdnQUFGMEl6cy9UQ1ptWVhRZz09Iiksc2l6ZToyfSxnZXRSYWRpdXM6e3ZhbHVlOkRHLmYzMigiQUFESVFnQUFTRU1BQUJaREFBQTBRd0FBOEVJPSIpLHNpemU6MX19fSxnZXRGaWxsQ29sb3I6WzI1NSwxNDAsMCwyMDBdLHJhZGl1c01pblBpeGVsczo0fSldLAogIGNvbnRyb2xsZXI6dHJ1ZX19KTsKCjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K" style="width:100%;height:520px;border:none;" sandbox="allow-scripts"></iframe>
+</div>
+</div>
+<p>Leaving <code>map_style</code> out draws the layers on a blank background, which is what you want for non-geographic data — see <code>OrthographicView</code> on the <a href="./layers.html">Layers page</a>.</p>
+<p>Two things follow from a basemap being a separate map library underneath deck.gl:</p>
+<ul>
+<li><strong>It always needs network access</strong>, for MapLibre itself and for the map tiles. This is true even with <code>bundle=:local</code>, which only inlines deck.gl.</li>
+<li><strong>deck.gl owns the camera.</strong> The basemap follows it, so <code>initial_view_state</code> and the controller settings apply to both.</li>
+</ul>
 </section>
 <section id="data-input" class="level2">
 <h2 class="anchored" data-anchor-id="data-input">Data Input</h2>
 <p>DeckGL.jl works with any <a href="https://tables.juliadata.org/">Tables.jl</a>-compatible data source:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NamedTuple of vectors</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (x <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>], y <span class="op">=</span> [<span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>])</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># DataFrame</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(x <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>], y <span class="op">=</span> [<span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>])</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector of NamedTuples</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> [(x<span class="op">=</span><span class="fl">1</span>, y<span class="op">=</span><span class="fl">4</span>), (x<span class="op">=</span><span class="fl">2</span>, y<span class="op">=</span><span class="fl">5</span>), (x<span class="op">=</span><span class="fl">3</span>, y<span class="op">=</span><span class="fl">6</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NamedTuple of vectors</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (x <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>], y <span class="op">=</span> [<span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># DataFrame</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(x <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>], y <span class="op">=</span> [<span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>])</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector of NamedTuples</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> [(x<span class="op">=</span><span class="fl">1</span>, y<span class="op">=</span><span class="fl">4</span>), (x<span class="op">=</span><span class="fl">2</span>, y<span class="op">=</span><span class="fl">5</span>), (x<span class="op">=</span><span class="fl">3</span>, y<span class="op">=</span><span class="fl">6</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="column-references" class="level3">
 <h3 class="anchored" data-anchor-id="column-references">Column References</h3>
 <p>Use <code>Symbol</code> to reference columns for data-driven properties:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],     <span class="co"># Two columns for position</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,               <span class="co"># Column for radius</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">200</span>] <span class="co"># Static color</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],     <span class="co"># Two columns for position</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,               <span class="co"># Column for radius</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">200</span>] <span class="co"># Static color</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="how-data-reaches-the-browser" class="level3">
+<h3 class="anchored" data-anchor-id="how-data-reaches-the-browser">How Data Reaches the Browser</h3>
+<p>You do not have to think about this, but it explains why some layers behave differently.</p>
+<p>Most layers upload their accessors straight to the GPU, so a table is packed column-by-column into typed arrays and sent as deck.gl’s binary form. Nothing is allocated per row on either side, and for a million points the page is several times smaller and builds an order of magnitude faster than one row of JSON per record.</p>
+<p>Two things follow from that:</p>
+<ul>
+<li><p><strong>Columns that cannot be packed</strong> — strings, or variable-length paths — are sent as a plain array and read by index instead. <code>get_text = :name</code> works exactly as you would expect; it just takes a different route.</p></li>
+<li><p><strong>Picking reports an index, not a row object</strong>, because there are no row objects. The <code>tooltip</code> prop handles this for you by shipping the columns it needs separately:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ScatterplotLayer</span>(data <span class="op">=</span> df, get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat], tooltip <span class="op">=</span> [<span class="op">:</span>name, <span class="op">:</span>magnitude])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Setting <code>tooltip</code> turns on <code>pickable</code> unless you say otherwise. Pass <code>true</code> for every column.</p></li>
+</ul>
+<p>Aggregation layers (<code>HexagonLayer</code>, <code>GridLayer</code>, <code>HeatmapLayer</code>, <code>ContourLayer</code>, <code>ScreenGridLayer</code>) bin their records before drawing and read each one through its accessor, so they cannot take binary attributes at all — deck.gl silently produces a single bin if you give them any. They are sent an index array instead, over the same packed columns. Picking one selects a bin, so <code>tooltip = true</code> shows the bin’s own aggregated values rather than a source row.</p>
 </section>
 </section>
 <section id="color-specification" class="level2">
 <h2 class="anchored" data-anchor-id="color-specification">Color Specification</h2>
-<p>Colors are specified as RGB or RGBA arrays with values 0-255:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RGB (alpha defaults to 255)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>]      <span class="co"># Red</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># RGBA (with transparency)</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">128</span>] <span class="co"># Semi-transparent red</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Colors are specified as RGB or RGBA arrays with values 0-255, a hex string, or any Colors.jl colorant once that package is loaded:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RGB (alpha defaults to 255)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>]      <span class="co"># Red</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># RGBA (with transparency)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">128</span>] <span class="co"># Semi-transparent red</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Hex string</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> <span class="st">"#ff0000"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> <span class="st">"#ff000080"</span>      <span class="co"># with alpha</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Colors.jl, via a package extension</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Colors</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> colorant<span class="st">"tomato"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For data-driven colors, reference a column:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>get_fill_color <span class="op">=</span> <span class="op">:</span>color_column</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>get_fill_color <span class="op">=</span> <span class="op">:</span>color_column</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="viewstate" class="level2">
 <h2 class="anchored" data-anchor-id="viewstate">ViewState</h2>
 <p>The <code>ViewState</code> controls the camera:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.4</span>,  <span class="co"># Center longitude</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    latitude <span class="op">=</span> <span class="fl">37.8</span>,     <span class="co"># Center latitude</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    zoom <span class="op">=</span> <span class="fl">11</span>,           <span class="co"># Zoom level (0-20+)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    pitch <span class="op">=</span> <span class="fl">45</span>,          <span class="co"># Tilt angle (0-60 degrees)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    bearing <span class="op">=</span> <span class="fl">0</span>          <span class="co"># Rotation (0-360 degrees)</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.4</span>,  <span class="co"># Center longitude</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    latitude <span class="op">=</span> <span class="fl">37.8</span>,     <span class="co"># Center latitude</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    zoom <span class="op">=</span> <span class="fl">11</span>,           <span class="co"># Zoom level (0-20+)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    pitch <span class="op">=</span> <span class="fl">45</span>,          <span class="co"># Tilt angle (0-60 degrees)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    bearing <span class="op">=</span> <span class="fl">0</span>          <span class="co"># Rotation (0-360 degrees)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="display-options" class="level2">
 <h2 class="anchored" data-anchor-id="display-options">Display Options</h2>
 <section id="open-in-browser" class="level3">
 <h3 class="anchored" data-anchor-id="open-in-browser">Open in Browser</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="save-as-html-file" class="level3">
 <h3 class="anchored" data-anchor-id="save-as-html-file">Save as HTML File</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save_html</span>(deck, <span class="st">"visualization.html"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save_html</span>(deck, <span class="st">"visualization.html"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="get-html-string" class="level3">
 <h3 class="anchored" data-anchor-id="get-html-string">Get HTML String</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>html_string <span class="op">=</span> <span class="fu">to_html</span>(deck)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>html_string <span class="op">=</span> <span class="fu">to_html</span>(deck)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="jupytervs-code" class="level3">
 <h3 class="anchored" data-anchor-id="jupytervs-code">Jupyter/VS Code</h3>
 <p>In notebook environments, <code>Deck</code> objects display automatically:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>deck  <span class="co"># Displays inline in notebook</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>deck  <span class="co"># Displays inline in notebook</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="convenience-functions" class="level2">
 <h2 class="anchored" data-anchor-id="convenience-functions">Convenience Functions</h2>
-<p>For quick visualizations, use the convenience functions:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>])</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Arcs</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(data, [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat], [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat])</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagonal binning</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hexbin</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=</span><span class="fl">1000</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Heatmap</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, weight<span class="op">=:</span>value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>These return a <code>Deck</code> that you can display:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat) <span class="op">|&gt;</span> open_html</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For quick visualizations, use the convenience functions. These are <strong>not exported</strong> — names like <code>scatter</code>, <code>lines</code>, <code>text</code>, <code>hexbin</code> and <code>heatmap</code> would collide with Plots.jl and Makie.jl — so call them qualified:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>DeckGL.<span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>])</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Arcs</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>DeckGL.<span class="fu">arcs</span>(data, [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat], [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat])</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagonal binning</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>DeckGL.<span class="fu">hexbin</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=</span><span class="fl">1000</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Heatmap</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>DeckGL.<span class="fu">heatmap</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, weight<span class="op">=:</span>value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The full set is <code>scatter</code>, <code>arcs</code>, <code>lines</code>, <code>paths</code>, <code>polygons</code>, <code>text</code>, <code>hexbin</code>, <code>heatmap</code> and <code>geojson</code>. Each returns a <code>Deck</code> you can display:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>DeckGL.<span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat) <span class="op">|&gt;</span> open_html</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you would rather use them unqualified, import them explicitly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DeckGL</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DeckGL</span>: scatter, heatmap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="multiple-layers" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-layers">Multiple Layers</h2>
 <p>Combine multiple layers in a single visualization:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> [</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>points, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat]),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">TextLayer</span>(data<span class="op">=</span>labels, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat], get_text<span class="op">=:</span>name),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">PathLayer</span>(data<span class="op">=</span>routes, get_path<span class="op">=:</span>path)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(layers, initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(zoom<span class="op">=</span><span class="fl">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> [</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>points, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat]),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">TextLayer</span>(data<span class="op">=</span>labels, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat], get_text<span class="op">=:</span>name),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">PathLayer</span>(data<span class="op">=</span>routes, get_path<span class="op">=:</span>path)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(layers, initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(zoom<span class="op">=</span><span class="fl">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
 <ul>
 <li><a href="./layers.html">Layers</a> - Explore all available layer types</li>
-<li><a href="api.qmd">API Reference</a> - Complete function and type documentation</li>
+<li><a href="./pages/api.html">API Reference</a> - Complete function and type documentation</li>
 <li><a href="./examples.html">Examples</a> - More visualization examples</li>
 </ul>
 
@@ -870,7 +954,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-04-23</p>
+<p>Built on 2026-08-31</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -76,10 +79,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3db6c18bb69885e7f25697a9383847b5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-095245003bb80bd2beb305de39928752.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-426f41d558ea4d560124c4548de7cb69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-1fea2c51d21c7813f291f492b4a412d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -253,8 +256,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#types" id="toc-types" class="nav-link active" data-scroll-target="#types">Types</a></li>
-  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
+  <li><a href="#types" id="toc-types" class="nav-link active" data-scroll-target="#types">Types</a>
+  <ul>
+  <li><a href="#a5layer" id="toc-a5layer" class="nav-link" data-scroll-target="#a5layer"><code>A5Layer</code></a></li>
+  <li><a href="#arclayer" id="toc-arclayer" class="nav-link" data-scroll-target="#arclayer"><code>ArcLayer</code></a></li>
+  <li><a href="#bitmaplayer" id="toc-bitmaplayer" class="nav-link" data-scroll-target="#bitmaplayer"><code>BitmapLayer</code></a></li>
+  <li><a href="#columnlayer" id="toc-columnlayer" class="nav-link" data-scroll-target="#columnlayer"><code>ColumnLayer</code></a></li>
+  <li><a href="#compasswidget" id="toc-compasswidget" class="nav-link" data-scroll-target="#compasswidget"><code>CompassWidget</code></a></li>
+  <li><a href="#contextmenuwidget" id="toc-contextmenuwidget" class="nav-link" data-scroll-target="#contextmenuwidget"><code>ContextMenuWidget</code></a></li>
+  <li><a href="#contourlayer" id="toc-contourlayer" class="nav-link" data-scroll-target="#contourlayer"><code>ContourLayer</code></a></li>
+  <li><a href="#deck" id="toc-deck" class="nav-link" data-scroll-target="#deck"><code>Deck</code></a></li>
+  <li><a href="#firstpersonview" id="toc-firstpersonview" class="nav-link" data-scroll-target="#firstpersonview"><code>FirstPersonView</code></a></li>
+  <li><a href="#fullscreenwidget" id="toc-fullscreenwidget" class="nav-link" data-scroll-target="#fullscreenwidget"><code>FullscreenWidget</code></a></li>
+  <li><a href="#geojsonlayer" id="toc-geojsonlayer" class="nav-link" data-scroll-target="#geojsonlayer"><code>GeoJsonLayer</code></a></li>
+  <li><a href="#geohashlayer" id="toc-geohashlayer" class="nav-link" data-scroll-target="#geohashlayer"><code>GeohashLayer</code></a></li>
+  <li><a href="#gimbalwidget" id="toc-gimbalwidget" class="nav-link" data-scroll-target="#gimbalwidget"><code>GimbalWidget</code></a></li>
+  <li><a href="#greatcirclelayer" id="toc-greatcirclelayer" class="nav-link" data-scroll-target="#greatcirclelayer"><code>GreatCircleLayer</code></a></li>
+  <li><a href="#gridcelllayer" id="toc-gridcelllayer" class="nav-link" data-scroll-target="#gridcelllayer"><code>GridCellLayer</code></a></li>
+  <li><a href="#gridlayer" id="toc-gridlayer" class="nav-link" data-scroll-target="#gridlayer"><code>GridLayer</code></a></li>
+  <li><a href="#h3clusterlayer" id="toc-h3clusterlayer" class="nav-link" data-scroll-target="#h3clusterlayer"><code>H3ClusterLayer</code></a></li>
+  <li><a href="#h3hexagonlayer" id="toc-h3hexagonlayer" class="nav-link" data-scroll-target="#h3hexagonlayer"><code>H3HexagonLayer</code></a></li>
+  <li><a href="#heatmaplayer" id="toc-heatmaplayer" class="nav-link" data-scroll-target="#heatmaplayer"><code>HeatmapLayer</code></a></li>
+  <li><a href="#hexagonlayer" id="toc-hexagonlayer" class="nav-link" data-scroll-target="#hexagonlayer"><code>HexagonLayer</code></a></li>
+  <li><a href="#iconlayer" id="toc-iconlayer" class="nav-link" data-scroll-target="#iconlayer"><code>IconLayer</code></a></li>
+  <li><a href="#iconwidget" id="toc-iconwidget" class="nav-link" data-scroll-target="#iconwidget"><code>IconWidget</code></a></li>
+  <li><a href="#infowidget" id="toc-infowidget" class="nav-link" data-scroll-target="#infowidget"><code>InfoWidget</code></a></li>
+  <li><a href="#js" id="toc-js" class="nav-link" data-scroll-target="#js"><code>JS</code></a></li>
+  <li><a href="#layer" id="toc-layer" class="nav-link" data-scroll-target="#layer"><code>Layer</code></a></li>
+  <li><a href="#linelayer" id="toc-linelayer" class="nav-link" data-scroll-target="#linelayer"><code>LineLayer</code></a></li>
+  <li><a href="#loadingwidget" id="toc-loadingwidget" class="nav-link" data-scroll-target="#loadingwidget"><code>LoadingWidget</code></a></li>
+  <li><a href="#mvtlayer" id="toc-mvtlayer" class="nav-link" data-scroll-target="#mvtlayer"><code>MVTLayer</code></a></li>
+  <li><a href="#mapview" id="toc-mapview" class="nav-link" data-scroll-target="#mapview"><code>MapView</code></a></li>
+  <li><a href="#orbitview" id="toc-orbitview" class="nav-link" data-scroll-target="#orbitview"><code>OrbitView</code></a></li>
+  <li><a href="#orthographicview" id="toc-orthographicview" class="nav-link" data-scroll-target="#orthographicview"><code>OrthographicView</code></a></li>
+  <li><a href="#pathlayer" id="toc-pathlayer" class="nav-link" data-scroll-target="#pathlayer"><code>PathLayer</code></a></li>
+  <li><a href="#pointcloudlayer" id="toc-pointcloudlayer" class="nav-link" data-scroll-target="#pointcloudlayer"><code>PointCloudLayer</code></a></li>
+  <li><a href="#polygonlayer" id="toc-polygonlayer" class="nav-link" data-scroll-target="#polygonlayer"><code>PolygonLayer</code></a></li>
+  <li><a href="#popupwidget" id="toc-popupwidget" class="nav-link" data-scroll-target="#popupwidget"><code>PopupWidget</code></a></li>
+  <li><a href="#quadkeylayer" id="toc-quadkeylayer" class="nav-link" data-scroll-target="#quadkeylayer"><code>QuadkeyLayer</code></a></li>
+  <li><a href="#resetviewwidget" id="toc-resetviewwidget" class="nav-link" data-scroll-target="#resetviewwidget"><code>ResetViewWidget</code></a></li>
+  <li><a href="#s2layer" id="toc-s2layer" class="nav-link" data-scroll-target="#s2layer"><code>S2Layer</code></a></li>
+  <li><a href="#scatterplotlayer" id="toc-scatterplotlayer" class="nav-link" data-scroll-target="#scatterplotlayer"><code>ScatterplotLayer</code></a></li>
+  <li><a href="#scenegraphlayer" id="toc-scenegraphlayer" class="nav-link" data-scroll-target="#scenegraphlayer"><code>ScenegraphLayer</code></a></li>
+  <li><a href="#screengridlayer" id="toc-screengridlayer" class="nav-link" data-scroll-target="#screengridlayer"><code>ScreenGridLayer</code></a></li>
+  <li><a href="#screenshotwidget" id="toc-screenshotwidget" class="nav-link" data-scroll-target="#screenshotwidget"><code>ScreenshotWidget</code></a></li>
+  <li><a href="#scrollbarwidget" id="toc-scrollbarwidget" class="nav-link" data-scroll-target="#scrollbarwidget"><code>ScrollbarWidget</code></a></li>
+  <li><a href="#selectorwidget" id="toc-selectorwidget" class="nav-link" data-scroll-target="#selectorwidget"><code>SelectorWidget</code></a></li>
+  <li><a href="#simplemeshlayer" id="toc-simplemeshlayer" class="nav-link" data-scroll-target="#simplemeshlayer"><code>SimpleMeshLayer</code></a></li>
+  <li><a href="#solidpolygonlayer" id="toc-solidpolygonlayer" class="nav-link" data-scroll-target="#solidpolygonlayer"><code>SolidPolygonLayer</code></a></li>
+  <li><a href="#terrainlayer" id="toc-terrainlayer" class="nav-link" data-scroll-target="#terrainlayer"><code>TerrainLayer</code></a></li>
+  <li><a href="#textlayer" id="toc-textlayer" class="nav-link" data-scroll-target="#textlayer"><code>TextLayer</code></a></li>
+  <li><a href="#themewidget" id="toc-themewidget" class="nav-link" data-scroll-target="#themewidget"><code>ThemeWidget</code></a></li>
+  <li><a href="#tile3dlayer" id="toc-tile3dlayer" class="nav-link" data-scroll-target="#tile3dlayer"><code>Tile3DLayer</code></a></li>
+  <li><a href="#tilelayer" id="toc-tilelayer" class="nav-link" data-scroll-target="#tilelayer"><code>TileLayer</code></a></li>
+  <li><a href="#togglewidget" id="toc-togglewidget" class="nav-link" data-scroll-target="#togglewidget"><code>ToggleWidget</code></a></li>
+  <li><a href="#tripslayer" id="toc-tripslayer" class="nav-link" data-scroll-target="#tripslayer"><code>TripsLayer</code></a></li>
+  <li><a href="#view" id="toc-view" class="nav-link" data-scroll-target="#view"><code>View</code></a></li>
+  <li><a href="#viewstate" id="toc-viewstate" class="nav-link" data-scroll-target="#viewstate"><code>ViewState</code></a></li>
+  <li><a href="#widget" id="toc-widget" class="nav-link" data-scroll-target="#widget"><code>Widget</code></a></li>
+  <li><a href="#zoomwidget" id="toc-zoomwidget" class="nav-link" data-scroll-target="#zoomwidget"><code>ZoomWidget</code></a></li>
+  </ul></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a>
+  <ul>
+  <li><a href="#arcs" id="toc-arcs" class="nav-link" data-scroll-target="#arcs"><code>arcs</code></a></li>
+  <li><a href="#geojson" id="toc-geojson" class="nav-link" data-scroll-target="#geojson"><code>geojson</code></a></li>
+  <li><a href="#heatmap" id="toc-heatmap" class="nav-link" data-scroll-target="#heatmap"><code>heatmap</code></a></li>
+  <li><a href="#hexbin" id="toc-hexbin" class="nav-link" data-scroll-target="#hexbin"><code>hexbin</code></a></li>
+  <li><a href="#lines" id="toc-lines" class="nav-link" data-scroll-target="#lines"><code>lines</code></a></li>
+  <li><a href="#open_html" id="toc-open_html" class="nav-link" data-scroll-target="#open_html"><code>open_html</code></a></li>
+  <li><a href="#paths" id="toc-paths" class="nav-link" data-scroll-target="#paths"><code>paths</code></a></li>
+  <li><a href="#polygons" id="toc-polygons" class="nav-link" data-scroll-target="#polygons"><code>polygons</code></a></li>
+  <li><a href="#save_html" id="toc-save_html" class="nav-link" data-scroll-target="#save_html"><code>save_html</code></a></li>
+  <li><a href="#scatter" id="toc-scatter" class="nav-link" data-scroll-target="#scatter"><code>scatter</code></a></li>
+  <li><a href="#text" id="toc-text" class="nav-link" data-scroll-target="#text"><code>text</code></a></li>
+  <li><a href="#to_html" id="toc-to_html" class="nav-link" data-scroll-target="#to_html"><code>to_html</code></a></li>
+  <li><a href="#to_js" id="toc-to_js" class="nav-link" data-scroll-target="#to_js"><code>to_js</code></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -280,730 +357,600 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Convenience functions (<code>scatter</code>, <code>arcs</code>, <code>lines</code>, <code>paths</code>, <code>polygons</code>, <code>text</code>, <code>hexbin</code>, <code>heatmap</code>, <code>geojson</code>) are public but <strong>not exported</strong>, because their names collide with Plots.jl and Makie.jl. Call them qualified, e.g.&nbsp;<code>DeckGL.scatter(...)</code>.</p>
 <section id="types" class="level2">
 <h2 class="anchored" data-anchor-id="types">Types</h2>
+<section id="a5layer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="a5layer"><code>A5Layer</code></h3>
 <div class="card mb-3">
-<section id="abstractlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="abstractlayer"><code>AbstractLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>AbstractLayer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Abstract supertype for all deck.gl layers.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="arclayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="arclayer"><code>ArcLayer</code></h3>
 <div class="card mb-3">
-<section id="abstractwidget" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="abstractwidget"><code>AbstractWidget</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>AbstractWidget</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Abstract supertype for all deck.gl widgets.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="bitmaplayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="bitmaplayer"><code>BitmapLayer</code></h3>
 <div class="card mb-3">
-<section id="arclayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="arclayer"><code>ArcLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArcLayer</span>(; data, get_source_position, get_target_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders arcs between source and target coordinates.</p>
-<section id="required-arguments" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_source_position</code>: Column accessor for source [longitude, latitude]. Can be a <code>Symbol</code> or <code>Vector{Symbol}</code> like <code>[:src_lng, :src_lat]</code></li>
-<li><code>get_target_position</code>: Column accessor for target [longitude, latitude]. Can be a <code>Symbol</code> or <code>Vector{Symbol}</code> like <code>[:dst_lng, :dst_lat]</code></li>
-</ul>
-</section>
-<section id="optional-arguments" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>get_source_color</code>: Source end color as <code>[R,G,B,A]</code> or column reference</li>
-<li><code>get_target_color</code>: Target end color as <code>[R,G,B,A]</code> or column reference</li>
-<li><code>get_width::Union{Real,Symbol}</code>: Arc width in pixels. Default: <code>1</code></li>
-<li><code>get_height::Union{Real,Symbol}</code>: Arc height multiplier (0-1). Default: <code>1</code></li>
-<li><code>get_tilt::Union{Real,Symbol}</code>: Arc tilt in degrees. Default: <code>0</code></li>
-<li><code>great_circle::Bool</code>: Use great circle arcs. Default: <code>false</code></li>
-<li><code>width_units::String</code>: Width units (“pixels” or “meters”). Default: <code>"pixels"</code></li>
-<li><code>width_scale::Real</code>: Width multiplier. Default: <code>1</code></li>
-<li><code>width_min_pixels::Real</code>: Minimum width. Default: <code>0</code></li>
-<li><code>width_max_pixels::Real</code>: Maximum width. Default: <code>Inf</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    src_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>],</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    src_lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>],</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    dst_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">73.9</span>, <span class="op">-</span><span class="fl">87.6</span>],</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    dst_lat <span class="op">=</span> [<span class="fl">40.7</span>, <span class="fl">41.9</span>],</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">50</span>]</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ArcLayer</span>(</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> trips,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    get_source_position <span class="op">=</span> [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat],</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    get_target_position <span class="op">=</span> [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat],</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="op">:</span>count,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    get_source_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>],</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    get_target_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>]</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="columnlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="columnlayer"><code>ColumnLayer</code></h3>
 <div class="card mb-3">
-<section id="compasswidget" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="compasswidget"><code>CompassWidget</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">CompassWidget</span>(; id<span class="op">=</span><span class="st">"compass"</span>, placement<span class="op">=</span><span class="st">"top-right"</span>, transition_duration<span class="op">=</span><span class="fl">200</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Displays a compass rose showing the current bearing. Click to reset bearing to north.</p>
-<section id="keyword-arguments" class="level1">
-<h1>Keyword Arguments</h1>
-<ul>
-<li><code>id::String</code>: Widget identifier. Default: <code>"compass"</code></li>
-<li><code>placement::String</code>: Widget position (<code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code>). Default: <code>"top-right"</code></li>
-<li><code>transition_duration::Int</code>: Reset animation duration in ms. Default: <code>200</code></li>
-</ul>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">CompassWidget</span>()])</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">CompassWidget</span>(placement<span class="op">=</span><span class="st">"bottom-right"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="compasswidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="compasswidget"><code>CompassWidget</code></h3>
 <div class="card mb-3">
-<section id="deck" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="deck"><code>Deck</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layers; initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(), map_style<span class="op">=</span><span class="cn">nothing</span>, controller<span class="op">=</span><span class="cn">true</span>, widgets<span class="op">=</span>AbstractWidget[])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The top-level container representing a deck.gl visualization.</p>
-<section id="arguments" class="level1">
-<h1>Arguments</h1>
-<ul>
-<li><code>layers</code>: A single <code>AbstractLayer</code> or a vector of layers</li>
-</ul>
-</section>
-<section id="keyword-arguments-1" class="level1">
-<h1>Keyword Arguments</h1>
-<ul>
-<li><code>initial_view_state::ViewState</code>: Camera configuration</li>
-<li><code>map_style::Union{String,Nothing}</code>: Map tile style URL (Mapbox/MapLibre/Carto)</li>
-<li><code>controller::Bool</code>: Enable pan/zoom/rotate controls</li>
-<li><code>widgets::Vector{AbstractWidget}</code>: UI widgets (zoom, compass, fullscreen)</li>
-</ul>
-</section>
-<section id="example-1" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>df, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat])</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(layer,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    initial_view_state<span class="op">=</span><span class="fu">ViewState</span>(longitude<span class="op">=-</span><span class="fl">122.4</span>, latitude<span class="op">=</span><span class="fl">37.8</span>, zoom<span class="op">=</span><span class="fl">11</span>),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    widgets<span class="op">=</span>[<span class="fu">ZoomWidget</span>(), <span class="fu">CompassWidget</span>()]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
 </div>
 </div>
+</section>
+<section id="contextmenuwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="contextmenuwidget"><code>ContextMenuWidget</code></h3>
 <div class="card mb-3">
-<section id="fullscreenwidget" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="fullscreenwidget"><code>FullscreenWidget</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FullscreenWidget</span>(; id<span class="op">=</span><span class="st">"fullscreen"</span>, placement<span class="op">=</span><span class="st">"top-right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Adds a button to toggle fullscreen mode.</p>
-<section id="keyword-arguments-2" class="level1">
-<h1>Keyword Arguments</h1>
-<ul>
-<li><code>id::String</code>: Widget identifier. Default: <code>"fullscreen"</code></li>
-<li><code>placement::String</code>: Widget position (<code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code>). Default: <code>"top-right"</code></li>
-</ul>
-<section id="examples-1" class="level3">
-<h3 class="anchored" data-anchor-id="examples-1">Examples</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">FullscreenWidget</span>()])</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">FullscreenWidget</span>(placement<span class="op">=</span><span class="st">"top-left"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
 </div>
 </div>
+</section>
+<section id="contourlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="contourlayer"><code>ContourLayer</code></h3>
 <div class="card mb-3">
-<section id="geojsonlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="geojsonlayer"><code>GeoJsonLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GeoJsonLayer</span>(; data, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders GeoJSON data as points, lines, and polygons.</p>
-<p>This is a composite layer that automatically renders GeoJSON features using the appropriate sub-layers (ScatterplotLayer, PathLayer, PolygonLayer).</p>
-<section id="required-arguments-1" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: GeoJSON data as a Dict, String (JSON), or URL to GeoJSON file</li>
-</ul>
-</section>
-<section id="optional-arguments-1" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>filled::Bool</code>: Fill polygons. Default: <code>true</code></li>
-<li><code>stroked::Bool</code>: Draw polygon outlines. Default: <code>true</code></li>
-<li><code>extruded::Bool</code>: Extrude polygons in 3D. Default: <code>false</code></li>
-<li><code>wireframe::Bool</code>: Draw 3D wireframe. Default: <code>false</code></li>
-<li><code>point_type::String</code>: Point rendering type (“circle”, “icon”, “text”). Default: <code>"circle"</code></li>
-<li><code>get_fill_color</code>: Fill color. Default: <code>[0, 0, 0, 255]</code></li>
-<li><code>get_line_color</code>: Line/stroke color. Default: <code>[0, 0, 0, 255]</code></li>
-<li><code>get_line_width::Union{Real,Symbol}</code>: Line width. Default: <code>1</code></li>
-<li><code>get_point_radius::Union{Real,Symbol}</code>: Point radius. Default: <code>1</code></li>
-<li><code>get_elevation::Union{Real,Symbol}</code>: Polygon elevation for 3D. Default: <code>1000</code></li>
-<li><code>line_width_units::String</code>: Line width units. Default: <code>"meters"</code></li>
-<li><code>line_width_scale::Real</code>: Line width multiplier. Default: <code>1</code></li>
-<li><code>line_width_min_pixels::Real</code>: Minimum line width. Default: <code>0</code></li>
-<li><code>line_width_max_pixels::Real</code>: Maximum line width. Default: <code>Inf</code></li>
-<li><code>line_joint_rounded::Bool</code>: Round line joints. Default: <code>false</code></li>
-<li><code>line_cap_rounded::Bool</code>: Round line caps. Default: <code>false</code></li>
-<li><code>line_miter_limit::Real</code>: Miter limit. Default: <code>4</code></li>
-<li><code>point_radius_units::String</code>: Point radius units. Default: <code>"meters"</code></li>
-<li><code>point_radius_scale::Real</code>: Point radius multiplier. Default: <code>1</code></li>
-<li><code>point_radius_min_pixels::Real</code>: Minimum point radius. Default: <code>0</code></li>
-<li><code>point_radius_max_pixels::Real</code>: Maximum point radius. Default: <code>Inf</code></li>
-<li><code>elevation_scale::Real</code>: Elevation multiplier. Default: <code>1</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-2" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GeoJSON as a Dict</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>geojson <span class="op">=</span> <span class="fu">Dict</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"FeatureCollection"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"features"</span> <span class="op">=&gt;</span> [</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">Dict</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"Feature"</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"geometry"</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>(</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">"type"</span> <span class="op">=&gt;</span> <span class="st">"Point"</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">"coordinates"</span> <span class="op">=&gt;</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>]</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"properties"</span> <span class="op">=&gt;</span> <span class="fu">Dict</span>(<span class="st">"name"</span> <span class="op">=&gt;</span> <span class="st">"San Francisco"</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GeoJsonLayer</span>(</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> geojson,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>],</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    get_point_radius <span class="op">=</span> <span class="fl">100</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Or load from URL</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GeoJsonLayer</span>(</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="st">"https://example.com/data.geojson"</span>,</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> <span class="cn">true</span>,</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    stroked <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="deck" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="deck"><code>Deck</code></h3>
 <div class="card mb-3">
-<section id="gridlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="gridlayer"><code>GridLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GridLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Aggregates data into rectangular grid cells and renders as 3D columns.</p>
-<section id="required-arguments-2" class="level1">
-<h1>Required Arguments</h1>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layers; initial_view_state, map_style, controller, widgets, views, props<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl visualization: the layers to draw, the camera to draw them from, and the page furniture around them.</p>
+<p><strong>Arguments</strong></p>
 <ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_position</code>: Column accessor for [longitude, latitude]</li>
+<li><code>layers</code>: one <code>Layer</code> or an iterable of them, drawn in order</li>
 </ul>
-</section>
-<section id="optional-arguments-2" class="level1">
-<h1>Optional Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>cell_size::Real</code>: Grid cell size in meters. Default: <code>1000</code></li>
-<li><code>elevation_scale::Real</code>: Elevation multiplier for 3D effect. Default: <code>1</code></li>
-<li><code>elevation_range::Vector{&lt;:Real}</code>: Min/max elevation <code>[min, max]</code>. Default: <code>[0, 1000]</code></li>
-<li><code>extruded::Bool</code>: Render as 3D columns. Default: <code>true</code></li>
-<li><code>coverage::Real</code>: Cell coverage (0-1). Default: <code>1</code></li>
-<li><code>get_color_weight::Union{Real,Symbol}</code>: Weight for color aggregation. Default: <code>1</code></li>
-<li><code>get_elevation_weight::Union{Real,Symbol}</code>: Weight for elevation aggregation. Default: <code>1</code></li>
-<li><code>color_aggregation::String</code>: Aggregation method (“SUM”, “MEAN”, “MIN”, “MAX”). Default: <code>"SUM"</code></li>
-<li><code>elevation_aggregation::String</code>: Aggregation method. Default: <code>"SUM"</code></li>
-<li><code>color_range::Vector</code>: Array of RGB colors for color scale. Default: 6-color yellow-red scale</li>
-<li><code>upper_percentile::Real</code>: Filter out cells above this percentile. Default: <code>100</code></li>
-<li><code>lower_percentile::Real</code>: Filter out cells below this percentile. Default: <code>0</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
+<li><code>initial_view_state::ViewState</code>: starting camera. With no explicit <code>views</code>, deck.gl renders through a <code>MapView</code>, which needs a <code>longitude</code> and <code>latitude</code>; those two are filled in at the origin if left out. Default: world view at zoom 1</li>
+<li><code>map_style</code>: URL of a MapLibre style to draw a basemap beneath the layers, or <code>nothing</code> for no basemap. A basemap always requires network access at view time, for both MapLibre itself and the map tiles</li>
+<li><code>controller</code>: enable pan/zoom/rotate. Default: <code>true</code></li>
+<li><code>widgets</code>: <code>Widget</code>s to overlay</li>
+<li><code>views</code>: <code>View</code>s to render through. Default: deck.gl’s own <code>MapView</code></li>
+<li><code>props...</code>: any other deck.gl <code>Deck</code> prop, e.g.&nbsp;<code>on_click=JS("info =&gt; ...")</code></li>
 </ul>
-</section>
-<section id="example-3" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> (</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">122.5</span><span class="op">:-</span><span class="fl">122.3</span>, <span class="fl">5000</span>),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">37.7</span><span class="op">:</span><span class="fl">37.9</span>, <span class="fl">5000</span>),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5000</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">GridLayer</span>(</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> points,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    get_elevation_weight <span class="op">=</span> <span class="op">:</span>value,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    cell_size <span class="op">=</span> <span class="fl">200</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">4</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<p><strong>Examples</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>deck <span class="op">=</span> <span class="fu">Deck</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>df, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat], get_radius<span class="op">=</span><span class="fl">100</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude<span class="op">=-</span><span class="fl">122.4</span>, latitude<span class="op">=</span><span class="fl">37.8</span>, zoom<span class="op">=</span><span class="fl">11</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    widgets <span class="op">=</span> [<span class="fu">ZoomWidget</span>(), <span class="fu">CompassWidget</span>()],</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+</section>
+<section id="firstpersonview" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="firstpersonview"><code>FirstPersonView</code></h3>
 <div class="card mb-3">
-<section id="heatmaplayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="heatmaplayer"><code>HeatmapLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HeatmapLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders a heatmap based on point density and weights.</p>
-<section id="required-arguments-3" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_position</code>: Column accessor for [longitude, latitude]</li>
-</ul>
-</section>
-<section id="optional-arguments-3" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>radius_pixels::Real</code>: Radius of influence in pixels. Default: <code>30</code></li>
-<li><code>intensity::Real</code>: Intensity multiplier. Default: <code>1</code></li>
-<li><code>threshold::Real</code>: Minimum density threshold (0-1). Default: <code>0.05</code></li>
-<li><code>get_weight::Union{Real,Symbol}</code>: Point weight for aggregation. Default: <code>1</code></li>
-<li><code>color_range::Vector</code>: Array of RGBA colors for heatmap gradient. Default: blue-green-yellow-red</li>
-<li><code>aggregation::String</code>: Aggregation method (“SUM” or “MEAN”). Default: <code>"SUM"</code></li>
-<li><code>weights_texture_size::Int</code>: Resolution of weight texture. Default: <code>2048</code></li>
-<li><code>debounce_timeout::Int</code>: Debounce timeout in ms. Default: <code>500</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-4" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>incidents <span class="op">=</span> (</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">122.5</span><span class="op">:-</span><span class="fl">122.3</span>, <span class="fl">10000</span>),</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">37.7</span><span class="op">:</span><span class="fl">37.9</span>, <span class="fl">10000</span>),</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    severity <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">10000</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">HeatmapLayer</span>(</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> incidents,</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    get_weight <span class="op">=</span> <span class="op">:</span>severity,</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    radius_pixels <span class="op">=</span> <span class="fl">50</span>,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    intensity <span class="op">=</span> <span class="fl">1</span>,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    threshold <span class="op">=</span> <span class="fl">0.03</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>View{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl view: the camera model the layers are rendered through. <code>MapView</code> is the geospatial default; <code>OrthographicView</code> and <code>OrbitView</code> render non-geographic data in Cartesian coordinates. Concrete views are <code>const</code> aliases, e.g.&nbsp;<code>MapView === View{:MapView}</code>.</p>
 </div>
 </div>
+</section>
+<section id="fullscreenwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="fullscreenwidget"><code>FullscreenWidget</code></h3>
 <div class="card mb-3">
-<section id="hexagonlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="hexagonlayer"><code>HexagonLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HexagonLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Aggregates data into hexagonal bins and renders as 3D hexagons.</p>
-<section id="required-arguments-4" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_position</code>: Column accessor for [longitude, latitude]</li>
-</ul>
-</section>
-<section id="optional-arguments-4" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>radius::Real</code>: Hexagon radius in meters. Default: <code>1000</code></li>
-<li><code>elevation_scale::Real</code>: Elevation multiplier for 3D effect. Default: <code>1</code></li>
-<li><code>elevation_range::Vector{&lt;:Real}</code>: Min/max elevation <code>[min, max]</code>. Default: <code>[0, 1000]</code></li>
-<li><code>extruded::Bool</code>: Render as 3D hexagons. Default: <code>true</code></li>
-<li><code>coverage::Real</code>: Hexagon coverage (0-1). Default: <code>1</code></li>
-<li><code>get_color_weight::Union{Real,Symbol}</code>: Weight for color aggregation. Default: <code>1</code></li>
-<li><code>get_elevation_weight::Union{Real,Symbol}</code>: Weight for elevation aggregation. Default: <code>1</code></li>
-<li><code>color_aggregation::String</code>: Aggregation method (“SUM”, “MEAN”, “MIN”, “MAX”). Default: <code>"SUM"</code></li>
-<li><code>elevation_aggregation::String</code>: Aggregation method. Default: <code>"SUM"</code></li>
-<li><code>color_range::Vector</code>: Array of RGB colors for color scale. Default: 6-color yellow-red scale</li>
-<li><code>upper_percentile::Real</code>: Filter out bins above this percentile. Default: <code>100</code></li>
-<li><code>lower_percentile::Real</code>: Filter out bins below this percentile. Default: <code>0</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-5" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>earthquakes <span class="op">=</span> (</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">180.0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="fl">180.0</span>, <span class="fl">10000</span>),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="fu">rand</span>(<span class="op">-</span><span class="fl">60.0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="fl">60.0</span>, <span class="fl">10000</span>),</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    magnitude <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1.0</span><span class="op">:</span><span class="fl">0.1</span><span class="op">:</span><span class="fl">8.0</span>, <span class="fl">10000</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">HexagonLayer</span>(</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> earthquakes,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    get_elevation_weight <span class="op">=</span> <span class="op">:</span>magnitude,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    radius <span class="op">=</span> <span class="fl">50000</span>,</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    elevation_scale <span class="op">=</span> <span class="fl">100</span>,</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    extruded <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
 </div>
 </div>
+</section>
+<section id="geojsonlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="geojsonlayer"><code>GeoJsonLayer</code></h3>
 <div class="card mb-3">
-<section id="linelayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="linelayer"><code>LineLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">LineLayer</span>(; data, get_source_position, get_target_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders straight lines between source and target coordinates.</p>
-<section id="required-arguments-5" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_source_position</code>: Column accessor for source [longitude, latitude]</li>
-<li><code>get_target_position</code>: Column accessor for target [longitude, latitude]</li>
-</ul>
-</section>
-<section id="optional-arguments-5" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>get_color</code>: Line color as <code>[R,G,B,A]</code> or column reference. Default: <code>[0,0,0,255]</code></li>
-<li><code>get_width::Union{Real,Symbol}</code>: Line width in pixels. Default: <code>1</code></li>
-<li><code>width_units::String</code>: Width units (“pixels” or “meters”). Default: <code>"pixels"</code></li>
-<li><code>width_scale::Real</code>: Width multiplier. Default: <code>1</code></li>
-<li><code>width_min_pixels::Real</code>: Minimum width. Default: <code>0</code></li>
-<li><code>width_max_pixels::Real</code>: Maximum width. Default: <code>Inf</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-6" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>connections <span class="op">=</span> (</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    from_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>],</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    from_lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>],</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    to_lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.3</span>, <span class="op">-</span><span class="fl">122.4</span>],</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    to_lat <span class="op">=</span> [<span class="fl">37.9</span>, <span class="fl">37.8</span>]</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">LineLayer</span>(</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> connections,</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    get_source_position <span class="op">=</span> [<span class="op">:</span>from_lng, <span class="op">:</span>from_lat],</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    get_target_position <span class="op">=</span> [<span class="op">:</span>to_lng, <span class="op">:</span>to_lat],</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">200</span>],</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="fl">2</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="geohashlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="geohashlayer"><code>GeohashLayer</code></h3>
 <div class="card mb-3">
-<section id="pathlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="pathlayer"><code>PathLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PathLayer</span>(; data, get_path, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders sequences of coordinates as paths/polylines.</p>
-<section id="required-arguments-6" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_path</code>: Column accessor for path coordinates. Should reference a column containing arrays of <code>[lng, lat]</code> pairs, e.g., <code>[[lng1,lat1], [lng2,lat2], ...]</code></li>
-</ul>
-</section>
-<section id="optional-arguments-6" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>get_color</code>: Path color as <code>[R,G,B,A]</code> or column reference. Default: <code>[0,0,0,255]</code></li>
-<li><code>get_width::Union{Real,Symbol}</code>: Path width in pixels. Default: <code>1</code></li>
-<li><code>width_units::String</code>: Width units (“pixels” or “meters”). Default: <code>"pixels"</code></li>
-<li><code>width_scale::Real</code>: Width multiplier. Default: <code>1</code></li>
-<li><code>width_min_pixels::Real</code>: Minimum width. Default: <code>0</code></li>
-<li><code>width_max_pixels::Real</code>: Maximum width. Default: <code>Inf</code></li>
-<li><code>cap_rounded::Bool</code>: Round line caps. Default: <code>false</code></li>
-<li><code>joint_rounded::Bool</code>: Round line joints. Default: <code>false</code></li>
-<li><code>billboard::Bool</code>: Always face camera. Default: <code>false</code></li>
-<li><code>miter_limit::Real</code>: Miter limit for sharp corners. Default: <code>4</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-7" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>routes <span class="op">=</span> (</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> [</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        [[<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.9</span>]],</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        [[<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.75</span>], [<span class="op">-</span><span class="fl">122.35</span>, <span class="fl">37.85</span>]]</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> [<span class="st">"Route A"</span>, <span class="st">"Route B"</span>]</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">PathLayer</span>(</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> routes,</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    get_path <span class="op">=</span> <span class="op">:</span>path,</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>, <span class="fl">200</span>],</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    get_width <span class="op">=</span> <span class="fl">5</span>,</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    cap_rounded <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="gimbalwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="gimbalwidget"><code>GimbalWidget</code></h3>
 <div class="card mb-3">
-<section id="polygonlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="polygonlayer"><code>PolygonLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PolygonLayer</span>(; data, get_polygon, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders filled and/or stroked polygons.</p>
-<section id="required-arguments-7" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_polygon</code>: Column accessor for polygon coordinates. Should reference a column containing arrays of <code>[lng, lat]</code> rings (outer ring, then optional holes)</li>
-</ul>
-</section>
-<section id="optional-arguments-7" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>filled::Bool</code>: Draw fill. Default: <code>true</code></li>
-<li><code>stroked::Bool</code>: Draw outline. Default: <code>true</code></li>
-<li><code>extruded::Bool</code>: Extrude polygons in 3D. Default: <code>false</code></li>
-<li><code>wireframe::Bool</code>: Draw 3D wireframe. Default: <code>false</code></li>
-<li><code>elevation_scale::Real</code>: Elevation multiplier. Default: <code>1</code></li>
-<li><code>get_elevation::Union{Real,Symbol}</code>: Polygon height for extrusion. Default: <code>1000</code></li>
-<li><code>get_fill_color</code>: Fill color as <code>[R,G,B,A]</code> or column reference. Default: <code>[0,0,0,255]</code></li>
-<li><code>get_line_color</code>: Outline color as <code>[R,G,B,A]</code> or column reference. Default: <code>[0,0,0,255]</code></li>
-<li><code>get_line_width::Union{Real,Symbol}</code>: Outline width. Default: <code>1</code></li>
-<li><code>line_width_units::String</code>: Width units. Default: <code>"meters"</code></li>
-<li><code>line_width_scale::Real</code>: Width multiplier. Default: <code>1</code></li>
-<li><code>line_width_min_pixels::Real</code>: Minimum width. Default: <code>0</code></li>
-<li><code>line_width_max_pixels::Real</code>: Maximum width. Default: <code>Inf</code></li>
-<li><code>line_joint_rounded::Bool</code>: Round line joints. Default: <code>false</code></li>
-<li><code>line_miter_limit::Real</code>: Miter limit. Default: <code>4</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-8" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>regions <span class="op">=</span> (</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    polygon <span class="op">=</span> [</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        [[[<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.7</span>], [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>]]],</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        [[[<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.85</span>], [<span class="op">-</span><span class="fl">122.5</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span>], [<span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.85</span>]]]</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>]</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">PolygonLayer</span>(</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> regions,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    get_polygon <span class="op">=</span> <span class="op">:</span>polygon,</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">100</span>],</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    get_line_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    get_line_width <span class="op">=</span> <span class="fl">2</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
 </div>
 </div>
+</section>
+<section id="greatcirclelayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="greatcirclelayer"><code>GreatCircleLayer</code></h3>
 <div class="card mb-3">
-<section id="scatterplotlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="scatterplotlayer"><code>ScatterplotLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ScatterplotLayer</span>(; data, get_position, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders circles at given coordinates.</p>
-<section id="required-arguments-8" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source (DataFrame, NamedTuple of vectors, etc.)</li>
-<li><code>get_position</code>: Column accessor for [longitude, latitude] positions. Can be a <code>Symbol</code> for a column containing coordinate tuples/arrays, or a <code>Vector{Symbol}</code> like <code>[:lng, :lat]</code> for separate columns.</li>
-</ul>
-</section>
-<section id="optional-arguments-8" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier (auto-generated if not provided)</li>
-<li><code>get_radius::Union{Real,Symbol}</code>: Circle radius in meters. Default: <code>1</code></li>
-<li><code>get_fill_color</code>: Fill color as <code>[R,G,B]</code> or <code>[R,G,B,A]</code> (0-255), or a <code>Symbol</code> for data-driven color</li>
-<li><code>get_line_color</code>: Outline color (same format as fill_color)</li>
-<li><code>get_line_width::Union{Real,Symbol}</code>: Outline width in pixels. Default: <code>1</code></li>
-<li><code>radius_scale::Real</code>: Global radius multiplier. Default: <code>1</code></li>
-<li><code>radius_min_pixels::Real</code>: Minimum radius in pixels. Default: <code>0</code></li>
-<li><code>radius_max_pixels::Real</code>: Maximum radius in pixels. Default: <code>Inf</code></li>
-<li><code>line_width_units::String</code>: Units for line width (“pixels” or “meters”). Default: <code>"pixels"</code></li>
-<li><code>line_width_scale::Real</code>: Global line width multiplier. Default: <code>1</code></li>
-<li><code>stroked::Bool</code>: Draw outline. Default: <code>false</code></li>
-<li><code>filled::Bool</code>: Draw fill. Default: <code>true</code></li>
-<li><code>billboard::Bool</code>: If true, circles always face camera. Default: <code>false</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable hover/click interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-9" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    longitude <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>, <span class="op">-</span><span class="fl">122.3</span>],</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    latitude <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>, <span class="fl">37.9</span>],</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">150</span>]</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">ScatterplotLayer</span>(</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> df,</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>longitude, <span class="op">:</span>latitude],</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    get_radius <span class="op">=</span> <span class="op">:</span>size,</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    get_fill_color <span class="op">=</span> [<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>, <span class="fl">200</span>]</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="gridcelllayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="gridcelllayer"><code>GridCellLayer</code></h3>
 <div class="card mb-3">
-<section id="textlayer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="textlayer"><code>TextLayer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TextLayer</span>(; data, get_position, get_text, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Renders text labels at given coordinates.</p>
-<section id="required-arguments-9" class="level1">
-<h1>Required Arguments</h1>
-<ul>
-<li><code>data</code>: Any Tables.jl-compatible data source</li>
-<li><code>get_position</code>: Column accessor for [longitude, latitude]</li>
-<li><code>get_text</code>: Column accessor for text content (Symbol referencing a string column)</li>
-</ul>
-</section>
-<section id="optional-arguments-9" class="level1">
-<h1>Optional Arguments</h1>
-<ul>
-<li><code>id::String</code>: Unique layer identifier</li>
-<li><code>get_size::Union{Real,Symbol}</code>: Text size in pixels. Default: <code>32</code></li>
-<li><code>get_color</code>: Text color as <code>[R,G,B,A]</code> or column reference. Default: <code>[0,0,0,255]</code></li>
-<li><code>get_angle::Union{Real,Symbol}</code>: Text rotation in degrees. Default: <code>0</code></li>
-<li><code>get_text_anchor::String</code>: Horizontal anchor (“start”, “middle”, “end”). Default: <code>"middle"</code></li>
-<li><code>get_alignment_baseline::String</code>: Vertical anchor (“top”, “center”, “bottom”). Default: <code>"center"</code></li>
-<li><code>get_pixel_offset::Vector{&lt;:Real}</code>: Pixel offset [x, y]. Default: <code>[0, 0]</code></li>
-<li><code>background::Bool</code>: Draw background. Default: <code>false</code></li>
-<li><code>get_background_color</code>: Background color. Default: <code>[255, 255, 255, 255]</code></li>
-<li><code>background_padding::Vector{&lt;:Real}</code>: Background padding [x, y]. Default: <code>[0, 0]</code></li>
-<li><code>font_family::String</code>: Font family. Default: <code>"Monaco, monospace"</code></li>
-<li><code>font_weight::Union{String,Int}</code>: Font weight. Default: <code>"normal"</code></li>
-<li><code>line_height::Real</code>: Line height multiplier. Default: <code>1</code></li>
-<li><code>billboard::Bool</code>: Always face camera. Default: <code>true</code></li>
-<li><code>size_scale::Real</code>: Size multiplier. Default: <code>1</code></li>
-<li><code>size_units::String</code>: Size units (“pixels” or “meters”). Default: <code>"pixels"</code></li>
-<li><code>size_min_pixels::Real</code>: Minimum size. Default: <code>0</code></li>
-<li><code>size_max_pixels::Real</code>: Maximum size. Default: <code>Inf</code></li>
-<li><code>opacity::Real</code>: Layer opacity (0-1). Default: <code>1</code></li>
-<li><code>pickable::Bool</code>: Enable interactions. Default: <code>false</code></li>
-<li><code>visible::Bool</code>: Layer visibility. Default: <code>true</code></li>
-</ul>
-</section>
-<section id="example-10" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> (</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">73.9</span>, <span class="op">-</span><span class="fl">87.6</span>],</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">40.7</span>, <span class="fl">41.9</span>],</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> [<span class="st">"San Francisco"</span>, <span class="st">"New York"</span>, <span class="st">"Chicago"</span>],</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    population <span class="op">=</span> [<span class="fl">883000</span>, <span class="fl">8336000</span>, <span class="fl">2693000</span>]</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">TextLayer</span>(</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> cities,</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    get_position <span class="op">=</span> [<span class="op">:</span>lng, <span class="op">:</span>lat],</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    get_text <span class="op">=</span> <span class="op">:</span>name,</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    get_size <span class="op">=</span> <span class="fl">16</span>,</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    get_color <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">255</span>],</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    get_text_anchor <span class="op">=</span> <span class="st">"middle"</span>,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    get_alignment_baseline <span class="op">=</span> <span class="st">"center"</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="gridlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="gridlayer"><code>GridLayer</code></h3>
 <div class="card mb-3">
-<section id="viewstate" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="viewstate"><code>ViewState</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(; longitude<span class="op">=</span><span class="fl">0.0</span>, latitude<span class="op">=</span><span class="fl">0.0</span>, zoom<span class="op">=</span><span class="fl">1.0</span>, pitch<span class="op">=</span><span class="fl">0.0</span>, bearing<span class="op">=</span><span class="fl">0.0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Camera/viewport configuration for a deck.gl visualization.</p>
-<section id="fields" class="level1">
-<h1>Fields</h1>
-<ul>
-<li><code>longitude::Float64</code>: Center longitude</li>
-<li><code>latitude::Float64</code>: Center latitude</li>
-<li><code>zoom::Float64</code>: Zoom level (0-20+)</li>
-<li><code>pitch::Float64</code>: Tilt angle in degrees (0-60)</li>
-<li><code>bearing::Float64</code>: Rotation angle in degrees (0-360)</li>
-</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="h3clusterlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="h3clusterlayer"><code>H3ClusterLayer</code></h3>
 <div class="card mb-3">
-<section id="zoomwidget" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="zoomwidget"><code>ZoomWidget</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ZoomWidget</span>(; id<span class="op">=</span><span class="st">"zoom"</span>, placement<span class="op">=</span><span class="st">"top-right"</span>, orientation<span class="op">=</span><span class="st">"vertical"</span>, transition_duration<span class="op">=</span><span class="fl">200</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Adds +/- zoom buttons to the map.</p>
-<section id="keyword-arguments-3" class="level1">
-<h1>Keyword Arguments</h1>
-<ul>
-<li><code>id::String</code>: Widget identifier. Default: <code>"zoom"</code></li>
-<li><code>placement::String</code>: Widget position (<code>"top-left"</code>, <code>"top-right"</code>, <code>"bottom-left"</code>, <code>"bottom-right"</code>). Default: <code>"top-right"</code></li>
-<li><code>orientation::String</code>: Button layout (<code>"vertical"</code> or <code>"horizontal"</code>). Default: <code>"vertical"</code></li>
-<li><code>transition_duration::Int</code>: Zoom animation duration in ms. Default: <code>200</code></li>
-</ul>
-<section id="examples-2" class="level3">
-<h3 class="anchored" data-anchor-id="examples-2">Examples</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">ZoomWidget</span>()])</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, widgets<span class="op">=</span>[<span class="fu">ZoomWidget</span>(placement<span class="op">=</span><span class="st">"top-left"</span>, orientation<span class="op">=</span><span class="st">"horizontal"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
 </div>
 </div>
+</section>
+<section id="h3hexagonlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="h3hexagonlayer"><code>H3HexagonLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="heatmaplayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="heatmaplayer"><code>HeatmapLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="hexagonlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="hexagonlayer"><code>HexagonLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="iconlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="iconlayer"><code>IconLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="iconwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="iconwidget"><code>IconWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="infowidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="infowidget"><code>InfoWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="js" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="js"><code>JS</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">JS</span>(code<span class="op">::</span><span class="dt">AbstractString</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Raw JavaScript, emitted verbatim into the generated page. Escape hatch to provide functions (typical for deck.gl properties).</p>
+<p><strong>Examples</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A prop deck.gl expects to be a function</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ScatterplotLayer</span>(data<span class="op">=</span>df, get_position<span class="op">=</span>[<span class="op">:</span>lng, <span class="op">:</span>lat], get_radius<span class="op">=</span><span class="fu">JS</span>(<span class="st">"d =&gt; 10"</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A callback</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">Deck</span>(layer, on_click<span class="op">=</span><span class="fu">JS</span>(<span class="st">"info =&gt; console.log(info.index)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="layer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="layer"><code>Layer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="linelayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="linelayer"><code>LineLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="loadingwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="loadingwidget"><code>LoadingWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="mvtlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="mvtlayer"><code>MVTLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="mapview" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="mapview"><code>MapView</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>View{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl view: the camera model the layers are rendered through. <code>MapView</code> is the geospatial default; <code>OrthographicView</code> and <code>OrbitView</code> render non-geographic data in Cartesian coordinates. Concrete views are <code>const</code> aliases, e.g.&nbsp;<code>MapView === View{:MapView}</code>.</p>
+</div>
+</div>
+</section>
+<section id="orbitview" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="orbitview"><code>OrbitView</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>View{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl view: the camera model the layers are rendered through. <code>MapView</code> is the geospatial default; <code>OrthographicView</code> and <code>OrbitView</code> render non-geographic data in Cartesian coordinates. Concrete views are <code>const</code> aliases, e.g.&nbsp;<code>MapView === View{:MapView}</code>.</p>
+</div>
+</div>
+</section>
+<section id="orthographicview" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="orthographicview"><code>OrthographicView</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>View{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl view: the camera model the layers are rendered through. <code>MapView</code> is the geospatial default; <code>OrthographicView</code> and <code>OrbitView</code> render non-geographic data in Cartesian coordinates. Concrete views are <code>const</code> aliases, e.g.&nbsp;<code>MapView === View{:MapView}</code>.</p>
+</div>
+</div>
+</section>
+<section id="pathlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="pathlayer"><code>PathLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="pointcloudlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="pointcloudlayer"><code>PointCloudLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="polygonlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="polygonlayer"><code>PolygonLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="popupwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="popupwidget"><code>PopupWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="quadkeylayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="quadkeylayer"><code>QuadkeyLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="resetviewwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="resetviewwidget"><code>ResetViewWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="s2layer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="s2layer"><code>S2Layer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="scatterplotlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="scatterplotlayer"><code>ScatterplotLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="scenegraphlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="scenegraphlayer"><code>ScenegraphLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="screengridlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="screengridlayer"><code>ScreenGridLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="screenshotwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="screenshotwidget"><code>ScreenshotWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="scrollbarwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="scrollbarwidget"><code>ScrollbarWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="selectorwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="selectorwidget"><code>SelectorWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="simplemeshlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="simplemeshlayer"><code>SimpleMeshLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="solidpolygonlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="solidpolygonlayer"><code>SolidPolygonLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="terrainlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="terrainlayer"><code>TerrainLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="textlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="textlayer"><code>TextLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="themewidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="themewidget"><code>ThemeWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="tile3dlayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="tile3dlayer"><code>Tile3DLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="tilelayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="tilelayer"><code>TileLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="togglewidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="togglewidget"><code>ToggleWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="tripslayer" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="tripslayer"><code>TripsLayer</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>Layer{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl layer: a name and a bag of props, serialized into a <code>new deck.&lt;name&gt;(...)</code> call. The concrete layers are <code>const</code> aliases of this type, so <code>ScatterplotLayer</code> is exactly <code>Layer{:ScatterplotLayer}</code> and <code>layer isa ScatterplotLayer</code> works as expected.</p>
+<p>There is deliberately no Julia-side struct field per deck.gl prop. deck.gl’s own <code>defaultProps</code> tables are the source of truth for which props exist (see <code>src/metadata.jl</code>), and any prop left unset here is left unset in the output so that deck.gl applies its own default rather than one copied into Julia and left to drift.</p>
+</div>
+</div>
+</section>
+<section id="view" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="view"><code>View</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>View{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl view: the camera model the layers are rendered through. <code>MapView</code> is the geospatial default; <code>OrthographicView</code> and <code>OrbitView</code> render non-geographic data in Cartesian coordinates. Concrete views are <code>const</code> aliases, e.g.&nbsp;<code>MapView === View{:MapView}</code>.</p>
+</div>
+</div>
+</section>
+<section id="viewstate" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="viewstate"><code>ViewState</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(; props<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The camera position layers are rendered from.</p>
+<p>The meaningful props depend on the view: <code>longitude</code>, <code>latitude</code>, <code>zoom</code>, <code>pitch</code> and <code>bearing</code> for the geospatial <code>MapView</code>; <code>target</code> and <code>zoom</code> for <code>OrthographicView</code> and <code>OrbitView</code>. Nothing is defaulted here, so anything omitted is omitted from the output.</p>
+<p><strong>Examples</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(longitude<span class="op">=-</span><span class="fl">122.4</span>, latitude<span class="op">=</span><span class="fl">37.8</span>, zoom<span class="op">=</span><span class="fl">11</span>, pitch<span class="op">=</span><span class="fl">45</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ViewState</span>(target<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], zoom<span class="op">=</span><span class="fl">3</span>)          <span class="co"># OrthographicView / OrbitView</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="widget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="widget"><code>Widget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
+<section id="zoomwidget" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="zoomwidget"><code>ZoomWidget</code></h3>
+<div class="card mb-3">
+<div class="card-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>Widget{name}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A deck.gl UI widget (zoom buttons, compass, fullscreen toggle, …). Concrete widgets are <code>const</code> aliases, e.g.&nbsp;<code>ZoomWidget === Widget{:ZoomWidget}</code>.</p>
+</div>
+</div>
+</section>
 </section>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
+<section id="arcs" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="arcs"><code>arcs</code></h3>
 <div class="card mb-3">
-<section id="arcs" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="arcs"><code>arcs</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, source_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>], target_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, source_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>], target_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">128</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create an arc diagram visualization.</p>
-<section id="arguments-1" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>source</code>: Source position as <code>[lng_col, lat_col]</code> or single column Symbol</li>
 <li><code>target</code>: Target position as <code>[lng_col, lat_col]</code> or single column Symbol</li>
 </ul>
-</section>
-<section id="keyword-arguments-4" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>width</code>: Arc width (number or column Symbol). Default: <code>1</code></li>
 <li><code>source_color</code>: Source end color. Default: <code>[0, 128, 255]</code></li>
@@ -1012,29 +959,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>3</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>ArcLayer</code></li>
 </ul>
-</section>
-<section id="example-11" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (src_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">122.4</span>], src_lat<span class="op">=</span>[<span class="fl">37.8</span>], dst_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">73.9</span>], dst_lat<span class="op">=</span>[<span class="fl">40.7</span>])</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(trips, [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat], [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<p><strong>Example</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>trips <span class="op">=</span> (src_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">122.4</span>], src_lat<span class="op">=</span>[<span class="fl">37.8</span>], dst_lng<span class="op">=</span>[<span class="op">-</span><span class="fl">73.9</span>], dst_lat<span class="op">=</span>[<span class="fl">40.7</span>])</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">arcs</span>(trips, [<span class="op">:</span>src_lng, <span class="op">:</span>src_lat], [<span class="op">:</span>dst_lng, <span class="op">:</span>dst_lat])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+</section>
+<section id="geojson" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="geojson"><code>geojson</code></h3>
 <div class="card mb-3">
-<section id="geojson" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="geojson"><code>geojson</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson</span>(data; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson</span>(data; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a GeoJSON visualization.</p>
-<section id="arguments-2" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: GeoJSON data as Dict, JSON string, or URL</li>
 </ul>
-</section>
-<section id="keyword-arguments-5" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>fill_color</code>: Fill color for polygons. Default: <code>[0, 0, 0, 100]</code></li>
 <li><code>line_color</code>: Line/stroke color. Default: <code>[0, 0, 0]</code></li>
@@ -1044,42 +985,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>4</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>GeoJsonLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="heatmap" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="heatmap"><code>heatmap</code></h3>
 <div class="card mb-3">
-<section id="geojson_layer" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="geojson_layer"><code>geojson_layer</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geojson_layer</span>(geom; kwargs<span class="op">...</span>) <span class="op">-&gt;</span> GeoJsonLayer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Create a GeoJsonLayer from any GeoInterface-compatible geometry.</p>
-<section id="example-12" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Shapefile</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>shp <span class="op">=</span> Shapefile.<span class="fu">Table</span>(<span class="st">"boundaries.shp"</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> <span class="fu">geojson_layer</span>(shp, get_fill_color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</div>
-</div>
-<div class="card mb-3">
-<section id="heatmap" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="heatmap"><code>heatmap</code></h4>
-</section>
-<div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">30</span>, intensity<span class="op">=</span><span class="fl">1</span>, weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">30</span>, intensity<span class="op">=</span><span class="fl">1</span>, weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a heatmap visualization.</p>
-<section id="arguments-3" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>lng</code>: Column name for longitude</li>
 <li><code>lat</code>: Column name for latitude</li>
 </ul>
-</section>
-<section id="keyword-arguments-6" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>radius</code>: Radius of influence in pixels. Default: <code>30</code></li>
 <li><code>intensity</code>: Intensity multiplier. Default: <code>1</code></li>
@@ -1089,26 +1010,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>10</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>HeatmapLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="hexbin" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="hexbin"><code>hexbin</code></h3>
 <div class="card mb-3">
-<section id="hexbin" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="hexbin"><code>hexbin</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hexbin</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1000</span>, elevation_weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hexbin</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1000</span>, elevation_weight<span class="op">=</span><span class="fl">1</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a hexagonal binning visualization.</p>
-<section id="arguments-4" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>lng</code>: Column name for longitude</li>
 <li><code>lat</code>: Column name for latitude</li>
 </ul>
-</section>
-<section id="keyword-arguments-7" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>radius</code>: Hexagon radius in meters. Default: <code>1000</code></li>
 <li><code>elevation_weight</code>: Column for elevation weighting or constant. Default: <code>1</code></li>
@@ -1119,26 +1036,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>10</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>HexagonLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="lines" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="lines"><code>lines</code></h3>
 <div class="card mb-3">
-<section id="lines" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="lines"><code>lines</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(data, source, target; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a line visualization connecting points.</p>
-<section id="arguments-5" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>source</code>: Source position as <code>[lng_col, lat_col]</code></li>
 <li><code>target</code>: Target position as <code>[lng_col, lat_col]</code></li>
 </ul>
-</section>
-<section id="keyword-arguments-8" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>width</code>: Line width. Default: <code>1</code></li>
 <li><code>color</code>: Line color. Default: <code>[0, 0, 0]</code></li>
@@ -1146,34 +1059,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>10</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>LineLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="open_html" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="open_html"><code>open_html</code></h3>
 <div class="card mb-3">
-<section id="open_html" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="open_html"><code>open_html</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Open the visualization in the default web browser.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; kwargs<span class="op">...</span>) <span class="op">-&gt;</span> path</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Write <code>deck</code> to a temporary file and open it in the default browser. Takes the same keyword arguments as <code>to_html</code>.</p>
 </div>
 </div>
+</section>
+<section id="paths" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="paths"><code>paths</code></h3>
 <div class="card mb-3">
-<section id="paths" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="paths"><code>paths</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(data, path_col; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(data, path_col; width<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a path visualization.</p>
-<section id="arguments-6" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>path_col</code>: Column containing path coordinates (arrays of [lng, lat] pairs)</li>
 </ul>
-</section>
-<section id="keyword-arguments-9" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>width</code>: Path width. Default: <code>1</code></li>
 <li><code>color</code>: Path color. Default: <code>[0, 0, 0]</code></li>
@@ -1182,25 +1091,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>rounded</code>: Round line caps and joints. Default: <code>false</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>PathLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="polygons" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="polygons"><code>polygons</code></h3>
 <div class="card mb-3">
-<section id="polygons" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="polygons"><code>polygons</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">polygons</span>(data, polygon_col; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">polygons</span>(data, polygon_col; fill_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">100</span>], line_color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a polygon visualization.</p>
-<section id="arguments-7" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>polygon_col</code>: Column containing polygon coordinates</li>
 </ul>
-</section>
-<section id="keyword-arguments-10" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>fill_color</code>: Fill color. Default: <code>[0, 0, 0, 100]</code></li>
 <li><code>line_color</code>: Outline color. Default: <code>[0, 0, 0]</code></li>
@@ -1209,35 +1114,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>10</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>PolygonLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="save_html" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="save_html"><code>save_html</code></h3>
 <div class="card mb-3">
-<section id="save_html" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="save_html"><code>save_html</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>, path<span class="op">::</span><span class="dt">String</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Save the visualization as a standalone HTML file.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>, path; kwargs<span class="op">...</span>) <span class="op">-&gt;</span> path</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Write <code>deck</code> to an HTML file. Takes the same keyword arguments as <code>to_html</code>; pass <code>bundle=:local</code> for a file that renders without network access.</p>
 </div>
 </div>
+</section>
+<section id="scatter" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="scatter"><code>scatter</code></h3>
 <div class="card mb-3">
-<section id="scatter" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="scatter"><code>scatter</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>], opacity<span class="op">=</span><span class="fl">1</span>, zoom<span class="op">=</span><span class="fl">10</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, lng, lat; radius<span class="op">=</span><span class="fl">1</span>, color<span class="op">=</span>[<span class="fl">255</span>, <span class="fl">140</span>, <span class="fl">0</span>], opacity<span class="op">=</span><span class="fl">1</span>, zoom<span class="op">=</span><span class="fl">10</span>, kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a scatterplot visualization.</p>
-<section id="arguments-8" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>lng</code>: Column name for longitude (Symbol)</li>
 <li><code>lat</code>: Column name for latitude (Symbol)</li>
 </ul>
-</section>
-<section id="keyword-arguments-11" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>radius</code>: Point radius (number or column Symbol). Default: <code>1</code></li>
 <li><code>color</code>: Point color as <code>[R,G,B]</code> or <code>[R,G,B,A]</code>. Default: <code>[255, 140, 0]</code></li>
@@ -1245,32 +1146,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>10</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>ScatterplotLayer</code></li>
 </ul>
-</section>
-<section id="example-13" class="level1">
-<h1>Example</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>], lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>], size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>])</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<p><strong>Example</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> (lng <span class="op">=</span> [<span class="op">-</span><span class="fl">122.4</span>, <span class="op">-</span><span class="fl">122.5</span>], lat <span class="op">=</span> [<span class="fl">37.8</span>, <span class="fl">37.7</span>], size <span class="op">=</span> [<span class="fl">100</span>, <span class="fl">200</span>])</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(data, <span class="op">:</span>lng, <span class="op">:</span>lat, radius<span class="op">=:</span>size, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">128</span>, <span class="fl">255</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+</section>
+<section id="text" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="text"><code>text</code></h3>
 <div class="card mb-3">
-<section id="text" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="text"><code>text</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(data, lng, lat, text_col; size<span class="op">=</span><span class="fl">16</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(data, lng, lat, text_col; size<span class="op">=</span><span class="fl">16</span>, color<span class="op">=</span>[<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>], kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a text label visualization.</p>
-<section id="arguments-9" class="level1">
-<h1>Arguments</h1>
+<p><strong>Arguments</strong></p>
 <ul>
 <li><code>data</code>: Tables.jl-compatible data source</li>
 <li><code>lng</code>: Column name for longitude</li>
 <li><code>lat</code>: Column name for latitude</li>
 <li><code>text_col</code>: Column containing text labels</li>
 </ul>
-</section>
-<section id="keyword-arguments-12" class="level1">
-<h1>Keyword Arguments</h1>
+<p><strong>Keyword Arguments</strong></p>
 <ul>
 <li><code>size</code>: Text size. Default: <code>16</code></li>
 <li><code>color</code>: Text color. Default: <code>[0, 0, 0]</code></li>
@@ -1278,38 +1173,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>zoom</code>: Initial zoom level. Default: <code>10</code></li>
 <li><code>kwargs...</code>: Additional keyword arguments passed to <code>TextLayer</code></li>
 </ul>
+</div>
+</div>
 </section>
-</div>
-</div>
+<section id="to_html" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="to_html"><code>to_html</code></h3>
 <div class="card mb-3">
-<section id="to_geojson" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="to_geojson"><code>to_geojson</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_geojson</span>(geom) <span class="op">-&gt;</span> <span class="dt">Dict</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Convert a GeoInterface-compatible geometry to a GeoJSON Dict.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>, bundle<span class="op">=:</span>cdn, title<span class="op">=</span><span class="st">"DeckGL"</span>, scripts<span class="op">=</span><span class="dt">String</span>[]) <span class="op">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">to_html</span>(io<span class="op">::</span><span class="dt">IO</span>, deck<span class="op">::</span><span class="dt">Deck</span>; kwargs<span class="op">...</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Render <code>deck</code> as a complete HTML page. The <code>IO</code> form streams it out rather than building it in memory first.</p>
+<p><strong>Keyword Arguments</strong></p>
+<ul>
+<li><code>width</code>, <code>height</code>: CSS sizes for the container</li>
+<li><code>bundle</code>: where deck.gl itself comes from. <code>:cdn</code> links unpkg, keeping the page small but requiring network access to view. <code>:local</code> inlines the bundle from the <code>deckgl</code> artifact, producing a page that renders offline. A <code>map_style</code> needs the network either way, for MapLibre and for the map tiles, as do the peer libraries described below.</li>
+<li><code>title</code>: the page <code>&lt;title&gt;</code></li>
+<li><code>scripts</code>: URLs of extra scripts to load before deck.gl. The library the H3 layers need is added automatically (see <code>DeckGL.peer_scripts</code>); this is for anything else, such as a loader for <code>Tile3DLayer</code>.</li>
+</ul>
 </div>
 </div>
+</section>
+<section id="to_js" class="level3 api-item">
+<h3 class="api-item anchored" data-anchor-id="to_js"><code>to_js</code></h3>
 <div class="card mb-3">
-<section id="to_html" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="to_html"><code>to_html</code></h4>
-</section>
 <div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_html</span>(deck<span class="op">::</span><span class="dt">Deck</span>; width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"500px"</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Generate a standalone HTML string for the deck.gl visualization.</p>
-</div>
-</div>
-<div class="card mb-3">
-<section id="to_json" class="level4 card-header api-item-header">
-<h4 class="anchored" data-anchor-id="to_json"><code>to_json</code></h4>
-</section>
-<div class="card-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_json</span>(deck<span class="op">::</span><span class="dt">Deck</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Convert a Deck to its deck.gl JSON specification string.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">to_js</span>(deck<span class="op">::</span><span class="dt">Deck</span>) <span class="op">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">to_js</span>(io<span class="op">::</span><span class="dt">IO</span>, deck<span class="op">::</span><span class="dt">Deck</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The JavaScript that builds and mounts <code>deck</code>.</p>
+<p>The page carries no spec language and no interpreter: layers are emitted as the <code>new deck.ScatterplotLayer({...})</code> calls a hand-written page would contain, which means the output can be read, pasted into a console, and debugged directly.</p>
+<p>The <code>IO</code> form streams, encoding attribute buffers straight into the output instead of materializing the page – which at a million rows is mostly base64 – as a string first.</p>
 </div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1732,7 +1629,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-04-23</p>
+<p>Built on 2026-08-31</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

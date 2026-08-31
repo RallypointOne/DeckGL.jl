@@ -31,13 +31,13 @@
             <td class="headerValue">on branch main</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
-            <td class="headerCovTableEntry">18</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">96.6&nbsp;%</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntry">28</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-23 10:54:41</td>
+            <td class="headerValue">2026-08-31 22:20:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -60,39 +60,61 @@
               <td>
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
-<span id="L1"><span class="lineNum">       1</span>              : #-----------------------------------------------------------------------------# REPL display</span>
-<span id="L2"><span class="lineNum">       2</span> <span class="tlaUNC tlaBgUNC">           0 : function Base.show(io::IO, layer::AbstractLayer)</span></span>
-<span id="L3"><span class="lineNum">       3</span> <span class="tlaUNC">           0 :     T = typeof(layer)</span></span>
-<span id="L4"><span class="lineNum">       4</span> <span class="tlaUNC">           0 :     ndata = Tables.istable(layer.data) ? length(Tables.rowtable(layer.data)) : &quot;?&quot;</span></span>
-<span id="L5"><span class="lineNum">       5</span> <span class="tlaUNC">           0 :     print(io, nameof(T), &quot;(&quot;, ndata, &quot; rows)&quot;)</span></span>
-<span id="L6"><span class="lineNum">       6</span>              : end</span>
-<span id="L7"><span class="lineNum">       7</span>              : </span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaUNC">           0 : function Base.show(io::IO, deck::Deck)</span></span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaUNC">           0 :     n = length(deck.layers)</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaUNC">           0 :     vs = deck.initial_view_state</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaUNC">           0 :     print(io, &quot;Deck(&quot;, n, &quot; layer&quot;, n == 1 ? &quot;&quot; : &quot;s&quot;)</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaUNC">           0 :     print(io, &quot;, center=(&quot;, round(vs.longitude; digits=4), &quot;, &quot;, round(vs.latitude; digits=4), &quot;)&quot;)</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaUNC">           0 :     print(io, &quot;, zoom=&quot;, vs.zoom, &quot;)&quot;)</span></span>
-<span id="L14"><span class="lineNum">      14</span>              : end</span>
-<span id="L15"><span class="lineNum">      15</span>              : </span>
-<span id="L16"><span class="lineNum">      16</span>              : #-----------------------------------------------------------------------------# MIME types</span>
-<span id="L17"><span class="lineNum">      17</span>              : # Jupyter notebooks and VS Code use text/html</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaUNC">           0 : function Base.show(io::IO, ::MIME&quot;text/html&quot;, deck::Deck)</span></span>
-<span id="L19"><span class="lineNum">      19</span>              :     # Use iframe for isolation in notebook environments</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC">           0 :     html = to_html(deck; height=&quot;500px&quot;)</span></span>
-<span id="L21"><span class="lineNum">      21</span>              :     # Encode as base64 data URI to avoid escaping issues</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaUNC">           0 :     encoded = base64encode(html)</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC">           0 :     print(io, &quot;&quot;&quot;&lt;iframe src=&quot;data:text/html;base64,$encoded&quot; style=&quot;width:100%; height:520px; border:none;&quot;&gt;&lt;/iframe&gt;&quot;&quot;&quot;)</span></span>
-<span id="L24"><span class="lineNum">      24</span>              : end</span>
-<span id="L25"><span class="lineNum">      25</span>              : </span>
-<span id="L26"><span class="lineNum">      26</span>              : # VS Code Julia extension specific MIME type</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaUNC">           0 : function Base.show(io::IO, ::MIME&quot;juliavscode/html&quot;, deck::Deck)</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaUNC">           0 :     print(io, to_html(deck; height=&quot;500px&quot;))</span></span>
-<span id="L29"><span class="lineNum">      29</span>              : end</span>
-<span id="L30"><span class="lineNum">      30</span>              : </span>
-<span id="L31"><span class="lineNum">      31</span>              : #-----------------------------------------------------------------------------# Display helpers</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaUNC">           0 : Base.showable(::MIME&quot;text/html&quot;, ::Deck) = true</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 : Base.showable(::MIME&quot;juliavscode/html&quot;, ::Deck) = true</span></span>
+<span id="L1"><span class="lineNum">       1</span>              : #-----------------------------------------------------------------------------# Row counts</span>
+<span id="L2"><span class="lineNum">       2</span>              : # Layers routinely hold millions of rows. Count them only when the data can say how</span>
+<span id="L3"><span class="lineNum">       3</span>              : # many it has without being materialized.</span>
+<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC tlaBgGNC">           3 : function row_count(data)</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">           3 :     Tables.istable(data) || return nothing</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">           3 :     rows = Tables.rows(data)</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">           3 :     Base.IteratorSize(typeof(rows)) === Base.SizeUnknown() ? nothing : length(rows)</span></span>
+<span id="L8"><span class="lineNum">       8</span>              : end</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #-----------------------------------------------------------------------------# REPL display</span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           3 : function Base.show(io::IO, layer::Layer)</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           3 :     n = row_count(get(layer.props, :data, nothing))</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           3 :     print(io, typename(layer), &quot;(&quot;)</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           6 :     n === nothing || print(io, n, n == 1 ? &quot; row, &quot; : &quot; rows, &quot;)</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           3 :     print(io, length(layer.props), &quot; props)&quot;)</span></span>
+<span id="L16"><span class="lineNum">      16</span>              : end</span>
+<span id="L17"><span class="lineNum">      17</span>              : </span>
+<span id="L18"><span class="lineNum">      18</span>              : # Widgets, views and view states are all a name and a bag of props.</span>
+<span id="L19"><span class="lineNum">      19</span>              : function Base.show(io::IO, x::Union{Widget,View,ViewState})</span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           3 :     print(io, typename(x), &quot;(&quot;,</span></span>
+<span id="L21"><span class="lineNum">      21</span>              :           join((&quot;$k=$(repr(v))&quot; for (k, v) in sorted_props(x)), &quot;, &quot;), &quot;)&quot;)</span>
+<span id="L22"><span class="lineNum">      22</span>              : end</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           1 : function Base.show(io::IO, ::MIME&quot;text/plain&quot;, deck::Deck)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           1 :     println(io, &quot;Deck with &quot;, length(deck.layers), &quot; layer&quot;, length(deck.layers) == 1 ? &quot;&quot; : &quot;s&quot;, &quot;:&quot;)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           1 :     for layer in deck.layers</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           1 :         print(io, &quot;  &quot;)</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           1 :         show(io, layer)</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           1 :         println(io)</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">           1 :     end</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           1 :     print(io, &quot;  &quot;)</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">           1 :     show(io, deck.initial_view_state)</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           1 :     deck.map_style === nothing || print(io, &quot;\n  basemap: &quot;, deck.map_style)</span></span>
+<span id="L34"><span class="lineNum">      34</span>              : end</span>
+<span id="L35"><span class="lineNum">      35</span>              : </span>
+<span id="L36"><span class="lineNum">      36</span>              : function Base.show(io::IO, deck::Deck)</span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           1 :     n = length(deck.layers)</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           1 :     print(io, &quot;Deck(&quot;, n, &quot; layer&quot;, n == 1 ? &quot;&quot; : &quot;s&quot;, &quot;)&quot;)</span></span>
+<span id="L39"><span class="lineNum">      39</span>              : end</span>
+<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L41"><span class="lineNum">      41</span>              : #-----------------------------------------------------------------------------# Rich display</span>
+<span id="L42"><span class="lineNum">      42</span>              : # Notebooks get an iframe so the page's scripts and styles cannot reach the host</span>
+<span id="L43"><span class="lineNum">      43</span>              : # document. The page is encoded straight into the `src` attribute as it is generated,</span>
+<span id="L44"><span class="lineNum">      44</span>              : # rather than built and then encoded.</span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           1 : function Base.show(io::IO, ::MIME&quot;text/html&quot;, deck::Deck)</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           1 :     print(io, &quot;&quot;&quot;&lt;iframe src=&quot;data:text/html;base64,&quot;&quot;&quot;)</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           1 :     pipe = Base64EncodePipe(io)</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">           1 :     to_html(pipe, deck; height = &quot;500px&quot;)</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           1 :     close(pipe)</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           1 :     print(io, &quot;&quot;&quot;&quot; style=&quot;width:100%;height:520px;border:none;&quot; sandbox=&quot;allow-scripts&quot;&gt;&lt;/iframe&gt;&quot;&quot;&quot;)</span></span>
+<span id="L51"><span class="lineNum">      51</span>              : end</span>
+<span id="L52"><span class="lineNum">      52</span>              : </span>
+<span id="L53"><span class="lineNum">      53</span>              : # The VS Code Julia extension renders this MIME type in its own webview, which is</span>
+<span id="L54"><span class="lineNum">      54</span>              : # already isolated, so it gets the page directly.</span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC tlaBgUNC">           0 : Base.show(io::IO, ::MIME&quot;juliavscode/html&quot;, deck::Deck) = to_html(io, deck)</span></span>
         </pre>
               </td>
             </tr>

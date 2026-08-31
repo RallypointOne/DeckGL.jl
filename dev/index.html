@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3db6c18bb69885e7f25697a9383847b5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-095245003bb80bd2beb305de39928752.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-426f41d558ea4d560124c4548de7cb69.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-1fea2c51d21c7813f291f492b4a412d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -273,18 +276,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="interactive-maps-in-julia." class="level1 hero-pitch">
+<section id="interactive-maps-in-julia." class="level1 hero">
 <h1>Interactive maps in Julia.</h1>
 <p><span class="tagline">GPU-accelerated geospatial visualization. Millions of points. Smooth pan, zoom, 3D. Built on <a href="https://deck.gl/">deck.gl</a>.</span></p>
 </section>
-<iframe src="examples/global-flight-routes.html" class="viz-frame viz-hero" loading="lazy" title="Global flight routes demo">
+<iframe src="examples/global-flight-routes.html" class="viz-frame" loading="lazy" title="Global flight routes demo">
 </iframe>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <ul>
 <li><strong>Big data, smooth frames</strong> — WebGL rendering of millions of points.</li>
 <li><strong>Any Tables.jl source</strong> — DataFrames, NamedTuples, CSV.jl, Arrow.jl, …</li>
-<li><strong>10+ layer types</strong> — scatter, arc, line, path, polygon, text, hexbin, grid, heatmap, GeoJSON.</li>
+<li><strong>All 32 deck.gl layers</strong> — scatter, arc, path, polygon, text, hexbin, heatmap, contour, GeoJSON, vector and raster tiles, terrain, H3/S2/geohash/quadkey cells, 3D meshes.</li>
 <li><strong>Any display target</strong> — Jupyter, Pluto, VS Code, standalone HTML.</li>
 <li><strong>Declarative API</strong> — layers, view state, widgets. That’s it.</li>
 </ul>
@@ -315,16 +318,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    initial_view_state <span class="op">=</span> <span class="fu">ViewState</span>(longitude<span class="op">=</span><span class="fl">30</span>, latitude<span class="op">=</span><span class="fl">25</span>, zoom<span class="op">=</span><span class="fl">1.2</span>, pitch<span class="op">=</span><span class="fl">20</span>),</span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    map_style <span class="op">=</span> <span class="st">"https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"</span>,</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-green-fg ansi-bold">Precompiling</span> packages...
+   1214.4 ms<span class="ansi-green-fg">  ✓ </span>QuartoNotebookWorkerJSONExt<span class="ansi-bright-black-fg"> (serial)</span>
+  1 dependency successfully precompiled in 1 seconds
+<span class="ansi-green-fg ansi-bold">Precompiling</span> packages...
+    997.5 ms<span class="ansi-green-fg">  ✓ </span>QuartoNotebookWorkerTablesExt<span class="ansi-bright-black-fg"> (serial)</span>
+  1 dependency successfully precompiled in 1 seconds
+</pre>
+</div>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KICAgIDxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KICAgIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIj4KICAgIDx0aXRsZT5EZWNrR0wgVmlzdWFsaXphdGlvbjwvdGl0bGU+CiAgICA8bGluayBocmVmPSJodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEAzLjYuMi9kaXN0L21hcGxpYnJlLWdsLmNzcyIgcmVsPSJzdHlsZXNoZWV0IiAvPgogICAgPGxpbmsgaHJlZj0iaHR0cHM6Ly91bnBrZy5jb20vZGVjay5nbEA5LjAuMTYvZGlzdC9zdHlsZXNoZWV0LmNzcyIgcmVsPSJzdHlsZXNoZWV0IiAvPgogICAgPHN0eWxlPgogICAgICAgIGJvZHkgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgIG92ZXJmbG93OiBoaWRkZW47CiAgICAgICAgfQogICAgICAgICNkZWNrLWNvbnRhaW5lciB7CiAgICAgICAgICAgIHdpZHRoOiAxMDAlOwogICAgICAgICAgICBoZWlnaHQ6IDUwMHB4OwogICAgICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICAgICAgfQogICAgICAgICNtYXAgewogICAgICAgICAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICAgICAgICAgIHRvcDogMDsKICAgICAgICAgICAgbGVmdDogMDsKICAgICAgICAgICAgd2lkdGg6IDEwMCU7CiAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICB9CiAgICAgICAgI2RlY2stb3ZlcmxheSB7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICBsZWZ0OiAwOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OiAxMDAlOwogICAgICAgIH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CiAgICA8ZGl2IGlkPSJkZWNrLWNvbnRhaW5lciI+CiAgICAgICAgPGRpdiBpZD0ibWFwIj48L2Rpdj4KICAgICAgICA8Y2FudmFzIGlkPSJkZWNrLW92ZXJsYXkiPjwvY2FudmFzPgogICAgPC9kaXY+CiAgICA8c2NyaXB0PgogICAgICAgIGNvbnN0IHNwZWMgPSB7Im1hcFN0eWxlIjoiaHR0cHM6Ly9iYXNlbWFwcy5jYXJ0b2Nkbi5jb20vZ2wvZGFyay1tYXR0ZXItZ2wtc3R5bGUvc3R5bGUuanNvbiIsImNvbnRyb2xsZXIiOnRydWUsImluaXRpYWxWaWV3U3RhdGUiOnsibGF0aXR1ZGUiOjI1LjAsInBpdGNoIjoyMC4wLCJiZWFyaW5nIjowLjAsImxvbmdpdHVkZSI6MzAuMCwiem9vbSI6MS4yfSwibGF5ZXJzIjpbeyJAQHR5cGUiOiJTY2F0dGVycGxvdExheWVyIiwiZGF0YSI6W3sicG9wIjo4NzAsImxuZyI6LTEyMi40LCJsYXQiOjM3LjgsIl9wb3NpdGlvbiI6Wy0xMjIuNCwzNy44XX0seyJwb3AiOjg0MDAsImxuZyI6LTc0LjAsImxhdCI6NDAuNywiX3Bvc2l0aW9uIjpbLTc0LjAsNDAuN119LHsicG9wIjoyMTAwLCJsbmciOjIuMzUsImxhdCI6NDguODYsIl9wb3NpdGlvbiI6WzIuMzUsNDguODZdfSx7InBvcCI6MTM5MDAsImxuZyI6MTM5LjcsImxhdCI6MzUuNywiX3Bvc2l0aW9uIjpbMTM5LjcsMzUuN119LHsicG9wIjo1MzAwLCJsbmciOjE1MS4yLCJsYXQiOi0zMy45LCJfcG9zaXRpb24iOlsxNTEuMiwtMzMuOV19LHsicG9wIjo5MDAwLCJsbmciOi0wLjEzLCJsYXQiOjUxLjUsIl9wb3NpdGlvbiI6Wy0wLjEzLDUxLjVdfSx7InBvcCI6MzIwMDAsImxuZyI6NzcuMjIsImxhdCI6MjguNjEsIl9wb3NpdGlvbiI6Wzc3LjIyLDI4LjYxXX0seyJwb3AiOjU3MDAsImxuZyI6MTAzLjgsImxhdCI6MS4zNSwiX3Bvc2l0aW9uIjpbMTAzLjgsMS4zNV19XSwiYmlsbGJvYXJkIjpmYWxzZSwib3BhY2l0eSI6MS4wLCJzdHJva2VkIjpmYWxzZSwicmFkaXVzU2NhbGUiOjgwLCJmaWxsZWQiOnRydWUsImlkIjoic2NhdHRlcnBsb3QtOTNiYmQ3MWMiLCJyYWRpdXNNaW5QaXhlbHMiOjQsInZpc2libGUiOnRydWUsImdldFBvc2l0aW9uIjoiQEA9X3Bvc2l0aW9uIiwicGlja2FibGUiOmZhbHNlLCJsaW5lV2lkdGhVbml0cyI6InBpeGVscyIsImdldFJhZGl1cyI6IkBAPXBvcCIsImdldExpbmVDb2xvciI6WzAsMCwwLDI1NV0sImdldExpbmVXaWR0aCI6MSwibGluZVdpZHRoU2NhbGUiOjEsImxpbmVXaWR0aE1pblBpeGVscyI6MCwiZ2V0RmlsbENvbG9yIjpbMjU1LDE0MCwwLDIyMF19XX07CgogICAgICAgIC8vIExvYWQgYSBzY3JpcHQgd2l0aCByZXRyeSBvbiBmYWlsdXJlCiAgICAgICAgZnVuY3Rpb24gbG9hZFNjcmlwdChzcmMsIHJldHJpZXMpIHsKICAgICAgICAgICAgcmV0cmllcyA9IHJldHJpZXMgfHwgMjsKICAgICAgICAgICAgcmV0dXJuIG5ldyBQcm9taXNlKGZ1bmN0aW9uKHJlc29sdmUsIHJlamVjdCkgewogICAgICAgICAgICAgICAgdmFyIHNjcmlwdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpOwogICAgICAgICAgICAgICAgc2NyaXB0LnNyYyA9IHNyYzsKICAgICAgICAgICAgICAgIHNjcmlwdC5vbmxvYWQgPSByZXNvbHZlOwogICAgICAgICAgICAgICAgc2NyaXB0Lm9uZXJyb3IgPSBmdW5jdGlvbigpIHsKICAgICAgICAgICAgICAgICAgICBpZiAocmV0cmllcyA+IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgbG9hZFNjcmlwdChzcmMsIHJldHJpZXMgLSAxKS50aGVuKHJlc29sdmUsIHJlamVjdCk7CiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgICAgICAgICAgICAgcmVqZWN0KG5ldyBFcnJvcignRmFpbGVkIHRvIGxvYWQ6ICcgKyBzcmMpKTsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9OwogICAgICAgICAgICAgICAgZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZChzY3JpcHQpOwogICAgICAgICAgICB9KTsKICAgICAgICB9CgogICAgICAgIC8vIFByb2Nlc3MgYWNjZXNzb3Igc3RyaW5ncyB0aGF0IHN0YXJ0IHdpdGggIkBAPSIKICAgICAgICBmdW5jdGlvbiBwcm9jZXNzQWNjZXNzb3IodmFsdWUpIHsKICAgICAgICAgICAgaWYgKHR5cGVvZiB2YWx1ZSA9PT0gJ3N0cmluZycgJiYgdmFsdWUuc3RhcnRzV2l0aCgnQEA9JykpIHsKICAgICAgICAgICAgICAgIHZhciBmaWVsZCA9IHZhbHVlLnNsaWNlKDMpOwogICAgICAgICAgICAgICAgcmV0dXJuIGZ1bmN0aW9uKGQpIHsKICAgICAgICAgICAgICAgICAgICB2YXIgcGFydHMgPSBmaWVsZC5zcGxpdCgnLicpOwogICAgICAgICAgICAgICAgICAgIHZhciByZXN1bHQgPSBkOwogICAgICAgICAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgcGFydHMubGVuZ3RoOyBpKyspIHsKICAgICAgICAgICAgICAgICAgICAgICAgcmVzdWx0ID0gcmVzdWx0W3BhcnRzW2ldXTsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdDsKICAgICAgICAgICAgICAgIH07CiAgICAgICAgICAgIH0KICAgICAgICAgICAgcmV0dXJuIHZhbHVlOwogICAgICAgIH0KCiAgICAgICAgLy8gUHJvY2VzcyBsYXllciBzcGVjaWZpY2F0aW9uCiAgICAgICAgZnVuY3Rpb24gcHJvY2Vzc0xheWVyKGxheWVyU3BlYykgewogICAgICAgICAgICB2YXIgbGF5ZXJUeXBlID0gbGF5ZXJTcGVjWydAQHR5cGUnXTsKICAgICAgICAgICAgdmFyIExheWVyQ2xhc3MgPSBkZWNrW2xheWVyVHlwZV07CgogICAgICAgICAgICBpZiAoIUxheWVyQ2xhc3MpIHsKICAgICAgICAgICAgICAgIGNvbnNvbGUuZXJyb3IoJ1Vua25vd24gbGF5ZXIgdHlwZTonLCBsYXllclR5cGUpOwogICAgICAgICAgICAgICAgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHZhciBwcm9wcyA9IHt9OwogICAgICAgICAgICB2YXIga2V5cyA9IE9iamVjdC5rZXlzKGxheWVyU3BlYyk7CiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwga2V5cy5sZW5ndGg7IGkrKykgewogICAgICAgICAgICAgICAgaWYgKGtleXNbaV0gPT09ICdAQHR5cGUnKSBjb250aW51ZTsKICAgICAgICAgICAgICAgIHByb3BzW2tleXNbaV1dID0gcHJvY2Vzc0FjY2Vzc29yKGxheWVyU3BlY1trZXlzW2ldXSk7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJldHVybiBuZXcgTGF5ZXJDbGFzcyhwcm9wcyk7CiAgICAgICAgfQoKICAgICAgICAvLyBQcm9jZXNzIHdpZGdldCBzcGVjaWZpY2F0aW9uCiAgICAgICAgZnVuY3Rpb24gcHJvY2Vzc1dpZGdldCh3aWRnZXRTcGVjKSB7CiAgICAgICAgICAgIHZhciB3aWRnZXRUeXBlID0gd2lkZ2V0U3BlY1snQEB0eXBlJ107CiAgICAgICAgICAgIHZhciBXaWRnZXRDbGFzcyA9IGRlY2tbd2lkZ2V0VHlwZV07CgogICAgICAgICAgICBpZiAoIVdpZGdldENsYXNzKSB7CiAgICAgICAgICAgICAgICBjb25zb2xlLmVycm9yKCdVbmtub3duIHdpZGdldCB0eXBlOicsIHdpZGdldFR5cGUpOwogICAgICAgICAgICAgICAgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHZhciBwcm9wcyA9IHt9OwogICAgICAgICAgICB2YXIga2V5cyA9IE9iamVjdC5rZXlzKHdpZGdldFNwZWMpOwogICAgICAgICAgICBmb3IgKHZhciBpID0gMDsgaSA8IGtleXMubGVuZ3RoOyBpKyspIHsKICAgICAgICAgICAgICAgIGlmIChrZXlzW2ldID09PSAnQEB0eXBlJykgY29udGludWU7CiAgICAgICAgICAgICAgICBwcm9wc1trZXlzW2ldXSA9IHdpZGdldFNwZWNba2V5c1tpXV07CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJldHVybiBuZXcgV2lkZ2V0Q2xhc3MocHJvcHMpOwogICAgICAgIH0KCiAgICAgICAgLy8gRGV0ZXJtaW5lIHdoaWNoIHNjcmlwdHMgdG8gbG9hZAogICAgICAgIHZhciBzY3JpcHRzID0gWydodHRwczovL3VucGtnLmNvbS9kZWNrLmdsQDkuMC4xNi9kaXN0Lm1pbi5qcyddOwogICAgICAgIGlmIChzcGVjLm1hcFN0eWxlKSB7CiAgICAgICAgICAgIHNjcmlwdHMucHVzaCgnaHR0cHM6Ly91bnBrZy5jb20vbWFwbGlicmUtZ2xAMy42LjIvZGlzdC9tYXBsaWJyZS1nbC5qcycpOwogICAgICAgIH0KCiAgICAgICAgLy8gTG9hZCBzY3JpcHRzIHRoZW4gaW5pdGlhbGl6ZQogICAgICAgIFByb21pc2UuYWxsKHNjcmlwdHMubWFwKGZ1bmN0aW9uKHNyYykgeyByZXR1cm4gbG9hZFNjcmlwdChzcmMpOyB9KSkudGhlbihmdW5jdGlvbigpIHsKICAgICAgICAgICAgdmFyIGxheWVycyA9IHNwZWMubGF5ZXJzLm1hcChwcm9jZXNzTGF5ZXIpLmZpbHRlcihmdW5jdGlvbihsKSB7IHJldHVybiBsICE9PSBudWxsOyB9KTsKICAgICAgICAgICAgdmFyIHdpZGdldHMgPSAoc3BlYy53aWRnZXRzIHx8IFtdKS5tYXAocHJvY2Vzc1dpZGdldCkuZmlsdGVyKGZ1bmN0aW9uKHcpIHsgcmV0dXJuIHcgIT09IG51bGw7IH0pOwoKICAgICAgICAgICAgaWYgKHNwZWMubWFwU3R5bGUpIHsKICAgICAgICAgICAgICAgIHZhciBtYXAgPSBuZXcgbWFwbGlicmVnbC5NYXAoewogICAgICAgICAgICAgICAgICAgIGNvbnRhaW5lcjogJ21hcCcsCiAgICAgICAgICAgICAgICAgICAgc3R5bGU6IHNwZWMubWFwU3R5bGUsCiAgICAgICAgICAgICAgICAgICAgY2VudGVyOiBbc3BlYy5pbml0aWFsVmlld1N0YXRlLmxvbmdpdHVkZSwgc3BlYy5pbml0aWFsVmlld1N0YXRlLmxhdGl0dWRlXSwKICAgICAgICAgICAgICAgICAgICB6b29tOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUuem9vbSwKICAgICAgICAgICAgICAgICAgICBwaXRjaDogc3BlYy5pbml0aWFsVmlld1N0YXRlLnBpdGNoIHx8IDAsCiAgICAgICAgICAgICAgICAgICAgYmVhcmluZzogc3BlYy5pbml0aWFsVmlld1N0YXRlLmJlYXJpbmcgfHwgMCwKICAgICAgICAgICAgICAgICAgICBpbnRlcmFjdGl2ZTogZmFsc2UKICAgICAgICAgICAgICAgIH0pOwoKICAgICAgICAgICAgICAgIG5ldyBkZWNrLkRlY2tHTCh7CiAgICAgICAgICAgICAgICAgICAgY2FudmFzOiAnZGVjay1vdmVybGF5JywKICAgICAgICAgICAgICAgICAgICBpbml0aWFsVmlld1N0YXRlOiBzcGVjLmluaXRpYWxWaWV3U3RhdGUsCiAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlcjogc3BlYy5jb250cm9sbGVyLAogICAgICAgICAgICAgICAgICAgIGxheWVyczogbGF5ZXJzLAogICAgICAgICAgICAgICAgICAgIHdpZGdldHM6IHdpZGdldHMsCiAgICAgICAgICAgICAgICAgICAgZ2V0VG9vbHRpcDogc3BlYy5waWNrYWJsZSA/IGZ1bmN0aW9uKGluZm8pIHsgcmV0dXJuIGluZm8ub2JqZWN0ICYmIEpTT04uc3RyaW5naWZ5KGluZm8ub2JqZWN0KTsgfSA6IG51bGwsCiAgICAgICAgICAgICAgICAgICAgb25WaWV3U3RhdGVDaGFuZ2U6IGZ1bmN0aW9uKGUpIHsKICAgICAgICAgICAgICAgICAgICAgICAgbWFwLmp1bXBUbyh7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6IFtlLnZpZXdTdGF0ZS5sb25naXR1ZGUsIGUudmlld1N0YXRlLmxhdGl0dWRlXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHpvb206IGUudmlld1N0YXRlLnpvb20sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaXRjaDogZS52aWV3U3RhdGUucGl0Y2gsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBiZWFyaW5nOiBlLnZpZXdTdGF0ZS5iZWFyaW5nCiAgICAgICAgICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgdmFyIGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdkZWNrLWNvbnRhaW5lcicpOwogICAgICAgICAgICAgICAgY29udGFpbmVyLmlubmVySFRNTCA9ICcnOwoKICAgICAgICAgICAgICAgIG5ldyBkZWNrLkRlY2tHTCh7CiAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyOiBjb250YWluZXIsCiAgICAgICAgICAgICAgICAgICAgaW5pdGlhbFZpZXdTdGF0ZTogc3BlYy5pbml0aWFsVmlld1N0YXRlLAogICAgICAgICAgICAgICAgICAgIGNvbnRyb2xsZXI6IHNwZWMuY29udHJvbGxlciwKICAgICAgICAgICAgICAgICAgICBsYXllcnM6IGxheWVycywKICAgICAgICAgICAgICAgICAgICB3aWRnZXRzOiB3aWRnZXRzLAogICAgICAgICAgICAgICAgICAgIGdldFRvb2x0aXA6IHNwZWMucGlja2FibGUgPyBmdW5jdGlvbihpbmZvKSB7IHJldHVybiBpbmZvLm9iamVjdCAmJiBKU09OLnN0cmluZ2lmeShpbmZvLm9iamVjdCk7IH0gOiBudWxsCiAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgfQogICAgICAgIH0pLmNhdGNoKGZ1bmN0aW9uKGVycikgewogICAgICAgICAgICBjb25zb2xlLmVycm9yKCdEZWNrR0wgaW5pdGlhbGl6YXRpb24gZmFpbGVkOicsIGVycik7CiAgICAgICAgICAgIHZhciBjb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZGVjay1jb250YWluZXInKTsKICAgICAgICAgICAgY29udGFpbmVyLmlubmVySFRNTCA9ICc8ZGl2IHN0eWxlPSJkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7aGVpZ2h0OjEwMCU7Y29sb3I6IzY2NjsiPkZhaWxlZCB0byBsb2FkIHZpc3VhbGl6YXRpb24uIFBsZWFzZSByZWZyZXNoIHRoZSBwYWdlLjwvZGl2Pic7CiAgICAgICAgfSk7CiAgICA8L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==" style="width:100%; height:520px; border:none;"></iframe>
+<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+Cjx0aXRsZT5EZWNrR0w8L3RpdGxlPgo8c2NyaXB0IHNyYz0iaHR0cHM6Ly91bnBrZy5jb20vZGVjay5nbEA5LjMuMTEvZGlzdC5taW4uanMiPjwvc2NyaXB0Pgo8bGluayBocmVmPSJodHRwczovL3VucGtnLmNvbS9tYXBsaWJyZS1nbEA0LjcuMS9kaXN0L21hcGxpYnJlLWdsLmNzcyIgcmVsPSJzdHlsZXNoZWV0Ij4KPHNjcmlwdCBzcmM9Imh0dHBzOi8vdW5wa2cuY29tL21hcGxpYnJlLWdsQDQuNy4xL2Rpc3QvbWFwbGlicmUtZ2wuanMiPjwvc2NyaXB0Pgo8c3R5bGU+Cmh0bWwsIGJvZHkgeyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7IH0KI2RlY2stY29udGFpbmVyIHsgcG9zaXRpb246IHJlbGF0aXZlOyBvdmVyZmxvdzogaGlkZGVuOyB3aWR0aDogMTAwJTsgaGVpZ2h0OiA1MDBweDsgfQojbWFwLCAjZGVjay1jYW52YXMgeyBwb3NpdGlvbjogYWJzb2x1dGU7IHRvcDogMDsgbGVmdDogMDsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgfQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGlkPSJkZWNrLWNvbnRhaW5lciI+PGRpdiBpZD0ibWFwIj48L2Rpdj48Y2FudmFzIGlkPSJkZWNrLWNhbnZhcyI+PC9jYW52YXM+PC9kaXY+CjxzY3JpcHQ+Ci8vIFJ1bnRpbWUgaGVscGVycyBmb3IgcGFnZXMgZ2VuZXJhdGVkIGJ5IERlY2tHTC5qbC4KLy8KLy8gVGhlIEp1bGlhIHNpZGUgZW1pdHMgcGxhaW4gSmF2YVNjcmlwdCAtLSBgbmV3IGRlY2suU2NhdHRlcnBsb3RMYXllcih7Li4ufSlgIC0tIHNvCi8vIHRoZXJlIGlzIG5vIHNwZWMgbGFuZ3VhZ2UgdG8gaW50ZXJwcmV0IGhlcmUuIFdoYXQgaXMgbGVmdCBpcyBkZWNvZGluZyB0aGUgYmluYXJ5Ci8vIGJ1ZmZlcnMsIGZvcm1hdHRpbmcgdG9vbHRpcHMsIGFuZCB3aXJpbmcgZGVjay5nbCB0byBhbiBvcHRpb25hbCBiYXNlbWFwLgpjb25zdCBERyA9IHsKICAgIC8vIExheWVyIGF0dHJpYnV0ZXMgYXJyaXZlIGJhc2U2NC1lbmNvZGVkIGFuZCBhcmUgYWRvcHRlZCBhcyB0eXBlZCBhcnJheXMgd2l0aG91dAogICAgLy8gYSBjb3B5LCB3aGljaCBpcyB0aGUgd2hvbGUgcG9pbnQgb2Ygc2VuZGluZyB0aGVtIHRoaXMgd2F5LgogICAgdTgocykgewogICAgICAgIGlmIChVaW50OEFycmF5LmZyb21CYXNlNjQpIHJldHVybiBVaW50OEFycmF5LmZyb21CYXNlNjQocyk7CiAgICAgICAgY29uc3QgYmluID0gYXRvYihzKTsKICAgICAgICBjb25zdCBvdXQgPSBuZXcgVWludDhBcnJheShiaW4ubGVuZ3RoKTsKICAgICAgICBmb3IgKGxldCBpID0gMDsgaSA8IGJpbi5sZW5ndGg7IGkrKykgb3V0W2ldID0gYmluLmNoYXJDb2RlQXQoaSk7CiAgICAgICAgcmV0dXJuIG91dDsKICAgIH0sCiAgICBmMzIocykgeyByZXR1cm4gbmV3IEZsb2F0MzJBcnJheShERy51OChzKS5idWZmZXIpOyB9LAoKICAgIC8vIEFnZ3JlZ2F0aW9uIGxheWVycyBuZWVkIGl0ZXJhYmxlIGRhdGEuIEluZGljZXMgc3RhbmQgaW4gZm9yIHJlY29yZHMsIGFuZCB0aGUKICAgIC8vIGFjY2Vzc29ycyBiZWxvdyByZWFkIHRoZSBwYWNrZWQgYnVmZmVycyBhdCB0aGF0IGluZGV4LgogICAgcmFuZ2UobikgeyByZXR1cm4gQXJyYXkuZnJvbSh7bGVuZ3RoOiBufSwgKF8sIGkpID0+IGkpOyB9LAogICAgYXQoYnVmLCBzaXplKSB7CiAgICAgICAgcmV0dXJuIHNpemUgPT09IDEgPyBpID0+IGJ1ZltpXSA6IGkgPT4gYnVmLnN1YmFycmF5KGkgKiBzaXplLCBpICogc2l6ZSArIHNpemUpOwogICAgfSwKCiAgICBlc2NhcGUodikgewogICAgICAgIHJldHVybiBTdHJpbmcodikucmVwbGFjZSgvWyY8PiJdL2csIGMgPT4gKHsiJiI6ICImYW1wOyIsICI8IjogIiZsdDsiLCAiPiI6ICImZ3Q7IiwgJyInOiAiJnF1b3Q7In1bY10pKTsKICAgIH0sCgogICAgLy8gQmluYXJ5IGRhdGEgaGFzIG5vIHJvdyBvYmplY3RzLCBzbyBwaWNraW5nIHJlcG9ydHMgYW4gaW5kZXggYW5kIHRoZSB0b29sdGlwCiAgICAvLyBjb2x1bW5zIGFyZSBsb29rZWQgdXAgYnkgaXQuCiAgICB0b29sdGlwKHRhYmxlcykgewogICAgICAgIHJldHVybiBpbmZvID0+IHsKICAgICAgICAgICAgY29uc3QgdGFibGUgPSBpbmZvLmxheWVyICYmIHRhYmxlc1tpbmZvLmxheWVyLmlkXTsKICAgICAgICAgICAgaWYgKCF0YWJsZSB8fCBpbmZvLmluZGV4IDwgMCkgcmV0dXJuIG51bGw7CiAgICAgICAgICAgIC8vIEFnZ3JlZ2F0ZWQgYmlucyBkZXNjcmliZSB0aGVtc2VsdmVzOyBldmVyeXRoaW5nIGVsc2UgaXMgbG9va2VkIHVwIGJ5IGluZGV4LgogICAgICAgICAgICBjb25zdCBlbnRyaWVzID0gdGFibGUub2JqZWN0CiAgICAgICAgICAgICAgICA/IE9iamVjdC5lbnRyaWVzKGluZm8ub2JqZWN0IHx8IHt9KS5maWx0ZXIoKFssIHZdKSA9PiB2ID09PSBudWxsIHx8IHR5cGVvZiB2ICE9PSAib2JqZWN0IikKICAgICAgICAgICAgICAgIDogdGFibGUua2V5cy5tYXAoKGtleSwgaSkgPT4gW2tleSwgdGFibGUuY29sc1tpXVtpbmZvLmluZGV4XV0pOwogICAgICAgICAgICBpZiAoIWVudHJpZXMubGVuZ3RoKSByZXR1cm4gbnVsbDsKICAgICAgICAgICAgcmV0dXJuIHtodG1sOiBlbnRyaWVzLm1hcCgoW2ssIHZdKSA9PiBgPGI+JHtERy5lc2NhcGUoayl9PC9iPjogJHtERy5lc2NhcGUodil9YCkuam9pbigiPGJyPiIpfTsKICAgICAgICB9OwogICAgfSwKCiAgICBtb3VudChzcGVjKSB7CiAgICAgICAgY29uc3QgcHJvcHMgPSBPYmplY3QuYXNzaWduKHtjYW52YXM6ICJkZWNrLWNhbnZhcyJ9LCBzcGVjLmRlY2spOwoKICAgICAgICBpZiAoc3BlYy5tYXBTdHlsZSkgewogICAgICAgICAgICBjb25zdCB2aWV3ID0gcHJvcHMuaW5pdGlhbFZpZXdTdGF0ZSB8fCB7fTsKICAgICAgICAgICAgY29uc3QgbWFwID0gbmV3IG1hcGxpYnJlZ2wuTWFwKHsKICAgICAgICAgICAgICAgIGNvbnRhaW5lcjogIm1hcCIsCiAgICAgICAgICAgICAgICBzdHlsZTogc3BlYy5tYXBTdHlsZSwKICAgICAgICAgICAgICAgIGNlbnRlcjogW3ZpZXcubG9uZ2l0dWRlIHx8IDAsIHZpZXcubGF0aXR1ZGUgfHwgMF0sCiAgICAgICAgICAgICAgICB6b29tOiB2aWV3Lnpvb20gfHwgMSwKICAgICAgICAgICAgICAgIHBpdGNoOiB2aWV3LnBpdGNoIHx8IDAsCiAgICAgICAgICAgICAgICBiZWFyaW5nOiB2aWV3LmJlYXJpbmcgfHwgMCwKICAgICAgICAgICAgICAgIGludGVyYWN0aXZlOiBmYWxzZSwKICAgICAgICAgICAgfSk7CgogICAgICAgICAgICAvLyBkZWNrLmdsIG93bnMgdGhlIGNhbWVyYTsgdGhlIGJhc2VtYXAgZm9sbG93cyBpdC4gQ2hhaW4gcmF0aGVyIHRoYW4KICAgICAgICAgICAgLy8gcmVwbGFjZSwgc28gYSB1c2VyLXN1cHBsaWVkIG9uVmlld1N0YXRlQ2hhbmdlIHN0aWxsIHJ1bnMuCiAgICAgICAgICAgIGNvbnN0IGNoYWluZWQgPSBwcm9wcy5vblZpZXdTdGF0ZUNoYW5nZTsKICAgICAgICAgICAgcHJvcHMub25WaWV3U3RhdGVDaGFuZ2UgPSBldmVudCA9PiB7CiAgICAgICAgICAgICAgICBjb25zdCB2ID0gZXZlbnQudmlld1N0YXRlOwogICAgICAgICAgICAgICAgbWFwLmp1bXBUbyh7CiAgICAgICAgICAgICAgICAgICAgY2VudGVyOiBbdi5sb25naXR1ZGUsIHYubGF0aXR1ZGVdLAogICAgICAgICAgICAgICAgICAgIHpvb206IHYuem9vbSwKICAgICAgICAgICAgICAgICAgICBwaXRjaDogdi5waXRjaCB8fCAwLAogICAgICAgICAgICAgICAgICAgIGJlYXJpbmc6IHYuYmVhcmluZyB8fCAwLAogICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgICAgICByZXR1cm4gY2hhaW5lZCA/IGNoYWluZWQoZXZlbnQpIDogdW5kZWZpbmVkOwogICAgICAgICAgICB9OwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJtYXAiKS5yZW1vdmUoKTsKICAgICAgICB9CgogICAgICAgIHJldHVybiAoREcuaW5zdGFuY2UgPSBuZXcgZGVjay5EZWNrR0wocHJvcHMpKTsKICAgIH0sCn07CgpERy5tb3VudCh7bWFwU3R5bGU6Imh0dHBzOi8vYmFzZW1hcHMuY2FydG9jZG4uY29tL2dsL2RhcmstbWF0dGVyLWdsLXN0eWxlL3N0eWxlLmpzb24iLGRlY2s6e2luaXRpYWxWaWV3U3RhdGU6eyJsYXRpdHVkZSI6MjUsImxvbmdpdHVkZSI6MzAsInBpdGNoIjoyMCwiem9vbSI6MS4yfSwKICBsYXllcnM6W25ldyBkZWNrLlNjYXR0ZXJwbG90TGF5ZXIoe2lkOiJTY2F0dGVycGxvdExheWVyLTEiLGRhdGE6e2xlbmd0aDo4LGF0dHJpYnV0ZXM6e2dldFBvc2l0aW9uOnt2YWx1ZTpERy5mMzIoInpjejB3ak16RjBJQUFKVEN6Y3dpUW1abUZrQ2tjRU5DTTdNTFE4M01Ea0l6TXhkRG1wa0h3cmdlQmI0QUFFNUNwSENhUWtqaDVFR2FtYzlDemN5c1B3PT0iKSxzaXplOjJ9LGdldFJhZGl1czp7dmFsdWU6REcuZjMyKCJBSUJaUkFCQUEwWUFRQU5GQURCWlJnQ2dwVVVBb0F4R0FBRDZSZ0Fnc2tVPSIpLHNpemU6MX19fSxnZXRGaWxsQ29sb3I6WzI1NSwxNDAsMCwyMjBdLHJhZGl1c01pblBpeGVsczo0LHJhZGl1c1NjYWxlOjgwfSldLAogIGNvbnRyb2xsZXI6dHJ1ZX19KTsKCjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K" style="width:100%;height:520px;border:none;" sandbox="allow-scripts"></iframe>
 </div>
 </div>
-<p>A <code>Deck</code> has three pieces:</p>
+<p>A <code>Deck</code> has four pieces:</p>
 <ol type="1">
 <li><strong>Layers</strong> — what to draw.</li>
 <li><strong>ViewState</strong> — where the camera is (<code>longitude</code>, <code>latitude</code>, <code>zoom</code>, <code>pitch</code>, <code>bearing</code>).</li>
+<li><strong>map_style</strong> — the basemap drawn underneath, as a MapLibre style URL. Carto’s are free and need no API key: swap <code>dark-matter</code> above for <code>positron</code> or <code>voyager</code>. Omit it for a blank background.</li>
 <li><strong>Widgets</strong> (optional) — UI overlays.</li>
 </ol>
+<p>Layer props may be written <code>snake_case</code> or <code>camelCase</code>, and anything left unset keeps deck.gl’s own default.</p>
 <p>Columns are referenced by <code>Symbol</code>: <code>get_radius = :pop</code>, <code>get_position = [:lng, :lat]</code>. Static values work too: <code>get_fill_color = [255, 140, 0, 220]</code>.</p>
 </section>
 <section id="display" class="level2">
@@ -333,16 +349,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Notebooks</strong> (Jupyter, Pluto, VS Code) — a <code>Deck</code> renders inline automatically.</li>
 <li><strong>Browser</strong> — <code>open_html(deck)</code> pops a tab.</li>
 <li><strong>File</strong> — <code>save_html(deck, "map.html")</code>.</li>
-<li><strong>String</strong> — <code>to_html(deck)</code> / <code>to_json(deck)</code>.</li>
+<li><strong>String</strong> — <code>to_html(deck)</code>, or <code>to_js(deck)</code> for just the JavaScript.</li>
 </ul>
 </section>
 <section id="where-to-go-next" class="level2">
 <h2 class="anchored" data-anchor-id="where-to-go-next">Where to go next</h2>
 <ul>
 <li><strong><a href="./examples.html">Examples →</a></strong> — flight routes, earthquakes, 3D buildings, wildfires, trees, accidents.</li>
-<li><strong><a href="./layers.html">Layers →</a></strong> — every layer type with a live interactive example.</li>
-<li><strong><a href="./widgets.html">Widgets →</a></strong> — zoom, compass, fullscreen.</li>
-<li><strong><a href="api.qmd">API →</a></strong> — full reference.</li>
+<li><strong><a href="./layers.html">Layers →</a></strong> — all 32 layer types with a live interactive example.</li>
+<li><strong><a href="./widgets.html">Widgets →</a></strong> — all 15 UI overlays: zoom, compass, popups, screenshots, themes.</li>
+<li><strong><a href="./pages/api.html">API →</a></strong> — full reference.</li>
 </ul>
 
 
@@ -765,7 +781,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-04-23</p>
+<p>Built on 2026-08-31</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
