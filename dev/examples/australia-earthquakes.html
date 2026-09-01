@@ -91,7 +91,12 @@ const DG = {
             document.getElementById("map").remove();
         }
 
-        return (DG.instance = new deck.DeckGL(props));
+        // `deck.Deck`, not `deck.DeckGL`: the latter is a scripting wrapper that creates
+        // its own canvas and -- finding `globalThis.maplibregl`, which a basemap page
+        // loads -- its own second basemap, both appended to `<body>` above this
+        // container, where they swallow every pointer event. We supply the canvas and
+        // the basemap ourselves.
+        return (DG.instance = new deck.Deck(props));
     },
 };
 
