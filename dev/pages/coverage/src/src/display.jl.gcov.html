@@ -31,13 +31,13 @@
             <td class="headerValue">on branch main</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">96.6&nbsp;%</td>
-            <td class="headerCovTableEntry">29</td>
-            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntryHi">97.5&nbsp;%</td>
+            <td class="headerCovTableEntry">40</td>
+            <td class="headerCovTableEntry">39</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-01 12:40:44</td>
+            <td class="headerValue">2026-09-01 13:25:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -101,20 +101,48 @@
 <span id="L39"><span class="lineNum">      39</span>              : end</span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
 <span id="L41"><span class="lineNum">      41</span>              : #-----------------------------------------------------------------------------# Rich display</span>
-<span id="L42"><span class="lineNum">      42</span>              : # Notebooks get an iframe so the page's scripts and styles cannot reach the host</span>
-<span id="L43"><span class="lineNum">      43</span>              : # document. The page is encoded straight into the `src` attribute as it is generated,</span>
-<span id="L44"><span class="lineNum">      44</span>              : # rather than built and then encoded.</span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           1 : function Base.show(io::IO, ::MIME&quot;text/html&quot;, deck::Deck)</span></span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           1 :     print(io, &quot;&quot;&quot;&lt;iframe src=&quot;data:text/html;base64,&quot;&quot;&quot;)</span></span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           1 :     pipe = Base64EncodePipe(io)</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">           1 :     to_html(pipe, deck; height = &quot;500px&quot;)</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           1 :     close(pipe)</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           1 :     print(io, &quot;&quot;&quot;&quot; style=&quot;width:100%;height:520px;border:none;&quot; sandbox=&quot;allow-scripts&quot;&gt;&lt;/iframe&gt;&quot;&quot;&quot;)</span></span>
-<span id="L51"><span class="lineNum">      51</span>              : end</span>
-<span id="L52"><span class="lineNum">      52</span>              : </span>
-<span id="L53"><span class="lineNum">      53</span>              : # The VS Code Julia extension renders this MIME type in its own webview, which is</span>
-<span id="L54"><span class="lineNum">      54</span>              : # already isolated, so it gets the page directly.</span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC tlaBgUNC">           0 : Base.show(io::IO, ::MIME&quot;juliavscode/html&quot;, deck::Deck) = to_html(io, deck)</span></span>
+<span id="L42"><span class="lineNum">      42</span>              : # Escapes the two characters that would end an HTML attribute value, as the bytes go</span>
+<span id="L43"><span class="lineNum">      43</span>              : # past, so a page can be written straight into a `srcdoc` without being built up as a</span>
+<span id="L44"><span class="lineNum">      44</span>              : # string and copied.</span>
+<span id="L45"><span class="lineNum">      45</span>              : struct AttributeEscape{T&lt;:IO} &lt;: IO</span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           1 :     io::T</span></span>
+<span id="L47"><span class="lineNum">      47</span>              : end</span>
+<span id="L48"><span class="lineNum">      48</span>              : </span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          45 : function Base.unsafe_write(esc::AttributeEscape, p::Ptr{UInt8}, n::UInt)</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          45 :     start = 1</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          45 :     for i in 1:n</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">        4534 :         byte = unsafe_load(p, i)</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">        9060 :         (byte == UInt8('&amp;') || byte == UInt8('&quot;')) || continue</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">         101 :         i &gt; start &amp;&amp; unsafe_write(esc.io, p + start - 1, UInt(i - start))</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          58 :         print(esc.io, byte == UInt8('&amp;') ? &quot;&amp;amp;&quot; : &quot;&amp;quot;&quot;)</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          58 :         start = i + 1</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        9023 :     end</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          48 :     n &gt;= start &amp;&amp; unsafe_write(esc.io, p + start - 1, n - start + 1)</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          45 :     return n</span></span>
+<span id="L60"><span class="lineNum">      60</span>              : end</span>
+<span id="L61"><span class="lineNum">      61</span>              : </span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          10 : Base.write(esc::AttributeEscape, byte::UInt8) = unsafe_write(esc, Ref(byte), UInt(1))</span></span>
+<span id="L63"><span class="lineNum">      63</span>              : </span>
+<span id="L64"><span class="lineNum">      64</span>              : # Notebooks and doc pages get an iframe so the page's scripts and styles cannot reach the</span>
+<span id="L65"><span class="lineNum">      65</span>              : # host document.</span>
+<span id="L66"><span class="lineNum">      66</span>              : #</span>
+<span id="L67"><span class="lineNum">      67</span>              : # `srcdoc` rather than a `data:` URI, which matters more than it looks: a `data:` URL is</span>
+<span id="L68"><span class="lineNum">      68</span>              : # always an opaque origin, so the browser partitions its cache and every deck on a page</span>
+<span id="L69"><span class="lineNum">      69</span>              : # downloads deck.gl -- 1.6 MB -- for itself. Thirty decks cost twenty megabytes of</span>
+<span id="L70"><span class="lineNum">      70</span>              : # duplicate library. A same-origin `srcdoc` frame shares the cache and fetches it once.</span>
+<span id="L71"><span class="lineNum">      71</span>              : # The cost is that `allow-same-origin` lets the frame reach the embedding page; the</span>
+<span id="L72"><span class="lineNum">      72</span>              : # content is the user's own data rendered by deck.gl, and the frame still isolates</span>
+<span id="L73"><span class="lineNum">      73</span>              : # styles and the DOM.</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           1 : function Base.show(io::IO, ::MIME&quot;text/html&quot;, deck::Deck)</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           1 :     print(io, &quot;&lt;iframe loading=\&quot;lazy\&quot; style=\&quot;width:100%;height:520px;border:none;\&quot; &quot;,</span></span>
+<span id="L76"><span class="lineNum">      76</span>              :               &quot;sandbox=\&quot;allow-scripts allow-same-origin\&quot; srcdoc=\&quot;&quot;)</span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           1 :     to_html(AttributeEscape(io), deck; height = &quot;500px&quot;)</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           1 :     print(io, &quot;\&quot;&gt;&lt;/iframe&gt;&quot;)</span></span>
+<span id="L79"><span class="lineNum">      79</span>              : end</span>
+<span id="L80"><span class="lineNum">      80</span>              : </span>
+<span id="L81"><span class="lineNum">      81</span>              : # The VS Code Julia extension renders this MIME type in its own webview, which is</span>
+<span id="L82"><span class="lineNum">      82</span>              : # already isolated, so it gets the page directly.</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaUNC tlaBgUNC">           0 : Base.show(io::IO, ::MIME&quot;juliavscode/html&quot;, deck::Deck) = to_html(io, deck)</span></span>
         </pre>
               </td>
             </tr>
