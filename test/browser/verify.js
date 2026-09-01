@@ -48,6 +48,25 @@ async function verify(browser, file) {
             };
         });
 
+        // Drive the camera the way a user would. deck.gl's controller is easy to break
+        // from the outside -- an overlay above the canvas, or a second deck instance --
+        // and neither rendering nor picking notices, because neither goes through the
+        // event manager.
+        const before = await page.evaluate(() => JSON.stringify(DG.instance.viewState));
+        await page.mouse.move(400, 300);
+        await page.mouse.wheel({deltaY: -500});
+        await new Promise(r => setTimeout(r, 700));
+        await page.mouse.move(400, 300);
+        await page.mouse.down();
+        await page.mouse.move(520, 370, {steps: 12});
+        await page.mouse.up();
+        await new Promise(r => setTimeout(r, 700));
+        const interactive = before !== await page.evaluate(() => JSON.stringify(DG.instance.viewState));
+
+        // Nothing above the canvas should be intercepting those events.
+        const strays = await page.evaluate(() =>
+            [...document.body.children].filter(e => e.id !== "deck-container" && e.tagName !== "SCRIPT").length);
+
         // Screenshot the page and count colors, which says whether anything was drawn
         // and in what color. Decoding happens in the page: a 2D canvas can be read back
         // where the WebGL drawing buffer cannot.
@@ -69,7 +88,7 @@ async function verify(browser, file) {
             return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
         }, shot);
 
-        return {file, errors, colors, ...result};
+        return {file, errors, colors, interactive, strays, ...result};
     } catch (e) {
         return {file, errors: errors.concat([String(e)]), mounted: false};
     } finally {
@@ -90,12 +109,14 @@ async function verify(browser, file) {
         // Some layers render through a framebuffer and expose no pickable geometry.
         const needsPick = !file.endsWith(".nopick.html");
         const drew = (r.colors || []).length > 1;   // background alone is not a render
-        const ok = r.mounted && r.errors.length === 0 && drew && (!needsPick || r.picked > 0);
+        const ok = r.mounted && r.errors.length === 0 && drew && r.interactive && !r.strays
+            && (!needsPick || r.picked > 0);
         if (!ok) failed++;
         report.push(r);
         const name = path.basename(file).padEnd(24);
         const top = (r.colors || []).map(([c, n]) => `${c}`).join(" | ");
-        console.log(`${ok ? "pass" : "FAIL"}  ${name} layers=${r.layers ?? "-"} picked=${String(r.picked ?? "-").padEnd(4)} colors=[${top}]`);
+        console.log(`${ok ? "pass" : "FAIL"}  ${name} layers=${r.layers ?? "-"} picked=${String(r.picked ?? "-").padEnd(4)} ` +
+                    `${r.interactive ? "interactive" : "NOT-INTERACTIVE"}${r.strays ? ` strays=${r.strays}` : ""} colors=[${top}]`);
         if (r.tooltip) console.log(`        tooltip: ${r.tooltip.replace(/<[^>]*>/g, " ").trim()}`);
         for (const e of r.errors) console.log(`        ${e.split("\n")[0].slice(0, 200)}`);
     }
