@@ -76,18 +76,23 @@ img {
 /* Hero section styling */
 .hero {
   text-align: center;
-  padding: 2rem 0;
-  margin-bottom: 2rem;
+  padding: 0;
+  margin-bottom: 1.25rem;
 }
 
 .hero h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.1rem;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.4rem;
 }
 
 .hero .tagline {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   color: #6c757d;
+  display: block;
+  max-width: 46rem;
+  margin: 0 auto;
 }
 
 /* Embedded visualization iframes */
